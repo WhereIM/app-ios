@@ -1,0 +1,6 @@
+framework module Pods_whereimTests {
+  umbrella header "Pods-whereimTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
