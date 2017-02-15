@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="J3S-0u-thg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,10 +9,37 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Channel List Controller-->
+        <scene sceneID="Epa-MB-uHI">
+            <objects>
+                <viewController storyboardIdentifier="channel_list" useStoryboardIdentifierAsRestorationIdentifier="YES" id="J3S-0u-thg" userLabel="Channel List Controller" customClass="ChannelListController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="98b-pY-JtB"/>
+                        <viewControllerLayoutGuide type="bottom" id="t6p-Hb-5z9"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5s5-7w-8Qk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0lj-Ac-Tkg">
+                                <rect key="frame" x="166" y="323" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xer-nB-ON2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="33" y="831"/>
+        </scene>
         <!--Login Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="login" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="LoginController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -25,6 +52,40 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="33" y="129"/>
+        </scene>
+        <!--Captcha Controller-->
+        <scene sceneID="gns-Ae-MxQ">
+            <objects>
+                <viewController storyboardIdentifier="captcha" useStoryboardIdentifierAsRestorationIdentifier="YES" id="NDD-SB-CBX" userLabel="Captcha Controller" customClass="CaptchaController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NHP-zf-mxk"/>
+                        <viewControllerLayoutGuide type="bottom" id="Fe8-nx-34i"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="MCL-ZB-xOD">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kYf-dH-V55">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Fe8-nx-34i" firstAttribute="top" secondItem="kYf-dH-V55" secondAttribute="bottom" id="Yis-6y-AhK"/>
+                            <constraint firstAttribute="trailing" secondItem="kYf-dH-V55" secondAttribute="trailing" id="hYy-nH-BdM"/>
+                            <constraint firstItem="kYf-dH-V55" firstAttribute="leading" secondItem="MCL-ZB-xOD" secondAttribute="leading" id="uIW-5x-I4L"/>
+                            <constraint firstItem="kYf-dH-V55" firstAttribute="top" secondItem="NHP-zf-mxk" secondAttribute="bottom" id="zYm-0s-xSU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="kYf-dH-V55" id="eea-We-fl8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TxU-0v-5NX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="844" y="129"/>
         </scene>
     </scenes>
 </document>
