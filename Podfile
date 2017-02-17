@@ -4,6 +4,7 @@ platform :ios, '8.0'
 target 'whereim' do
   use_frameworks!
 
+  pod 'Alamofire', '~> 4.3'
   pod 'FacebookCore'
   pod 'FacebookLogin'
 
