@@ -17,6 +17,12 @@
 		58568FCD1E51ADF2002FAD41 /* whereimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FCC1E51ADF2002FAD41 /* whereimTests.swift */; };
 		58568FD81E51ADF2002FAD41 /* whereimUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FD71E51ADF2002FAD41 /* whereimUITests.swift */; };
 		58568FE51E542E1D002FAD41 /* Pods_whereim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */; };
+		58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */; };
+		58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB861E56F5CF00C29A49 /* Config.swift */; };
+		58A6EB8B1E56F5CF00C29A49 /* CoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB871E56F5CF00C29A49 /* CoreService.swift */; };
+		58A6EB8D1E56F66D00C29A49 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB8C1E56F66D00C29A49 /* Key.swift */; };
+		58A6EB901E5858E700C29A49 /* aws.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58A6EB8F1E5858E700C29A49 /* aws.bundle */; };
 		F9AB810CBC94F21B55C4C54F /* Pods_whereimTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E406CB010A4BCE20D71AD2 /* Pods_whereimTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +65,12 @@
 		58568FD31E51ADF2002FAD41 /* whereimUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = whereimUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FD71E51ADF2002FAD41 /* whereimUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = whereimUITests.swift; sourceTree = "<group>"; };
 		58568FD91E51ADF2002FAD41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaController.swift; sourceTree = "<group>"; };
+		58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelListController.swift; sourceTree = "<group>"; };
+		58A6EB861E56F5CF00C29A49 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		58A6EB871E56F5CF00C29A49 /* CoreService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreService.swift; sourceTree = "<group>"; };
+		58A6EB8C1E56F66D00C29A49 /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		58A6EB8F1E5858E700C29A49 /* aws.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = aws.bundle; sourceTree = "<group>"; };
 		704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7959DEF4F849C6B55348887F /* Pods-whereimUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimUITests/Pods-whereimUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -140,10 +152,16 @@
 			isa = PBXGroup;
 			children = (
 				58568FB41E51ADF2002FAD41 /* AppDelegate.swift */,
+				58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */,
 				58568FB61E51ADF2002FAD41 /* LoginController.swift */,
+				58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */,
+				58A6EB871E56F5CF00C29A49 /* CoreService.swift */,
+				58A6EB861E56F5CF00C29A49 /* Config.swift */,
+				58A6EB8C1E56F66D00C29A49 /* Key.swift */,
 				58568FB81E51ADF2002FAD41 /* Main.storyboard */,
 				58568FBE1E51ADF2002FAD41 /* Assets.xcassets */,
 				58568FC01E51ADF2002FAD41 /* LaunchScreen.storyboard */,
+				58A6EB8F1E5858E700C29A49 /* aws.bundle */,
 				58568FC31E51ADF2002FAD41 /* Info.plist */,
 				58568FBB1E51ADF2002FAD41 /* whereim.xcdatamodeld */,
 			);
@@ -285,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58568FC21E51ADF2002FAD41 /* LaunchScreen.storyboard in Resources */,
+				58A6EB901E5858E700C29A49 /* aws.bundle in Resources */,
 				58568FBF1E51ADF2002FAD41 /* Assets.xcassets in Resources */,
 				58568FBA1E51ADF2002FAD41 /* Main.storyboard in Resources */,
 			);
@@ -451,7 +470,12 @@
 			files = (
 				58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */,
 				58568FBD1E51ADF2002FAD41 /* whereim.xcdatamodeld in Sources */,
+				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,
+				58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */,
+				58A6EB8D1E56F66D00C29A49 /* Key.swift in Sources */,
+				58A6EB8B1E56F5CF00C29A49 /* CoreService.swift in Sources */,
+				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

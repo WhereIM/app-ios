@@ -18,11 +18,24 @@ PODS:
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.19.0):
     - FBSDKCoreKit
+  - Moscapsule (0.5.2)
+  - OpenSSL-Universal (1.0.1.20)
 
 DEPENDENCIES:
   - Alamofire (~> 4.3)
   - FacebookCore
   - FacebookLogin
+  - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
+  - OpenSSL-Universal (~> 1.0.1.18)
+
+EXTERNAL SOURCES:
+  Moscapsule:
+    :git: https://github.com/flightonary/Moscapsule.git
+
+CHECKOUT OPTIONS:
+  Moscapsule:
+    :commit: c7025ecde754c7d080cbb7c374ca0d4041b43bf6
+    :git: https://github.com/flightonary/Moscapsule.git
 
 SPEC CHECKSUMS:
   Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
@@ -31,7 +44,9 @@ SPEC CHECKSUMS:
   FacebookLogin: c9d606504735780a9e3002465a615512e0a691a5
   FBSDKCoreKit: 894b2b6eda6a4c8c4204e92e59cc355709ef045c
   FBSDKLoginKit: 83ca4d8f12a2022570af9fd6aacf27f6b425b99f
+  Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
+  OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
 
-PODFILE CHECKSUM: d91143de246c940dbd1e6f1f2d1fe65aff85cd7f
+PODFILE CHECKSUM: fc6729ce8e88739bf755071154cc37233cf3b641
 
 COCOAPODS: 1.2.0
