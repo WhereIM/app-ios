@@ -15,6 +15,10 @@ protocol RegisterClientCallback {
     func onDone()
 }
 
+protocol ChannelListChangedListener {
+    func channelListChanged()
+}
+
 class CoreService {
     private static var service: CoreService?
 
@@ -41,25 +45,33 @@ class CoreService {
         }
     }
 
-    func printFile(_ path: String) {
-        print("printFile \(path)")
-        do {
-            let string = try String(contentsOfFile: path, encoding: .utf8)
-            print(string)
-        } catch {
-            print("error")
-        }
-    }
-
     var mqttClient: MQTTClient?
     func onAuthed() {
         let mqttConfig = MQTTConfig(clientId: clientId!, host: Config.AWS_IOT_MQTT_ENDPOINT, port: Int32(Config.AWS_IOT_MQTT_PORT), keepAlive: 60)
         mqttConfig.cleanSession = true
         mqttConfig.onConnectCallback = { returnCode in
-            NSLog("Return Code is \(returnCode.description)")
+            if returnCode != .success {
+                return
+            }
+            self.mqttOnConnected()
         }
-        mqttConfig.onMessageCallback = { mqttMessage in
-            NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
+        do {
+            let clientChannelPattern = try NSRegularExpression(pattern: "^client/([^/]+)/([^/]+)/get$", options: [])
+            mqttConfig.onMessageCallback = { mqttMessage in
+                NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
+                do {
+                    let data = try JSONSerialization.jsonObject(with: mqttMessage.payload, options: []) as! NSDictionary
+                    let matches = clientChannelPattern.matches(in: mqttMessage.topic, options: [], range: NSMakeRange(0, mqttMessage.topic.characters.count))
+                    if matches.count > 0 {
+                        self.mqttClientChannelHandler(data)
+                        return
+                    }
+                } catch {
+                    print("error decoding message")
+                }
+            }
+        } catch {
+            print("error preparing message callback")
         }
         mqttConfig.onDisconnectCallback = { reasonCode in
             NSLog("Reason Code is \(reasonCode.description)")
@@ -76,6 +88,35 @@ class CoreService {
         mqttConfig.mqttTlsOpts = MQTTTlsOpts(tls_insecure: false, cert_reqs: .ssl_verify_peer, tls_version: "tlsv1.2", ciphers: nil)
 
         mqttClient = MQTT.newConnection(mqttConfig)
+    }
+
+    func mqttOnConnected() {
+        subscribe("client/\(clientId!)/+/get")
+        publish("client/\(clientId!)/channel/sync", [Key.TS: 0])
+    }
+
+    var channelMap = [String:Channel]()
+    var channelList = [Channel]()
+    func mqttClientChannelHandler(_ data: NSDictionary) {
+        let channel_id = data[Key.CHANNEL] as! String
+        var channel = channelMap[channel_id]
+        if channel == nil {
+            channel = Channel()
+            channel!.id = channel_id
+            channel!.channel_name = data["channel_name"] as! String? ?? channel!.channel_name
+            channel!.user_channel_name = data["channel_name"] as! String? ?? channel!.user_channel_name
+            channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
+            if let enable = data[Key.ENABLE] as! Bool? {
+                channel!.enable = enable
+            }
+            channelMap[channel_id] = channel
+
+            channelList.append(channel!)
+
+            for cb in channelListChangedListener {
+                cb.value.channelListChanged()
+            }
+        }
     }
 
     func getClientId() -> String? {
@@ -133,12 +174,46 @@ class CoreService {
 
                                 callback.onDone()
                             } catch {
-                                print("error")
+                                print("error writing key/crt")
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    func getChannelList() -> [Channel] {
+        return channelList
+    }
+
+    var acc = 0
+    var channelListChangedListener = [Int:ChannelListChangedListener]()
+    func addChannelListChangedListener(_ callback: ChannelListChangedListener) -> Int {
+        acc += 1
+
+        channelListChangedListener[acc] = callback
+        callback.channelListChanged()
+        return acc
+    }
+
+    func removeChannelListChangedListener(_ key: Int?) {
+        if let k = key {
+            channelListChangedListener.removeValue(forKey: k)
+        }
+    }
+
+    func publish(_ topic: String, _ message: NSDictionary) {
+        do {
+            let json = try JSONSerialization.data(withJSONObject: message, options: [])
+            print("publish \(topic) \(String(data: json, encoding: .utf8)!)")
+            mqttClient!.publish(json, topic: topic, qos: 1, retain: false)
+        } catch {
+            print("error in publish()")
+        }
+    }
+
+    func subscribe(_ topicFilter: String) {
+        mqttClient!.subscribe(topicFilter, qos: 1)
     }
 }
