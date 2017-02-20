@@ -19,6 +19,10 @@ protocol ChannelListChangedListener {
     func channelListChanged()
 }
 
+protocol MapDataReceiver {
+    func onMateData(_ mate: Mate)
+}
+
 class CoreService {
     private static var service: CoreService?
 
@@ -45,6 +49,7 @@ class CoreService {
         }
     }
 
+    var mqttConnected = false
     var mqttClient: MQTTClient?
     func onAuthed() {
         let mqttConfig = MQTTConfig(clientId: clientId!, host: Config.AWS_IOT_MQTT_ENDPOINT, port: Int32(Config.AWS_IOT_MQTT_PORT), keepAlive: 60)
@@ -53,27 +58,20 @@ class CoreService {
             if returnCode != .success {
                 return
             }
+            self.mqttConnected = true
             self.mqttOnConnected()
         }
-        do {
-            let clientChannelPattern = try NSRegularExpression(pattern: "^client/([^/]+)/([^/]+)/get$", options: [])
-            mqttConfig.onMessageCallback = { mqttMessage in
-                NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
-                do {
-                    let data = try JSONSerialization.jsonObject(with: mqttMessage.payload, options: []) as! NSDictionary
-                    let matches = clientChannelPattern.matches(in: mqttMessage.topic, options: [], range: NSMakeRange(0, mqttMessage.topic.characters.count))
-                    if matches.count > 0 {
-                        self.mqttClientChannelHandler(data)
-                        return
-                    }
-                } catch {
-                    print("error decoding message")
-                }
+        mqttConfig.onMessageCallback = { mqttMessage in
+            NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
+            do {
+                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload, options: []) as! NSDictionary
+                self.mqttOnMessage(mqttMessage.topic, data)
+            } catch {
+                print("error decoding message")
             }
-        } catch {
-            print("error preparing message callback")
         }
         mqttConfig.onDisconnectCallback = { reasonCode in
+            self.mqttConnected = false
             NSLog("Reason Code is \(reasonCode.description)")
         }
 
@@ -93,6 +91,31 @@ class CoreService {
     func mqttOnConnected() {
         subscribe("client/\(clientId!)/+/get")
         publish("client/\(clientId!)/channel/sync", [Key.TS: 0])
+    }
+
+    func mqttOnMessage(_ topic: String, _ data: NSDictionary) {
+        do {
+            let clientChannelPattern = try NSRegularExpression(pattern: "^client/[a-f0-9]{32}/([^/]+)/get$", options: [])
+            if let match = clientChannelPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
+                let t = (topic as NSString).substring(with: match.rangeAt(1))
+                switch t {
+                case "unicast":
+                    mqttOnMessage(data["topic"] as! String, data["message"] as! NSDictionary)
+                case "channel":
+                    self.mqttClientChannelHandler(data)
+                default:
+                    break
+                }
+                return
+            }
+            let channelLocationPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/location/([^/]+)/get$", options: [])
+            if let match = channelLocationPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
+                let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
+                mqttChannelLocationHandler(channel_id, data)
+            }
+        } catch {
+            print("error in mqttOnMessage")
+        }
     }
 
     var channelMap = [String:Channel]()
@@ -117,6 +140,34 @@ class CoreService {
                 cb.value.channelListChanged()
             }
         }
+    }
+
+    func mqttChannelLocationHandler(_ channel_id: String, _ data: NSDictionary) {
+        let mate_id = data[Key.MATE] as! String
+        let mate = getChannelMate(channel_id, mate_id)
+        mate.channel_id = channel_id
+//        mate.mate_name = data[Key.MATE_NAME] as! String ?? mate.mate_name
+//       mate.user_mate_name = data[Key.USER_MATE_NAME] as! String ?? mate.user_mate_name
+        mate.latitude = data[Key.LATITUDE] as! Double? ?? mate.latitude
+        mate.longitude = data[Key.LONGITUDE] as! Double? ?? mate.longitude
+        mate.accuracy = data[Key.ACCURACY] as! Double? ?? mate.accuracy
+
+        for receiver in (mapDataReceiver[channel_id]?.values)! {
+            receiver.onMateData(mate)
+        }
+    }
+
+    var channelMate = [String:[String:Mate]]()
+    func getChannelMate(_ channel_id: String, _ mate_id: String) -> Mate {
+        if channelMate[channel_id] == nil {
+            channelMate[channel_id] = [String:Mate]()
+        }
+        if channelMate[channel_id]![mate_id] == nil {
+            let mate = Mate()
+            mate.id = mate_id
+            channelMate[channel_id]![mate_id] = mate
+        }
+        return channelMate[channel_id]![mate_id]!
     }
 
     func getClientId() -> String? {
@@ -203,6 +254,40 @@ class CoreService {
         }
     }
 
+    var mapDataReceiver = [String:[Int:MapDataReceiver]]()
+    var openedChannel = [String]()
+    func openMap(channel: Channel, receiver: MapDataReceiver) -> Int? {
+        if !mqttConnected {
+            return nil
+        }
+        openedChannel.append(channel.id!)
+        if mapDataReceiver[channel.id!] == nil {
+            mapDataReceiver[channel.id!] = [Int:MapDataReceiver]()
+        }
+        acc += 1
+        mapDataReceiver[channel.id!]![acc] = receiver
+
+        subscribeChannelLocation(channel_id: channel.id!)
+
+        return acc
+    }
+
+    func closeMap(channel: Channel, key: Int) {
+        unsubscribeChannelLocation(channel_id: channel.id!)
+        if mapDataReceiver[channel.id!] == nil {
+            return
+        }
+        mapDataReceiver[channel.id!]!.removeValue(forKey: key)
+    }
+
+    func subscribeChannelLocation(channel_id: String) {
+        subscribe("channel/\(channel_id)/location/private/get")
+    }
+
+    func unsubscribeChannelLocation(channel_id: String) {
+        unsubscribe("channel/\(channel_id)/location/private/get")
+    }
+
     func publish(_ topic: String, _ message: NSDictionary) {
         do {
             let json = try JSONSerialization.data(withJSONObject: message, options: [])
@@ -215,5 +300,9 @@ class CoreService {
 
     func subscribe(_ topicFilter: String) {
         mqttClient!.subscribe(topicFilter, qos: 1)
+    }
+
+    func unsubscribe(_ topicFilter: String) {
+        mqttClient!.unsubscribe(topicFilter)
     }
 }

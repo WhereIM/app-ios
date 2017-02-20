@@ -8,6 +8,8 @@
 
 
 class Config {
+    static let GOOGLE_MAP_KEY = "AIzaSyAtP4_TFI7E_88lUQQTo9NBqJvF9KcC8HA"
+
     static let FACEBOOK_SLUG = "facebook"
 
     static let CAPTCHA_URL = "https://where.im/captcha.html"
