@@ -77,10 +77,10 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
 
     var markerMarker = [String:GMSMarker]()
     func onMarkerData(_ marker: Marker) {
-        if let m = markerMarker[marker.id!] {
-            m.map = nil
-        }
         DispatchQueue.main.async {
+            if let m = self.markerMarker[marker.id!] {
+                m.map = nil
+            }
             if marker.enable == true {
                 let m = GMSMarker()
                 m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
@@ -88,6 +88,8 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
                 m.title = marker.name
                 m.icon = marker.getIcon()
                 m.map = self.mapView
+
+                self.markerMarker[marker.id!] = m
             }
         }
     }
