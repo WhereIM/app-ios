@@ -54,6 +54,10 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         mapView!.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        mapView!.removeObserver(self, forKeyPath: "myLocation")
+    }
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if !didFindMyLocation {
             let myLocation = change?[NSKeyValueChangeKey.newKey] as! CLLocation
