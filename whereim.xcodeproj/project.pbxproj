@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */; };
+		5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33A1E5CB95600A7EB0E /* Marker.swift */; };
 		58483BC3F34B2978F0A0DED9 /* Pods_whereimUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */; };
 		58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB41E51ADF2002FAD41 /* AppDelegate.swift */; };
 		58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB61E51ADF2002FAD41 /* LoginController.swift */; };
@@ -57,6 +58,7 @@
 		4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereimUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F5BC4E91993D704AA8B9A80 /* Pods-whereimTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimTests/Pods-whereimTests.debug.xcconfig"; sourceTree = "<group>"; };
 		580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleMapController.swift; sourceTree = "<group>"; };
+		5831E33A1E5CB95600A7EB0E /* Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		58568FB11E51ADF2002FAD41 /* whereim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = whereim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FB41E51ADF2002FAD41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		58568FB61E51ADF2002FAD41 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 			children = (
 				58A6EB991E5897BA00C29A49 /* Channel.swift */,
 				58E347A61E5A18F00025211B /* Mate.swift */,
+				5831E33A1E5CB95600A7EB0E /* Marker.swift */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -504,6 +507,7 @@
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */,
+				5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

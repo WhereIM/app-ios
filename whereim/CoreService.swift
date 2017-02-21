@@ -21,6 +21,7 @@ protocol ChannelListChangedListener {
 
 protocol MapDataReceiver {
     func onMateData(_ mate: Mate)
+    func onMarkerData(_ marker: Marker)
 }
 
 class CoreService {
@@ -155,7 +156,34 @@ class CoreService {
     func mqttChannelEnchantmentHandler(_ data: NSDictionary) {
     }
 
+    var channelMarker = [String:[String:Marker]]()
     func mqttChannelMarkerHandler(_ data: NSDictionary) {
+        let marker_id = data[Key.ID] as! String
+        let channel_id = data[Key.CHANNEL] as! String
+
+        if channelMarker[channel_id] == nil {
+            channelMarker[channel_id] = [String:Marker]()
+        }
+
+        if channelMarker[channel_id]![marker_id] == nil {
+            channelMarker[channel_id]![marker_id] = Marker()
+        }
+
+        let marker = channelMarker[channel_id]![marker_id]!
+        marker.id = marker_id
+        marker.channel_id = channel_id
+        marker.name = data[Key.NAME] as? String ?? marker.name
+        marker.latitude = data[Key.LATITUDE] as? Double ?? marker.latitude
+        marker.longitude = data[Key.LONGITUDE] as? Double ?? marker.longitude
+        marker.attr = data[Key.ATTR] as? NSDictionary
+        marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
+        marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
+
+        if let receivers = mapDataReceiver[channel_id]?.values {
+            for receiver in receivers {
+                receiver.onMarkerData(marker)
+            }
+        }
     }
 
 
@@ -312,6 +340,12 @@ class CoreService {
         mapDataReceiver[channel.id!]![acc] = receiver
 
         subscribeChannelLocation(channel_id: channel.id!)
+
+        if let markers = channelMarker[channel.id!] {
+            for marker in markers.values {
+                receiver.onMarkerData(marker)
+            }
+        }
 
         return acc
     }

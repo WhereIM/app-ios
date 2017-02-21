@@ -33,14 +33,14 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         markerTemplate.alignment = .center
         markerTemplate.distribution = .fill
         markerTemplateText.adjustsFontSizeToFitWidth = false
-        markerTemplateIcon.image = UIImage(named: "icon_mate.png")
+        markerTemplateIcon.image = UIImage(named: "icon_mate")
         markerTemplateIcon.contentMode = .center
         markerTemplate.addArrangedSubview(markerTemplateText)
         markerTemplate.addArrangedSubview(markerTemplateIcon)
     }
 
     override func viewDidLoad() {
-        let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 2)
+        let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.isMyLocationEnabled = true
         mapView!.accessibilityElementsHidden = false
@@ -62,7 +62,7 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if !didFindMyLocation {
             let myLocation = change?[NSKeyValueChangeKey.newKey] as! CLLocation
-            mapView!.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 10.0)
+            mapView!.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 15.0)
             mapView!.settings.myLocationButton = true
 
             didFindMyLocation = true
@@ -75,20 +75,36 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         }
     }
 
+    var markerMarker = [String:GMSMarker]()
+    func onMarkerData(_ marker: Marker) {
+        if let m = markerMarker[marker.id!] {
+            m.map = nil
+        }
+        DispatchQueue.main.async {
+            if marker.enable == true {
+                let m = GMSMarker()
+                m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
+                m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+                m.title = marker.name
+                m.icon = marker.getIcon()
+                m.map = self.mapView
+            }
+        }
+    }
+
     var mateMarker = [String:GMSMarker]()
     func onMateData(_ mate: Mate) {
-        if let marker = mateMarker[mate.id!] {
+        if let m = mateMarker[mate.id!] {
             if mate.latitude != nil {
-                marker.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
             }
         } else {
             DispatchQueue.main.async {
                 if mate.latitude != nil {
-                    let marker = GMSMarker()
-                    marker.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                    marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-                    marker.title = mate.mate_name
-                    marker.map = self.mapView
+                    let m = GMSMarker()
+                    m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                    m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+                    m.map = self.mapView
                     self.markerTemplateText.text = mate.getDisplayName()
 
                     self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
@@ -99,7 +115,7 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
                         self.markerTemplate.layer.render(in: currentContext)
                         var imageMarker = UIImage()
                         imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
-                        marker.icon = imageMarker
+                        m.icon = imageMarker
                     }
                     UIGraphicsEndImageContext()
                 }
