@@ -112,14 +112,36 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         }
     }
 
+    var mateCircle = [String:GMSCircle]()
     var mateMarker = [String:GMSMarker]()
     func onMateData(_ mate: Mate) {
-        if let m = mateMarker[mate.id!] {
-            if mate.latitude != nil {
-                m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+        DispatchQueue.main.async {
+            if let c = self.mateCircle[mate.id!] {
+                if mate.latitude != nil {
+                    c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                    c.radius = mate.accuracy!
+                } else {
+                    c.map = nil
+                    self.mateCircle.removeValue(forKey: mate.id!)
+                }
+            } else {
+                if mate.latitude != nil {
+                    let c = GMSCircle()
+                    c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                    c.radius = mate.accuracy!
+                    c.strokeColor = .blue
+                    c.map = self.mapView
+                    self.mateCircle[mate.id!] = c
+                }
             }
-        } else {
-            DispatchQueue.main.async {
+            if let m = self.mateMarker[mate.id!] {
+                if mate.latitude != nil {
+                    m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                } else {
+                    m.map = nil
+                    self.mateMarker.removeValue(forKey: mate.id!)
+                }
+            } else {
                 if mate.latitude != nil {
                     let m = GMSMarker()
                     m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
@@ -138,6 +160,8 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
                         m.icon = imageMarker
                     }
                     UIGraphicsEndImageContext()
+
+                    self.mateMarker[mate.id!] = m
                 }
             }
         }
