@@ -372,6 +372,12 @@ class CoreService {
 
         subscribeChannelLocation(channel_id: channel.id!)
 
+        if let enchantments = channelEnchantment[channel.id!] {
+            for enchantment in enchantments.values {
+                receiver.onEnchantmentData(enchantment)
+            }
+        }
+
         if let markers = channelMarker[channel.id!] {
             for marker in markers.values {
                 receiver.onMarkerData(marker)
