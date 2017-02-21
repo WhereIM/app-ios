@@ -75,6 +75,24 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         }
     }
 
+    var enchantmentCirclr = [String:GMSCircle]()
+    func onEnchantmentData(_ enchantment: Enchantment) {
+        DispatchQueue.main.async {
+            if let c = self.enchantmentCirclr[enchantment.id!] {
+                c.map = nil
+            }
+            if enchantment.enable == true {
+                let c = GMSCircle()
+                c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
+                c.radius = enchantment.radius!
+                c.strokeColor = .red
+                c.map = self.mapView
+
+                self.enchantmentCirclr[enchantment.id!] = c
+            }
+        }
+    }
+
     var markerMarker = [String:GMSMarker]()
     func onMarkerData(_ marker: Marker) {
         DispatchQueue.main.async {
