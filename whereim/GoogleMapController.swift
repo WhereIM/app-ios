@@ -15,14 +15,38 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
     var didFindMyLocation = false
     var mapView: GMSMapView?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)   {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        initmarkerTamplate()
+    }
 
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)!
+        initmarkerTamplate()
+    }
+
+    var markerTemplate = UIStackView()
+    var markerTemplateText = UILabel()
+    var markerTemplateIcon = UIImageView()
+    func initmarkerTamplate() {
+        markerTemplate.axis = .vertical
+        markerTemplate.alignment = .center
+        markerTemplate.distribution = .fill
+        markerTemplateText.adjustsFontSizeToFitWidth = false
+        markerTemplateIcon.image = UIImage(named: "icon_mate.png")
+        markerTemplateIcon.contentMode = .center
+        markerTemplate.addArrangedSubview(markerTemplateText)
+        markerTemplate.addArrangedSubview(markerTemplateIcon)
+    }
+
+    override func viewDidLoad() {
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 2)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.isMyLocationEnabled = true
         mapView!.accessibilityElementsHidden = false
         self.view = mapView
+
+        super.viewDidLoad()
 
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -54,12 +78,26 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
             }
         } else {
             DispatchQueue.main.async {
-                let marker = GMSMarker()
                 if mate.latitude != nil {
+                    let marker = GMSMarker()
                     marker.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                    marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+                    marker.title = mate.mate_name
+                    marker.map = self.mapView
+                    self.markerTemplateText.text = mate.mate_name ?? mate.id!
+
+                    self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
+
+                    UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
+                    if let currentContext = UIGraphicsGetCurrentContext()
+                    {
+                        self.markerTemplate.layer.render(in: currentContext)
+                        var imageMarker = UIImage()
+                        imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
+                        marker.icon = imageMarker
+                    }
+                    UIGraphicsEndImageContext()
                 }
-                marker.title = mate.mate_name
-                marker.map = self.mapView
             }
         }
     }
