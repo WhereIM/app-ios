@@ -19,4 +19,8 @@ class Mate {
     var bearing: Double?
     var speed: Double?
     var time: UInt64?
+
+    func getDisplayName() -> String? {
+        return user_mate_name ?? mate_name
+    }
 }

@@ -113,10 +113,51 @@ class CoreService {
                 let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
                 mqttChannelLocationHandler(channel_id, data)
             }
+            let channelDataPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/data/([^/]+)/get$", options: [])
+            if let match = channelDataPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
+                let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
+                let category = (topic as NSString).substring(with: match.rangeAt(2))
+                switch category {
+                case "mate":
+                    mqttChannelMateHandler(channel_id, data)
+                case "message":
+                    mqttChannelMessageHandler(channel_id, data, true)
+                case "enchantment":
+                    mqttChannelEnchantmentHandler(data)
+                case "marker":
+                    mqttChannelMarkerHandler(data)
+                default:
+                    break
+                }
+            }
         } catch {
             print("error in mqttOnMessage")
         }
     }
+
+    func mqttChannelMateHandler(_ channel_id: String, _ data: NSDictionary) {
+        let mate_id = data[Key.ID] as! String
+        let mate = getChannelMate(channel_id, mate_id)
+
+        mate.mate_name = data[Key.MATE_NAME] as? String ?? mate.mate_name
+        mate.user_mate_name = data[Key.USER_MATE_NAME] as? String ?? mate.user_mate_name
+
+        if let receivers = mapDataReceiver[channel_id]?.values {
+            for receiver in receivers {
+                receiver.onMateData(mate)
+            }
+        }
+    }
+
+    func mqttChannelMessageHandler(_ channel_id: String, _ data: NSDictionary, _ isPublic: Bool) {
+    }
+
+    func mqttChannelEnchantmentHandler(_ data: NSDictionary) {
+    }
+
+    func mqttChannelMarkerHandler(_ data: NSDictionary) {
+    }
+
 
     var channelMap = [String:Channel]()
     var channelList = [Channel]()
@@ -126,19 +167,22 @@ class CoreService {
         if channel == nil {
             channel = Channel()
             channel!.id = channel_id
-            channel!.channel_name = data["channel_name"] as! String? ?? channel!.channel_name
-            channel!.user_channel_name = data["channel_name"] as! String? ?? channel!.user_channel_name
-            channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
-            if let enable = data[Key.ENABLE] as! Bool? {
-                channel!.enable = enable
-            }
             channelMap[channel_id] = channel
-
             channelList.append(channel!)
+        }
+        channel!.channel_name = data["channel_name"] as! String? ?? channel!.channel_name
+        channel!.user_channel_name = data["channel_name"] as! String? ?? channel!.user_channel_name
+        channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
+        if let enable = data[Key.ENABLE] as! Bool? {
+            channel!.enable = enable
+        }
 
-            for cb in channelListChangedListener {
-                cb.value.channelListChanged()
-            }
+        subscribe("channel/\(channel_id)/data/+/get")
+
+        publish("client/\(clientId!)/channel_data/sync", [Key.TS: 0, Key.CHANNEL: channel_id])
+
+        for cb in channelListChangedListener {
+            cb.value.channelListChanged()
         }
     }
 
@@ -146,14 +190,14 @@ class CoreService {
         let mate_id = data[Key.MATE] as! String
         let mate = getChannelMate(channel_id, mate_id)
         mate.channel_id = channel_id
-//        mate.mate_name = data[Key.MATE_NAME] as! String ?? mate.mate_name
-//       mate.user_mate_name = data[Key.USER_MATE_NAME] as! String ?? mate.user_mate_name
         mate.latitude = data[Key.LATITUDE] as! Double? ?? mate.latitude
         mate.longitude = data[Key.LONGITUDE] as! Double? ?? mate.longitude
         mate.accuracy = data[Key.ACCURACY] as! Double? ?? mate.accuracy
 
-        for receiver in (mapDataReceiver[channel_id]?.values)! {
-            receiver.onMateData(mate)
+        if let receivers = mapDataReceiver[channel_id]?.values {
+            for receiver in receivers {
+                receiver.onMateData(mate)
+            }
         }
     }
 
@@ -298,11 +342,18 @@ class CoreService {
         }
     }
 
+    var subscribedTopics = [String]()
     func subscribe(_ topicFilter: String) {
+        if subscribedTopics.index(of: topicFilter) != nil {
+            return
+        }
         mqttClient!.subscribe(topicFilter, qos: 1)
     }
 
     func unsubscribe(_ topicFilter: String) {
         mqttClient!.unsubscribe(topicFilter)
+        if let index = subscribedTopics.index(of: topicFilter) {
+            subscribedTopics.remove(at: index)
+        }
     }
 }

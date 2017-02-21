@@ -89,7 +89,7 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
                     marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
                     marker.title = mate.mate_name
                     marker.map = self.mapView
-                    self.markerTemplateText.text = mate.mate_name ?? mate.id!
+                    self.markerTemplateText.text = mate.getDisplayName()
 
                     self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
 
