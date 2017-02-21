@@ -175,7 +175,9 @@ class CoreService {
         marker.name = data[Key.NAME] as? String ?? marker.name
         marker.latitude = data[Key.LATITUDE] as? Double ?? marker.latitude
         marker.longitude = data[Key.LONGITUDE] as? Double ?? marker.longitude
-        marker.attr = data[Key.ATTR] as? NSDictionary
+        if data[Key.ATTR] != nil {
+            marker.attr = data[Key.ATTR] as? NSDictionary
+        }
         marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
         marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
 
