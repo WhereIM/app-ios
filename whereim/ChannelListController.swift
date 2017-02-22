@@ -41,6 +41,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
 class ChannelListController: UIViewController, ChannelListChangedListener {
     var service: CoreService?
+    var cbkey: Int?
 
     @IBOutlet weak var channelListView: UITableView!
 
@@ -54,7 +55,6 @@ class ChannelListController: UIViewController, ChannelListChangedListener {
         channelListView.delegate = adapter
     }
 
-    var cbkey: Int?
     override func viewDidAppear(_ animated: Bool) {
         if service!.getClientId() == nil {
             let vc = storyboard?.instantiateViewController(withIdentifier: "login")
@@ -64,8 +64,10 @@ class ChannelListController: UIViewController, ChannelListChangedListener {
         cbkey = service!.addChannelListChangedListener(self)
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        service!.removeChannelListChangedListener(cbkey)
+    deinit {
+        if let sv = service {
+            sv.removeChannelListChangedListener(cbkey)
+        }
     }
 
     func channelListChanged() {

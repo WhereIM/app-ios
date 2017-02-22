@@ -6,6 +6,11 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+class EnchantmentList {
+    var public_list = [Enchantment]()
+    var private_list = [Enchantment]()
+}
+
 class Enchantment {
     var id: String?
     var channel_id: String?

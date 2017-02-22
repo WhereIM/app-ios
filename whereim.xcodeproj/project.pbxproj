@@ -10,6 +10,8 @@
 		580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */; };
 		5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33A1E5CB95600A7EB0E /* Marker.swift */; };
 		5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33C1E5CC96500A7EB0E /* Enchantment.swift */; };
+		5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */; };
+		5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E3401E5D632900A7EB0E /* MarkerController.swift */; };
 		58483BC3F34B2978F0A0DED9 /* Pods_whereimUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */; };
 		58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB41E51ADF2002FAD41 /* AppDelegate.swift */; };
 		58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB61E51ADF2002FAD41 /* LoginController.swift */; };
@@ -61,6 +63,8 @@
 		580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleMapController.swift; sourceTree = "<group>"; };
 		5831E33A1E5CB95600A7EB0E /* Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		5831E33C1E5CC96500A7EB0E /* Enchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enchantment.swift; sourceTree = "<group>"; };
+		5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnchantmentController.swift; sourceTree = "<group>"; };
+		5831E3401E5D632900A7EB0E /* MarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerController.swift; sourceTree = "<group>"; };
 		58568FB11E51ADF2002FAD41 /* whereim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = whereim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FB41E51ADF2002FAD41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		58568FB61E51ADF2002FAD41 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 				58E347A81E5A23F20025211B /* ChannelController.swift */,
 				58E347A41E5A183D0025211B /* MapController.swift */,
 				580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */,
+				5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */,
+				5831E3401E5D632900A7EB0E /* MarkerController.swift */,
 				58A6EB871E56F5CF00C29A49 /* CoreService.swift */,
 				58A6EB861E56F5CF00C29A49 /* Config.swift */,
 				58A6EB8C1E56F66D00C29A49 /* Key.swift */,
@@ -510,8 +516,10 @@
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */,
+				5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */,
 				5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */,
 				5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */,
+				5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

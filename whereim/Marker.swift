@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+class MarkerList {
+    var public_list = [Marker]()
+    var private_list = [Marker]()
+}
+
 class Marker {
     var id: String?
     var channel_id: String?
