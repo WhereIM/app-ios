@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */; };
+		581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */; };
 		5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33A1E5CB95600A7EB0E /* Marker.swift */; };
 		5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33C1E5CC96500A7EB0E /* Enchantment.swift */; };
 		5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */; };
@@ -22,6 +23,9 @@
 		58568FCD1E51ADF2002FAD41 /* whereimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FCC1E51ADF2002FAD41 /* whereimTests.swift */; };
 		58568FD81E51ADF2002FAD41 /* whereimUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FD71E51ADF2002FAD41 /* whereimUITests.swift */; };
 		58568FE51E542E1D002FAD41 /* Pods_whereim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		5895F8541E5F638B00E00F02 /* AUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8531E5F638B00E00F02 /* AUIView.swift */; };
+		5895F8561E5F63B100E00F02 /* UICompactStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8551E5F63B100E00F02 /* UICompactStackView.swift */; };
+		5895F8581E5F671000E00F02 /* UIFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8571E5F671000E00F02 /* UIFrameView.swift */; };
 		58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */; };
 		58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */; };
 		58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB861E56F5CF00C29A49 /* Config.swift */; };
@@ -61,6 +65,7 @@
 		4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereimUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F5BC4E91993D704AA8B9A80 /* Pods-whereimTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimTests/Pods-whereimTests.debug.xcconfig"; sourceTree = "<group>"; };
 		580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleMapController.swift; sourceTree = "<group>"; };
+		581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILoadingSwitch.swift; sourceTree = "<group>"; };
 		5831E33A1E5CB95600A7EB0E /* Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		5831E33C1E5CC96500A7EB0E /* Enchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enchantment.swift; sourceTree = "<group>"; };
 		5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnchantmentController.swift; sourceTree = "<group>"; };
@@ -79,6 +84,9 @@
 		58568FD31E51ADF2002FAD41 /* whereimUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = whereimUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FD71E51ADF2002FAD41 /* whereimUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = whereimUITests.swift; sourceTree = "<group>"; };
 		58568FD91E51ADF2002FAD41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5895F8531E5F638B00E00F02 /* AUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUIView.swift; sourceTree = "<group>"; };
+		5895F8551E5F63B100E00F02 /* UICompactStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICompactStackView.swift; sourceTree = "<group>"; };
+		5895F8571E5F671000E00F02 /* UIFrameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFrameView.swift; sourceTree = "<group>"; };
 		58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaController.swift; sourceTree = "<group>"; };
 		58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelListController.swift; sourceTree = "<group>"; };
 		58A6EB861E56F5CF00C29A49 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -144,6 +152,17 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		581508B41E5DFA52003DDA80 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				5895F8531E5F638B00E00F02 /* AUIView.swift */,
+				5895F8551E5F63B100E00F02 /* UICompactStackView.swift */,
+				5895F8571E5F671000E00F02 /* UIFrameView.swift */,
+				581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */,
+			);
+			name = views;
+			sourceTree = "<group>";
+		};
 		58568FA81E51ADF2002FAD41 = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +188,7 @@
 		58568FB31E51ADF2002FAD41 /* whereim */ = {
 			isa = PBXGroup;
 			children = (
+				581508B41E5DFA52003DDA80 /* views */,
 				58A6EB9C1E5897D900C29A49 /* models */,
 				58568FB41E51ADF2002FAD41 /* AppDelegate.swift */,
 				58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */,
@@ -507,6 +527,7 @@
 				58568FBD1E51ADF2002FAD41 /* whereim.xcdatamodeld in Sources */,
 				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
+				5895F8541E5F638B00E00F02 /* AUIView.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,
 				58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */,
 				58A6EB8D1E56F66D00C29A49 /* Key.swift in Sources */,
@@ -515,11 +536,14 @@
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
+				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,
 				580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */,
 				5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */,
 				5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */,
+				5895F8561E5F63B100E00F02 /* UICompactStackView.swift in Sources */,
 				5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */,
 				5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */,
+				5895F8581E5F671000E00F02 /* UIFrameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

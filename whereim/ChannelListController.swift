@@ -84,6 +84,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = channelListView.indexPathForSelectedRow {
+            navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
             let channelController = segue.destination as! ChannelController
             channelController.channel = adapter!.getChannel(indexPath.row)
         }
