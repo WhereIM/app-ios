@@ -26,7 +26,8 @@ class UICompactStackView: UIStackView, AUIView {
                     total_edge += Double(view.intrinsicContentSize.width)
                 }
             }
-            self.frame = CGRect(x: 0, y: 0, width: total_edge, height: max_edge)
+            self.widthAnchor.constraint(equalToConstant: CGFloat(total_edge))
+            self.heightAnchor.constraint(equalToConstant: CGFloat(max_edge))
         case .vertical:
             var max_edge = 0.0
             var total_edge = 0.0
@@ -42,7 +43,8 @@ class UICompactStackView: UIStackView, AUIView {
                     total_edge += Double(view.intrinsicContentSize.height)
                 }
             }
-            self.frame = CGRect(x: 0, y: 0, width: max_edge, height: total_edge)
+            self.widthAnchor.constraint(equalToConstant: CGFloat(max_edge))
+            self.heightAnchor.constraint(equalToConstant: CGFloat(total_edge))
         }
     }
 }

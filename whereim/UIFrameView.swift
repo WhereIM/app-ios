@@ -10,6 +10,7 @@ import UIKit
 
 class UIFrameView: UIView, AUIView {
     func requestLayout() {
+
         var max_width = 0.0
         var max_height = 0.0
         for view in self.subviews {
@@ -23,7 +24,8 @@ class UIFrameView: UIView, AUIView {
                 max_width = max(max_width, Double(view.intrinsicContentSize.width))
                 max_height = max(max_height, Double(view.intrinsicContentSize.height))
             }
+            self.widthAnchor.constraint(greaterThanOrEqualTo: view.widthAnchor, multiplier: 1)
+            self.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, multiplier: 1)
         }
-        self.frame = CGRect(x: 0, y: 0, width: max_width, height: max_height)
     }
 }

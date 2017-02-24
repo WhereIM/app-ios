@@ -317,8 +317,8 @@ class CoreService {
             channelMap[channel_id] = channel
             channelList.append(channel!)
         }
-        channel!.channel_name = data["channel_name"] as! String? ?? channel!.channel_name
-        channel!.user_channel_name = data["channel_name"] as! String? ?? channel!.user_channel_name
+        channel!.channel_name = data["channel_name"] as? String ?? channel!.channel_name
+        channel!.user_channel_name = data["user_channel_name"] as? String ?? channel!.user_channel_name
         channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
         if let enable = data[Key.ENABLE] as! Bool? {
             channel!.enable = enable
@@ -328,9 +328,7 @@ class CoreService {
 
         publish("client/\(clientId!)/channel_data/sync", [Key.TS: 0, Key.CHANNEL: channel_id])
 
-        for cb in channelListChangedListener {
-            cb.value.channelListChanged()
-        }
+        notifyChannelListChangedListeners()
     }
 
     func mqttChannelLocationHandler(_ channel_id: String, _ data: NSDictionary) {
@@ -429,6 +427,21 @@ class CoreService {
         return channelList
     }
 
+    func getChannel(id: String) -> Channel? {
+        return channelMap[id]
+    }
+
+    func toggleChannelEnabled(_ channel: Channel) {
+        if channel.enable == nil {
+            return
+        }
+
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ENABLE: !channel.enable!])
+        channel.enable = nil
+
+        notifyChannelListChangedListeners()
+    }
+
     let acc_lock = DispatchQueue(label: "acc")
     var acc = 0
     var channelListChangedListener = [Int:ChannelListChangedListener]()
@@ -442,13 +455,24 @@ class CoreService {
         }
 
         channelListChangedListener[key!] = callback
-        callback.channelListChanged()
+
+        DispatchQueue.main.async {
+            callback.channelListChanged()
+        }
         return key!
     }
 
     func removeChannelListChangedListener(_ key: Int?) {
         if let k = key {
             channelListChangedListener.removeValue(forKey: k)
+        }
+    }
+
+    func notifyChannelListChangedListeners() {
+        DispatchQueue.main.async {
+            for cb in self.channelListChangedListener {
+                cb.value.channelListChanged()
+            }
         }
     }
 

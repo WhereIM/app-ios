@@ -13,7 +13,7 @@ class UILoadingSwitch: UIFrameView {
     let loading = UIActivityIndicatorView()
 
     init() {
-        super.init(frame: CGRect.zero)
+        super.init(frame: .zero)
         setView()
     }
 
@@ -23,13 +23,18 @@ class UILoadingSwitch: UIFrameView {
     }
 
     func setView() {
+        loading.translatesAutoresizingMaskIntoConstraints = false
         loading.activityIndicatorViewStyle = .gray
         addSubview(uiswitch)
         addSubview(loading)
-        uiswitch.translatesAutoresizingMaskIntoConstraints = false
-        loading.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([uiswitch.centerXAnchor.constraint(equalTo: self.centerXAnchor), uiswitch.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
-        NSLayoutConstraint.activate([loading.centerXAnchor.constraint(equalTo: self.centerXAnchor), loading.centerYAnchor.constraint(equalTo: self.centerYAnchor)])
+        NSLayoutConstraint.activate([
+            uiswitch.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            uiswitch.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            loading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            loading.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            ])
     }
 
     func setEnabled(_ enable: Bool?) {
