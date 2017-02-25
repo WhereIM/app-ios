@@ -109,6 +109,10 @@ class CoreService {
                     mqttOnMessage(data["topic"] as! String, data["message"] as! NSDictionary)
                 case "channel":
                     self.mqttClientChannelHandler(data)
+                case "enchantment":
+                    mqttChannelEnchantmentHandler(data)
+                case "marker":
+                    mqttChannelMarkerHandler(data)
                 default:
                     break
                 }
@@ -148,9 +152,11 @@ class CoreService {
         mate.mate_name = data[Key.MATE_NAME] as? String ?? mate.mate_name
         mate.user_mate_name = data[Key.USER_MATE_NAME] as? String ?? mate.user_mate_name
 
-        if let receivers = mapDataReceiver[channel_id]?.values {
-            for receiver in receivers {
-                receiver.onMateData(mate)
+        DispatchQueue.main.async {
+            if let receivers = self.mapDataReceiver[channel_id] {
+                for receiver in receivers {
+                    receiver.value.onMateData(mate)
+                }
             }
         }
     }
@@ -181,11 +187,15 @@ class CoreService {
         enchantment.isPublic = data[Key.PUBLIC] as? Bool ?? enchantment.isPublic
         enchantment.enable = data[Key.ENABLE] as? Bool ?? enchantment.enable
 
-        if let receivers = mapDataReceiver[channel_id]?.values {
-            for receiver in receivers {
-                receiver.onEnchantmentData(enchantment)
+        DispatchQueue.main.async {
+            if let receivers = self.mapDataReceiver[channel_id] {
+                for receiver in receivers {
+                    receiver.value.onEnchantmentData(enchantment)
+                }
             }
         }
+
+        notifyChannelEnchantmentListChangedListeners(channel_id)
     }
 
     func getChannelEnchantment(_ channel_id: String) -> EnchantmentList {
@@ -202,23 +212,41 @@ class CoreService {
         return list
     }
 
+    func toggleEnchantmentEnabled(_ enchantment: Enchantment) {
+        if enchantment.enable == nil {
+            return
+        }
+        var topic: String?
+        if enchantment.isPublic == true {
+            topic = "channel/\(enchantment.channel_id!)/data/enchantment/put"
+        } else if enchantment.isPublic == false {
+            topic = "client/\(clientId!)/enchantment/put"
+        }
+        if topic != nil {
+            publish(topic!, [Key.ID: enchantment.id!, Key.ENABLE: !enchantment.enable!])
+            enchantment.enable = nil
+        }
+
+        notifyChannelEnchantmentListChangedListeners(enchantment.channel_id!)
+    }
+
     var enchantmentListener = [String:[Int:Callback]]()
-    func addEnchantmentListener(_ channel: Channel, _ callback: Callback) -> Int {
+    func addEnchantmentListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
         if enchantmentListener[channel.id!] == nil {
             enchantmentListener[channel.id!] = [Int:Callback]()
         }
 
-        var listeners = enchantmentListener[channel.id!]!
-
-        var key: Int?
-        acc_lock.sync {
-            while listeners[acc] != nil {
-                acc += 1
+        var key = okey
+        if key == nil{
+            acc_lock.sync {
+                while enchantmentListener[channel.id!]![acc] != nil {
+                    acc += 1
+                }
+                key = acc
             }
-            key = acc
         }
 
-        listeners[key!] = callback
+        enchantmentListener[channel.id!]![key!] = callback
 
         return acc
     }
@@ -227,6 +255,16 @@ class CoreService {
         if let k = key {
             if var listeners = enchantmentListener[channel.id!] {
                 listeners.removeValue(forKey: k)
+            }
+        }
+    }
+
+    func notifyChannelEnchantmentListChangedListeners(_ channel_id: String) {
+        DispatchQueue.main.async {
+            if let listeners = self.enchantmentListener[channel_id] {
+                for l in listeners.values {
+                    l.onCallback()
+                }
             }
         }
     }
@@ -256,44 +294,65 @@ class CoreService {
         marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
         marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
 
-        if let receivers = mapDataReceiver[channel_id]?.values {
-            for receiver in receivers {
-                receiver.onMarkerData(marker)
+        DispatchQueue.main.async {
+            if let receivers = self.mapDataReceiver[channel_id] {
+                for receiver in receivers {
+                    receiver.value.onMarkerData(marker)
+                }
             }
         }
+        notifyChannelMarkerListChangedListeners(channel_id)
     }
 
     func getChannelMarker(_ channel_id: String) -> MarkerList {
         let list = MarkerList()
         if let Markers = channelMarker[channel_id] {
-            for Marker in Markers.values {
-                if Marker.isPublic == true {
-                    list.public_list.append(Marker)
-                } else if Marker.isPublic == false {
-                    list.private_list.append(Marker)
+            for marker in Markers.values {
+                if marker.isPublic == true {
+                    list.public_list.append(marker)
+                } else if marker.isPublic == false {
+                    list.private_list.append(marker)
                 }
             }
         }
         return list
     }
 
+    func toggleMarkerEnabled(_ marker: Marker) {
+        if marker.enable == nil {
+            return
+        }
+        var topic: String?
+        if marker.isPublic == true {
+            topic = "channel/\(marker.channel_id!)/data/marker/put"
+        } else if marker.isPublic == false {
+            topic = "client/\(clientId!)/marker/put"
+        }
+        if topic != nil {
+            publish(topic!, [Key.ID: marker.id!, Key.ENABLE: !marker.enable!])
+            marker.enable = nil
+        }
+
+        notifyChannelMarkerListChangedListeners(marker.channel_id!)
+    }
+
     var markerListener = [String:[Int:Callback]]()
-    func addMarkerListener(_ channel: Channel, _ callback: Callback) -> Int {
+    func addMarkerListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
         if markerListener[channel.id!] == nil {
             markerListener[channel.id!] = [Int:Callback]()
         }
 
-        var listeners = markerListener[channel.id!]!
-
-        var key: Int?
-        acc_lock.sync {
-            while listeners[acc] != nil {
-                acc += 1
+        var key = okey
+        if key == nil{
+            acc_lock.sync {
+                while markerListener[channel.id!]![acc] != nil {
+                    acc += 1
+                }
+                key = acc
             }
-            key = acc
         }
 
-        listeners[key!] = callback
+        markerListener[channel.id!]![key!] = callback
 
         return acc
     }
@@ -302,6 +361,16 @@ class CoreService {
         if let k = key {
             if var listeners = markerListener[channel.id!] {
                 listeners.removeValue(forKey: k)
+            }
+        }
+    }
+
+    func notifyChannelMarkerListChangedListeners(_ channel_id: String) {
+        DispatchQueue.main.async {
+            if let listeners = self.markerListener[channel_id] {
+                for l in listeners {
+                    l.value.onCallback()
+                }
             }
         }
     }
@@ -339,9 +408,11 @@ class CoreService {
         mate.longitude = data[Key.LONGITUDE] as! Double? ?? mate.longitude
         mate.accuracy = data[Key.ACCURACY] as! Double? ?? mate.accuracy
 
-        if let receivers = mapDataReceiver[channel_id]?.values {
-            for receiver in receivers {
-                receiver.onMateData(mate)
+        DispatchQueue.main.async {
+            if let receivers = self.mapDataReceiver[channel_id] {
+                for receiver in receivers {
+                    receiver.value.onMateData(mate)
+                }
             }
         }
     }
@@ -445,13 +516,15 @@ class CoreService {
     let acc_lock = DispatchQueue(label: "acc")
     var acc = 0
     var channelListChangedListener = [Int:ChannelListChangedListener]()
-    func addChannelListChangedListener(_ callback: ChannelListChangedListener) -> Int {
-        var key: Int?
-        acc_lock.sync {
-            while channelListChangedListener[acc] != nil {
-                acc += 1
+    func addChannelListChangedListener(_ okey: Int?, _ callback: ChannelListChangedListener) -> Int {
+        var key = okey
+        if key == nil {
+            acc_lock.sync {
+                while channelListChangedListener[acc] != nil {
+                    acc += 1
+                }
+                key = acc
             }
-            key = acc
         }
 
         channelListChangedListener[key!] = callback
@@ -478,35 +551,36 @@ class CoreService {
 
     var mapDataReceiver = [String:[Int:MapDataReceiver]]()
     var openedChannel = [String]()
-    func openMap(channel: Channel, receiver: MapDataReceiver) -> Int? {
-        if !mqttConnected {
-            return nil
-        }
+    func openMap(_ channel: Channel, _ okey: Int?, _ receiver: MapDataReceiver) -> Int? {
         openedChannel.append(channel.id!)
         if mapDataReceiver[channel.id!] == nil {
             mapDataReceiver[channel.id!] = [Int:MapDataReceiver]()
         }
 
-        var key: Int?
-        acc_lock.sync {
-            while channelListChangedListener[acc] != nil {
-                acc += 1
+        var key = okey
+        if key == nil {
+            acc_lock.sync {
+                while mapDataReceiver[channel.id!]![acc] != nil {
+                    acc += 1
+                }
+                key = acc
             }
-            key = acc
         }
         mapDataReceiver[channel.id!]![key!] = receiver
 
         subscribeChannelLocation(channel_id: channel.id!)
 
-        if let enchantments = channelEnchantment[channel.id!] {
-            for enchantment in enchantments.values {
-                receiver.onEnchantmentData(enchantment)
+        DispatchQueue.main.async {
+            if let enchantments = self.channelEnchantment[channel.id!] {
+                for enchantment in enchantments.values {
+                    receiver.onEnchantmentData(enchantment)
+                }
             }
-        }
 
-        if let markers = channelMarker[channel.id!] {
-            for marker in markers.values {
-                receiver.onMarkerData(marker)
+            if let markers = self.channelMarker[channel.id!] {
+                for marker in markers.values {
+                    receiver.onMarkerData(marker)
+                }
             }
         }
 
@@ -515,10 +589,12 @@ class CoreService {
 
     func closeMap(channel: Channel, key: Int) {
         unsubscribeChannelLocation(channel_id: channel.id!)
-        if mapDataReceiver[channel.id!] == nil {
-            return
+        if let index = openedChannel.index(of: channel.id!) {
+            openedChannel.remove(at: index)
         }
-        mapDataReceiver[channel.id!]!.removeValue(forKey: key)
+        if mapDataReceiver[channel.id!] != nil {
+            mapDataReceiver[channel.id!]!.removeValue(forKey: key)
+        }
     }
 
     func subscribeChannelLocation(channel_id: String) {

@@ -8,10 +8,11 @@
 
 import UIKit
 
-class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDelegate, Callback {
+class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var enchantmentList: EnchantmentList
     let service: CoreService
     let channel: Channel
+    let numberOfSections = 2
 
     init(_ service: CoreService, _ channel: Channel) {
         self.service = service
@@ -29,7 +30,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return numberOfSections
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -42,30 +43,40 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! UITableViewCellWIthTextLoadingSwitch
 
-        let enchantment = getEnchantment(indexPath)!
+        let enchantment = getEnchantment(indexPath.section, indexPath.row)!
 
-        cell.textLabel?.text = enchantment.name
+        cell.title.text = enchantment.name
+        cell.loadingSwitch.setEnabled(enchantment.enable)
+        cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
+        cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 
         return cell
     }
 
-    func getEnchantment(_ index: IndexPath) -> Enchantment? {
-        switch index.section {
-        case 0: return enchantmentList.public_list[index.row]
-        case 1: return enchantmentList.private_list[index.row]
+    func switchClicked(sender: UISwitch) {
+        let row = sender.tag / numberOfSections
+        let section = sender.tag % numberOfSections
+        let enchantment = getEnchantment(section, row)!
+        service.toggleEnchantmentEnabled(enchantment)
+    }
+
+    func getEnchantment(_ section: Int, _ row: Int) -> Enchantment? {
+        switch section {
+        case 0: return enchantmentList.public_list[row]
+        case 1: return enchantmentList.private_list[row]
         default:
             return nil
         }
     }
 
-    func onCallback() {
+    func reload() {
         self.enchantmentList = service.getChannelEnchantment(channel.id!)
     }
 }
 
-class EnchantmentController: UIViewController {
+class EnchantmentController: UIViewController, Callback {
     var service: CoreService?
     var channel: Channel?
     var adapter: ChannelEnchantmentAdapter?
@@ -81,18 +92,25 @@ class EnchantmentController: UIViewController {
         
         service = CoreService.bind()
         adapter = ChannelEnchantmentAdapter((service)!, channel!)
+        enchantmentListView.allowsSelection = false
+        enchantmentListView.register(UITableViewCellWIthTextLoadingSwitch.self, forCellReuseIdentifier: "enchantment")
         enchantmentListView.dataSource = adapter
         enchantmentListView.delegate = adapter
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        cbkey = service!.addEnchantmentListener(channel!, adapter!)
+        cbkey = service!.addEnchantmentListener(channel!, cbkey, self)
     }
 
     deinit {
         if let sv = service {
             sv.removeEnchantmentListener(channel!, cbkey)
         }
+    }
+
+    func onCallback() {
+        adapter!.reload()
+        enchantmentListView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {

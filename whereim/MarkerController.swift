@@ -8,28 +8,29 @@
 
 import UIKit
 
-class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate, Callback {
-    var MarkerList: MarkerList
+class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
+    var markerList: MarkerList
     let service: CoreService
     let channel: Channel
+    let numberOfSections = 2
 
     init(_ service: CoreService, _ channel: Channel) {
         self.service = service
         self.channel = channel
-        self.MarkerList = service.getChannelMarker(channel.id!)
+        self.markerList = service.getChannelMarker(channel.id!)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return MarkerList.public_list.count
-        case 1: return MarkerList.private_list.count
+        case 0: return markerList.public_list.count
+        case 1: return markerList.private_list.count
         default:
             return 0
         }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return numberOfSections
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -42,30 +43,40 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! UITableViewCellWIthTextLoadingSwitch
 
-        let Marker = getMarker(indexPath)!
+        let marker = getMarker(indexPath.section, indexPath.row)!
 
-        cell.textLabel?.text = Marker.name
+        cell.title.text = marker.name
+        cell.loadingSwitch.setEnabled(marker.enable)
+        cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
+        cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 
         return cell
     }
 
-    func getMarker(_ index: IndexPath) -> Marker? {
-        switch index.section {
-        case 0: return MarkerList.public_list[index.row]
-        case 1: return MarkerList.private_list[index.row]
+    func switchClicked(sender: UISwitch) {
+        let row = sender.tag / numberOfSections
+        let section = sender.tag % numberOfSections
+        let marker = getMarker(section, row)!
+        service.toggleMarkerEnabled(marker)
+    }
+
+    func getMarker(_ section: Int, _ row: Int) -> Marker? {
+        switch section {
+        case 0: return markerList.public_list[row]
+        case 1: return markerList.private_list[row]
         default:
             return nil
         }
     }
 
-    func onCallback() {
-        self.MarkerList = service.getChannelMarker(channel.id!)
+    func reload() {
+        self.markerList = service.getChannelMarker(channel.id!)
     }
 }
 
-class MarkerController: UIViewController {
+class MarkerController: UIViewController, Callback {
     var service: CoreService?
     var channel: Channel?
     var adapter: ChannelMarkerAdapter?
@@ -81,18 +92,25 @@ class MarkerController: UIViewController {
 
         service = CoreService.bind()
         adapter = ChannelMarkerAdapter((service)!, channel!)
+        markerListView.allowsSelection = false
+        markerListView.register(UITableViewCellWIthTextLoadingSwitch.self, forCellReuseIdentifier: "marker")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        cbkey = service!.addMarkerListener(channel!, adapter!)
+        cbkey = service!.addMarkerListener(channel!, cbkey, self)
     }
 
     deinit {
         if let sv = service {
             sv.removeMarkerListener(channel!, cbkey)
         }
+    }
+
+    func onCallback() {
+        adapter!.reload()
+        markerListView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {

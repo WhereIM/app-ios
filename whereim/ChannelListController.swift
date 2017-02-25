@@ -9,7 +9,6 @@
 import UIKit
 
 class ChannelCell: UITableViewCell {
-    var indexPath: IndexPath?
     let titleLayout = UICompactStackView()
     let title = UILabel()
     let subtitle = UILabel()
@@ -46,8 +45,6 @@ class ChannelCell: UITableViewCell {
             loadingSwitch.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant:-15),
             loadingSwitch.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
             ])
-
-        self.layoutSubviews()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -132,7 +129,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener {
             self.present(vc!, animated: true)
             return
         }
-        cbkey = service!.addChannelListChangedListener(self)
+        cbkey = service!.addChannelListChangedListener(cbkey, self)
     }
 
     deinit {
@@ -142,10 +139,8 @@ class ChannelListController: UIViewController, ChannelListChangedListener {
     }
 
     func channelListChanged() {
-        DispatchQueue.main.async {
-            self.adapter?.reload()
-            self.channelListView.reloadData()
-        }
+        self.adapter?.reload()
+        self.channelListView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {

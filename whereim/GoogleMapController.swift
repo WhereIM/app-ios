@@ -77,92 +77,86 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
 
     var enchantmentCirclr = [String:GMSCircle]()
     func onEnchantmentData(_ enchantment: Enchantment) {
-        DispatchQueue.main.async {
-            if let c = self.enchantmentCirclr[enchantment.id!] {
-                c.map = nil
-            }
-            if enchantment.enable == true {
-                let c = GMSCircle()
-                c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
-                c.radius = enchantment.radius!
-                c.strokeColor = .red
-                c.map = self.mapView
+        if let c = self.enchantmentCirclr[enchantment.id!] {
+            c.map = nil
+        }
+        if enchantment.enable == true {
+            let c = GMSCircle()
+            c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
+            c.radius = enchantment.radius!
+            c.strokeColor = .red
+            c.map = self.mapView
 
-                self.enchantmentCirclr[enchantment.id!] = c
-            }
+            self.enchantmentCirclr[enchantment.id!] = c
         }
     }
 
     var markerMarker = [String:GMSMarker]()
     func onMarkerData(_ marker: Marker) {
-        DispatchQueue.main.async {
-            if let m = self.markerMarker[marker.id!] {
-                m.map = nil
-            }
-            if marker.enable == true {
-                let m = GMSMarker()
-                m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
-                m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-                m.title = marker.name
-                m.icon = marker.getIcon()
-                m.map = self.mapView
+        if let m = self.markerMarker[marker.id!] {
+            m.map = nil
+        }
+        if marker.enable == true {
+            let m = GMSMarker()
+            m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
+            m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+            m.title = marker.name
+            m.icon = marker.getIcon()
+            m.map = self.mapView
 
-                self.markerMarker[marker.id!] = m
-            }
+            self.markerMarker[marker.id!] = m
         }
     }
 
     var mateCircle = [String:GMSCircle]()
     var mateMarker = [String:GMSMarker]()
     func onMateData(_ mate: Mate) {
-        DispatchQueue.main.async {
-            if let c = self.mateCircle[mate.id!] {
-                if mate.latitude != nil {
-                    c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                    c.radius = mate.accuracy!
-                } else {
-                    c.map = nil
-                    self.mateCircle.removeValue(forKey: mate.id!)
-                }
+        if let c = self.mateCircle[mate.id!] {
+            if mate.latitude != nil {
+                c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                c.radius = mate.accuracy!
             } else {
-                if mate.latitude != nil {
-                    let c = GMSCircle()
-                    c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                    c.radius = mate.accuracy!
-                    c.strokeColor = .blue
-                    c.map = self.mapView
-                    self.mateCircle[mate.id!] = c
-                }
+                c.map = nil
+                self.mateCircle.removeValue(forKey: mate.id!)
             }
-            if let m = self.mateMarker[mate.id!] {
-                if mate.latitude != nil {
-                    m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                } else {
-                    m.map = nil
-                    self.mateMarker.removeValue(forKey: mate.id!)
-                }
+        } else {
+            if mate.latitude != nil {
+                let c = GMSCircle()
+                c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                c.radius = mate.accuracy!
+                c.strokeColor = .blue
+                c.map = self.mapView
+                self.mateCircle[mate.id!] = c
+            }
+        }
+        if let m = self.mateMarker[mate.id!] {
+            if mate.latitude != nil {
+                m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
             } else {
-                if mate.latitude != nil {
-                    let m = GMSMarker()
-                    m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                    m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-                    m.map = self.mapView
-                    self.markerTemplateText.text = mate.getDisplayName()
+                m.map = nil
+                self.mateMarker.removeValue(forKey: mate.id!)
+            }
+        } else {
+            if mate.latitude != nil {
+                let m = GMSMarker()
+                m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+                m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+                m.map = self.mapView
+                self.markerTemplateText.text = mate.getDisplayName()
 
-                    self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
+                self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
 
-                    UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
-                    if let currentContext = UIGraphicsGetCurrentContext()
-                    {
-                        self.markerTemplate.layer.render(in: currentContext)
-                        var imageMarker = UIImage()
-                        imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
-                        m.icon = imageMarker
-                    }
-                    UIGraphicsEndImageContext()
-
-                    self.mateMarker[mate.id!] = m
+                UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
+                if let currentContext = UIGraphicsGetCurrentContext()
+                {
+                    self.markerTemplate.layer.render(in: currentContext)
+                    var imageMarker = UIImage()
+                    imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
+                    m.icon = imageMarker
                 }
+                UIGraphicsEndImageContext()
+
+                self.mateMarker[mate.id!] = m
             }
         }
     }

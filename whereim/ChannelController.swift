@@ -21,7 +21,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener {
 
     override func viewDidLoad() {
         service = CoreService.bind()
-        cbkey = service?.addChannelListChangedListener(self)
+        cbkey = service?.addChannelListChangedListener(cbkey, self)
 
         let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
 

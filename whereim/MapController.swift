@@ -19,10 +19,10 @@ class MapController: UIViewController {
         service = CoreService.bind()
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
-        cbkey = service!.openMap(channel: channel!, receiver: self as! MapDataReceiver)
+        cbkey = service!.openMap(channel!, cbkey, self as! MapDataReceiver)
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
+    deinit {
         service!.closeMap(channel: channel!, key: cbkey!)
     }
 
