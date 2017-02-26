@@ -43,9 +43,17 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.isMyLocationEnabled = true
-        mapView!.accessibilityElementsHidden = false
-        self.view = mapView
+        mapView!.settings.compassButton = true
 
+        mapView!.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(mapView!)
+
+        NSLayoutConstraint.activate([
+            mapView!.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            mapView!.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            mapView!.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
+            mapView!.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor),
+            ])
         super.viewDidLoad()
 
         locationManager.delegate = self
