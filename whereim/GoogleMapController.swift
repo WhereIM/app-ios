@@ -92,7 +92,8 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
             let c = GMSCircle()
             c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
             c.radius = enchantment.radius!
-            c.strokeColor = .red
+            c.strokeWidth = 3
+            c.strokeColor = enchantment.isPublic == true ? .red : .yellow
             c.map = self.mapView
 
             self.enchantmentCirclr[enchantment.id!] = c
