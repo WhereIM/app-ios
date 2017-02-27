@@ -7,6 +7,7 @@
 //
 
 import Alamofire
+import CoreLocation
 import Moscapsule
 
 protocol RegisterClientCallback {
@@ -29,7 +30,7 @@ protocol Callback {
     func onCallback()
 }
 
-class CoreService {
+class CoreService: NSObject, CLLocationManagerDelegate {
     private static var service: CoreService?
 
     static func bind() -> CoreService{
@@ -78,6 +79,7 @@ class CoreService {
         }
         mqttConfig.onDisconnectCallback = { reasonCode in
             self.mqttConnected = false
+            self.channelDataCheckedOut.removeAll()
             NSLog("Reason Code is \(reasonCode.description)")
         }
 
@@ -375,6 +377,7 @@ class CoreService {
         }
     }
 
+    var channelDataCheckedOut = [String:Bool]()
     var channelMap = [String:Channel]()
     var channelList = [Channel]()
     func mqttClientChannelHandler(_ data: NSDictionary) {
@@ -395,7 +398,10 @@ class CoreService {
 
         subscribe("channel/\(channel_id)/data/+/get")
 
-        publish("client/\(clientId!)/channel_data/sync", [Key.TS: 0, Key.CHANNEL: channel_id])
+        if channelDataCheckedOut[channel_id] == nil {
+            channelDataCheckedOut[channel_id] = true
+            publish("client/\(clientId!)/channel_data/sync", [Key.TS: 0, Key.CHANNEL: channel_id])
+        }
 
         notifyChannelListChangedListeners()
     }
@@ -546,6 +552,7 @@ class CoreService {
             for cb in self.channelListChangedListener {
                 cb.value.channelListChanged()
             }
+            self._checkLocationService()
         }
     }
 
@@ -597,6 +604,31 @@ class CoreService {
         }
     }
 
+    var isForeground = false
+    func _checkLocationService() {
+        var pending = false
+        var enableCount = 0
+
+        for channel in channelList {
+            if channel.enable == nil {
+                pending = true
+                break
+            } else if channel.enable == true {
+                enableCount += 1
+            }
+        }
+
+        if !pending {
+            if enableCount > 0 {
+                isForeground = true
+                startLocationService()
+            } else if enableCount == 0 {
+                isForeground = false
+                stopLocationService()
+            }
+        }
+    }
+
     func subscribeChannelLocation(channel_id: String) {
         subscribe("channel/\(channel_id)/location/private/get")
     }
@@ -628,5 +660,51 @@ class CoreService {
         if let index = subscribedTopics.index(of: topicFilter) {
             subscribedTopics.remove(at: index)
         }
+    }
+
+
+    let UPDATE_MIN_TIME = 10 // 10s
+    let UPDATE_MIN_DISTANCE = 5 // 5m
+    var locationServiceRunning = false
+    let lm = CLLocationManager()
+    func startLocationService() {
+        if locationServiceRunning {
+            return
+        }
+        locationServiceRunning = true
+        lm.requestAlwaysAuthorization()
+        lm.delegate = self
+        lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(UPDATE_MIN_DISTANCE), timeout: TimeInterval(UPDATE_MIN_TIME))
+        lm.startUpdatingLocation()
+    }
+
+    func stopLocationService() {
+        lm.stopUpdatingLocation()
+        locationServiceRunning = false
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            processLocation(location: location)
+        }
+    }
+
+    func processLocation(location: CLLocation) {
+        print("processLocation", location.coordinate.latitude, location.coordinate.longitude)
+        let data = [
+            Key.LATITUDE: location.coordinate.latitude,
+            Key.LONGITUDE: location.coordinate.longitude,
+            Key.ACCURACY: location.horizontalAccuracy,
+            Key.ALTITUDE: location.altitude,
+            Key.TIME: UInt64(NSDate().timeIntervalSince1970*1000),
+            Key.PROVIDER: "iOS"
+        ] as NSDictionary
+        if location.course >= 0 {
+            data.setValue(location.course, forKey: Key.BEARING)
+        }
+        if location.speed >= 0 {
+            data.setValue(location.speed, forKey: Key.SPEED)
+        }
+        publish("client/\(clientId!)/location/put", data)
     }
 }
