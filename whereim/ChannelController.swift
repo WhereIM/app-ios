@@ -63,6 +63,11 @@ class ChannelController: UITabBarController, ChannelListChangedListener {
 
         navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
+
+        let appearance = UITabBarItem.appearance()
+        let attributes: [String: AnyObject] = [NSFontAttributeName:UIFont(name: "Apple Color Emoji", size: 18)!, NSForegroundColorAttributeName: UIColor.orange]
+        appearance.setTitleTextAttributes(attributes, for: .normal)
+        appearance.titlePositionAdjustment = UIOffsetMake(0, -10)
     }
 
     deinit {

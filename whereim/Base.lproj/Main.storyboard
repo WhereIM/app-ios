@@ -56,9 +56,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="🌏" id="sx8-GP-CYr">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-10"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="🌏" id="sx8-GP-CYr"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3h2-Ct-Kkj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -77,9 +75,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="💬" id="bM9-iZ-gLE">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-10"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="💬" id="bM9-iZ-gLE"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uCI-UI-ZTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -110,9 +106,7 @@
                             <constraint firstAttribute="trailing" secondItem="tTX-Jw-Kwd" secondAttribute="trailing" id="soT-GP-uin"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="📍" id="hwa-Zo-CjZ">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-10"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="📍" id="hwa-Zo-CjZ"/>
                     <connections>
                         <outlet property="markerListView" destination="tTX-Jw-Kwd" id="DoD-tT-cZS"/>
                     </connections>
@@ -146,9 +140,7 @@
                             <constraint firstItem="sLk-81-i5U" firstAttribute="top" secondItem="5yi-5B-Uf1" secondAttribute="bottom" id="voG-f9-afI"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="⭕" id="5vJ-pd-LIc">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-10"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="⭕" id="5vJ-pd-LIc"/>
                     <connections>
                         <outlet property="enchantmentListView" destination="5yi-5B-Uf1" id="kQR-yR-Bnr"/>
                     </connections>
@@ -213,7 +205,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
