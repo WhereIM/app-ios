@@ -106,15 +106,36 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-class ChannelListController: UIViewController, ChannelListChangedListener {
+class ChannelListController: UIViewController, ChannelListChangedListener, ConnectionStatusCallback {
     var service: CoreService?
-    var cbkey: Int?
+    var channelListChangedCbkey: Int?
+    var connectionStatusChangedCbKey: Int?
 
     @IBOutlet weak var channelListView: UITableView!
 
+    let connectionStatusIndicator = UIActivityIndicatorView()
     var adapter: ChannelListAdapter?
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
+
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.adjustsFontSizeToFitWidth = false
+        title.text = "Where.IM"
+        navigator.addSubview(title)
+
+        connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
+        connectionStatusIndicator.activityIndicatorViewStyle = .gray
+        connectionStatusIndicator.startAnimating()
+        navigator.addSubview(connectionStatusIndicator)
+
+        NSLayoutConstraint.activate([title.leftAnchor.constraint(equalTo: navigator.leftAnchor), title.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+        NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: navigator.rightAnchor), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+
+        navigator.autoresizingMask = .flexibleWidth
+        self.navigationItem.titleView = navigator
 
         service = CoreService.bind()
         adapter = ChannelListAdapter((service)!, self)
@@ -129,18 +150,31 @@ class ChannelListController: UIViewController, ChannelListChangedListener {
             self.present(vc!, animated: true)
             return
         }
-        cbkey = service!.addChannelListChangedListener(cbkey, self)
+        channelListChangedCbkey = service!.addChannelListChangedListener(channelListChangedCbkey, self)
+        connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
     }
 
     deinit {
         if let sv = service {
-            sv.removeChannelListChangedListener(cbkey)
+            if channelListChangedCbkey != nil {
+                sv.removeChannelListChangedListener(channelListChangedCbkey)
+                channelListChangedCbkey = nil
+            }
+            if connectionStatusChangedCbKey != nil {
+                sv.removeConnectionStatusChangedListener(connectionStatusChangedCbKey)
+                connectionStatusChangedCbKey = nil
+            }
         }
     }
 
     func channelListChanged() {
         self.adapter?.reload()
         self.channelListView.reloadData()
+    }
+
+    func onConnectionStatusChanged(_ connected: Bool) {
+        print("onConnectionStatusChanged", connected)
+        connectionStatusIndicator.isHidden = connected
     }
 
     override func didReceiveMemoryWarning() {

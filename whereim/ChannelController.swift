@@ -8,20 +8,23 @@
 
 import UIKit
 
-class ChannelController: UITabBarController, ChannelListChangedListener {
+class ChannelController: UITabBarController, ChannelListChangedListener, ConnectionStatusCallback {
     var service: CoreService?
     var channel: Channel?
     let loadingSwitch = UILoadingSwitch()
-    var cbkey: Int?
+    var channelListChangedCbkey: Int?
+    var connectionStatusChangedCbKey: Int?
     let layout = UICompactStackView()
     let titleLayout = UICompactStackView()
     let channelTitle = UILabel()
     let channelSubtitle = UILabel()
+    let connectionStatusIndicator = UIActivityIndicatorView()
 
 
     override func viewDidLoad() {
         service = CoreService.bind()
-        cbkey = service?.addChannelListChangedListener(cbkey, self)
+        channelListChangedCbkey = service?.addChannelListChangedListener(channelListChangedCbkey, self)
+        connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
 
         let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
 
@@ -51,7 +54,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener {
 
         navigator.addSubview(layout)
 
-        let connectionStatusIndicator = UIActivityIndicatorView()
         connectionStatusIndicator.activityIndicatorViewStyle = .gray
         connectionStatusIndicator.startAnimating()
         navigator.addSubview(connectionStatusIndicator)
@@ -71,8 +73,15 @@ class ChannelController: UITabBarController, ChannelListChangedListener {
     }
 
     deinit {
-        if cbkey != nil {
-            service!.removeChannelListChangedListener(cbkey)
+        if let sv = service {
+            if channelListChangedCbkey != nil {
+                sv.removeChannelListChangedListener(channelListChangedCbkey)
+                channelListChangedCbkey = nil
+            }
+            if connectionStatusChangedCbKey != nil {
+                sv.removeConnectionStatusChangedListener(connectionStatusChangedCbKey)
+                connectionStatusChangedCbKey = nil
+            }
         }
     }
 
@@ -89,6 +98,11 @@ class ChannelController: UITabBarController, ChannelListChangedListener {
         }
         loadingSwitch.setEnabled(channel!.enable)
         layout.requestLayout()
+    }
+
+    func onConnectionStatusChanged(_ connected: Bool) {
+        print("onConnectionStatusChanged", connected)
+        connectionStatusIndicator.isHidden = connected
     }
 
     func switchClicked(sender: UISwitch) {

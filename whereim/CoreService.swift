@@ -26,6 +26,10 @@ protocol MapDataReceiver {
     func onMarkerData(_ marker: Marker)
 }
 
+protocol ConnectionStatusCallback {
+    func onConnectionStatusChanged(_ connected: Bool)
+}
+
 protocol Callback {
     func onCallback()
 }
@@ -67,6 +71,11 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             }
             self.mqttConnected = true
             self.mqttOnConnected()
+            DispatchQueue.main.async {
+                for listener in self.connectionStatusChangedListener {
+                    listener.value.onConnectionStatusChanged(true)
+                }
+            }
         }
         mqttConfig.onMessageCallback = { mqttMessage in
             NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
@@ -81,6 +90,11 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             self.mqttConnected = false
             self.channelDataCheckedOut.removeAll()
             NSLog("Reason Code is \(reasonCode.description)")
+            DispatchQueue.main.async {
+                for listener in self.connectionStatusChangedListener {
+                    listener.value.onConnectionStatusChanged(false)
+                }
+            }
         }
 
         let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -497,6 +511,31 @@ class CoreService: NSObject, CLLocationManagerDelegate {
                     }
                 }
             }
+        }
+    }
+
+    var connectionStatusChangedListener = [Int:ConnectionStatusCallback]()
+    func addConnectionStatusChangedListener(_ okey: Int?, _ callback: ConnectionStatusCallback) -> Int {
+        var key = okey
+        if key == nil {
+            acc_lock.sync {
+                while channelListChangedListener[acc] != nil {
+                    acc += 1
+                }
+                key = acc
+            }
+        }
+
+        connectionStatusChangedListener[key!] = callback
+        DispatchQueue.main.async {
+            callback.onConnectionStatusChanged(self.mqttConnected)
+        }
+        return key!
+    }
+
+    func removeConnectionStatusChangedListener(_ key: Int?) {
+        if let k = key {
+            connectionStatusChangedListener.removeValue(forKey: k)
         }
     }
 
