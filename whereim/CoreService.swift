@@ -713,6 +713,8 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         locationServiceRunning = true
         lm.requestAlwaysAuthorization()
         lm.delegate = self
+        lm.allowsBackgroundLocationUpdates = true
+        lm.pausesLocationUpdatesAutomatically = false
         lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(UPDATE_MIN_DISTANCE), timeout: TimeInterval(UPDATE_MIN_TIME))
         lm.startUpdatingLocation()
     }
