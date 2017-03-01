@@ -737,7 +737,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             Key.ALTITUDE: location.altitude,
             Key.TIME: UInt64(NSDate().timeIntervalSince1970*1000),
             Key.PROVIDER: "iOS"
-        ] as NSDictionary
+        ] as NSMutableDictionary
         if location.course >= 0 {
             data.setValue(location.course, forKey: Key.BEARING)
         }
