@@ -702,8 +702,8 @@ class CoreService: NSObject, CLLocationManagerDelegate {
     }
 
 
-    let UPDATE_MIN_TIME = 10 // 10s
-    let UPDATE_MIN_DISTANCE = 5 // 5m
+    let UPDATE_MIN_TIME = 10.0 // 10s
+    let UPDATE_MIN_DISTANCE = 5.0 // 5m
     var locationServiceRunning = false
     let lm = CLLocationManager()
     func startLocationService() {
@@ -728,14 +728,29 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    var lastLocationTime = 0.0
+    var lastLocation: CLLocation?
     func processLocation(location: CLLocation) {
-        print("processLocation", location.coordinate.latitude, location.coordinate.longitude)
+        var time_criteria = true
+        var distance_criteria = true
+        let time = NSDate().timeIntervalSince1970
+        if time - lastLocationTime < UPDATE_MIN_TIME {
+            time_criteria  = false
+        }
+        if lastLocation != nil && lastLocation!.distance(from: location) < UPDATE_MIN_DISTANCE {
+            distance_criteria = false
+        }
+        if !time_criteria && !distance_criteria {
+            return
+        }
+        lastLocationTime = time
+        lastLocation = location
         let data = [
             Key.LATITUDE: location.coordinate.latitude,
             Key.LONGITUDE: location.coordinate.longitude,
             Key.ACCURACY: location.horizontalAccuracy,
             Key.ALTITUDE: location.altitude,
-            Key.TIME: UInt64(NSDate().timeIntervalSince1970*1000),
+            Key.TIME: UInt64(time*1000),
             Key.PROVIDER: "iOS"
         ] as NSMutableDictionary
         if location.course >= 0 {
