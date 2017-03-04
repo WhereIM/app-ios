@@ -86,7 +86,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func channelListChanged() {
-        if channel!.user_channel_name != nil {
+        if channel!.user_channel_name != nil && !channel!.user_channel_name!.isEmpty {
             channelTitle.text = channel!.user_channel_name
 
             channelSubtitle.text = channel!.channel_name

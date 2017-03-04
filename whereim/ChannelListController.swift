@@ -74,7 +74,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "channel", for: indexPath) as! ChannelCell
 
-        if channelList[indexPath.row].user_channel_name != nil {
+        if channelList[indexPath.row].user_channel_name != nil && !channelList[indexPath.row].user_channel_name!.isEmpty {
             cell.title.text = channelList[indexPath.row].user_channel_name
             cell.subtitle.text = channelList[indexPath.row].channel_name
             cell.subtitle.isHidden = false
