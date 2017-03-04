@@ -69,7 +69,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([layout.leftAnchor.constraint(equalTo: navigator.leftAnchor, constant: -30), layout.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
         NSLayoutConstraint.activate([shareButton.rightAnchor.constraint(equalTo: navigator.rightAnchor), shareButton.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
-        NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: shareButton.leftAnchor), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+        NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: shareButton.leftAnchor, constant: -5), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
 
         navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
@@ -81,7 +81,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func invite_join(sender: UIButton) {
-        print("invite_join")
         if let url = NSURL(string: "http://where.im/channel/\(channel!.id!)") {
             let objectsToShare = ["action_invite".localized, url] as [Any]
             let vc = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
@@ -119,7 +118,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func onConnectionStatusChanged(_ connected: Bool) {
-        print("onConnectionStatusChanged", connected)
         connectionStatusIndicator.isHidden = connected
     }
 
