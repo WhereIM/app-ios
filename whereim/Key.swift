@@ -14,6 +14,7 @@ class Key {
     static let BEARING = "bear"
 
     static let CHANNEL = "channel"
+    static let CHANNEL_NAME = "channel_name"
     static let CLIENT_ID = "client_id"
     static let COLOR = "color"
 

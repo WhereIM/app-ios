@@ -595,6 +595,10 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    func joinChannel(channel_id: String, channel_alias: String, mate_name: String) {
+        publish("channel/\(channel_id)/join", [Key.CHANNEL_NAME: channel_alias, Key.MATE_NAME: mate_name])
+    }
+
     var mapDataReceiver = [String:[Int:MapDataReceiver]]()
     var openedChannel = [String]()
     func openMap(_ channel: Channel, _ okey: Int?, _ receiver: MapDataReceiver) -> Int? {

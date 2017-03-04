@@ -6,10 +6,16 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+import Branch
 import UIKit
-import CoreData
 import FBSDKCoreKit
 import GoogleMaps
+
+extension String {
+    var localized: String {
+        return NSLocalizedString(self, tableName: nil, bundle: Bundle.main, value: "", comment: "")
+    }
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,7 +25,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GMSServices.provideAPIKey(Config.GOOGLE_MAP_KEY)
+
         _ = CoreService.bind()
+
+        let branch = Branch.getInstance()
+        branch!.initSession(launchOptions: launchOptions, automaticallyDisplayDeepLinkController: true, deepLinkHandler: { params, error in
+            if error == nil {
+                if let link = params?["$deeplink_path"] as? String {
+                    do {
+                        let pattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
+                        if let match = pattern.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
+                            let channel_id = (link as NSString).substring(with: match.rangeAt(1))
+                            DispatchQueue.main.async {
+                                Dialog.join_channel((self.window?.rootViewController!)!, channel_id)
+                            }
+                        }
+                    } catch {
+                        print("Error in join_channel dialog")
+                    }
+                }
+            }
+        })
+
+        return true
+    }
+
+    // Respond to URI scheme links
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        // pass the url to the handle deep link call
+        Branch.getInstance().handleDeepLink(url);
+
+        // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
+        return true
+    }
+
+    // Respond to Universal Links
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        // pass the url to the handle deep link call
+        Branch.getInstance().continue(userActivity)
 
         return true
     }
