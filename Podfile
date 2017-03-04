@@ -6,6 +6,8 @@ target 'whereim' do
 
   pod 'Alamofire', '~> 4.3'
 
+  pod 'Branch'
+
   pod 'FacebookCore'
   pod 'FacebookLogin'
 

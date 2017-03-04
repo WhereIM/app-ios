@@ -6,6 +6,11 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
+  - Branch (0.12.27):
+    - Branch/Core (= 0.12.27)
+    - Branch/without-IDFA (= 0.12.27)
+  - Branch/Core (0.12.27)
+  - Branch/without-IDFA (0.12.27)
   - FacebookCore (0.2.0):
     - Bolts (~> 1.8)
     - FBSDKCoreKit (~> 4.15)
@@ -28,6 +33,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.3)
+  - Branch
   - FacebookCore
   - FacebookLogin
   - GoogleMaps
@@ -46,6 +52,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  Branch: 41404cc6de82e84368a26961f66d657b0662ca02
   FacebookCore: 2cb3f0fbff218e9d3119cec84bae983b232412de
   FacebookLogin: c9d606504735780a9e3002465a615512e0a691a5
   FBSDKCoreKit: 894b2b6eda6a4c8c4204e92e59cc355709ef045c
@@ -54,6 +61,6 @@ SPEC CHECKSUMS:
   Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
   OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
 
-PODFILE CHECKSUM: c95ddb589d8a929b9e2b3e6c7d5f78b430c81781
+PODFILE CHECKSUM: 954b4f78d8c9bb997e373d738e1fa43ab9d2e123
 
 COCOAPODS: 1.2.0

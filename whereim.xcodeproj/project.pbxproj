@@ -321,7 +321,7 @@
 				TargetAttributes = {
 					58568FB01E51ADF2002FAD41 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = P7KL9Z34E3;
+						DevelopmentTeam = 8VF6KLK6WK;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -706,11 +706,11 @@
 			baseConfigurationReference = 3FF6FDF16300892FC2995FD2 /* Pods-whereim.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P7KL9Z34E3;
+				DEVELOPMENT_TEAM = 8VF6KLK6WK;
 				INFOPLIST_FILE = whereim/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = im.where.whereimbeta;
+				PRODUCT_BUNDLE_IDENTIFIER = im.where.whereim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -721,11 +721,11 @@
 			baseConfigurationReference = 08B02BA680B73D399642E716 /* Pods-whereim.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P7KL9Z34E3;
+				DEVELOPMENT_TEAM = 8VF6KLK6WK;
 				INFOPLIST_FILE = whereim/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = im.where.whereimbeta;
+				PRODUCT_BUNDLE_IDENTIFIER = im.where.whereim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
