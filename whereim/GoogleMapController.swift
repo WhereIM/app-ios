@@ -9,21 +9,12 @@
 import UIKit
 import GoogleMaps
 
-class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataReceiver {
+class GoogleMapController: NSObject, MapControllerInterface, CLLocationManagerDelegate, MapDataReceiver {
 
     var locationManager = CLLocationManager()
     var didFindMyLocation = false
     var mapView: GMSMapView?
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)   {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        initmarkerTamplate()
-    }
-
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)!
-        initmarkerTamplate()
-    }
 
     var markerTemplate = UIStackView()
     var markerTemplateText = UILabel()
@@ -39,22 +30,21 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         markerTemplate.addArrangedSubview(markerTemplateIcon)
     }
 
-    override func viewDidLoad() {
+    func viewDidLoad(_ viewContrller: UIViewController) {
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.isMyLocationEnabled = true
         mapView!.settings.compassButton = true
 
         mapView!.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(mapView!)
+        viewContrller.view.addSubview(mapView!)
 
         NSLayoutConstraint.activate([
-            mapView!.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            mapView!.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            mapView!.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
-            mapView!.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor),
+            mapView!.leftAnchor.constraint(equalTo: viewContrller.view.leftAnchor),
+            mapView!.rightAnchor.constraint(equalTo: viewContrller.view.rightAnchor),
+            mapView!.topAnchor.constraint(equalTo: viewContrller.topLayoutGuide.bottomAnchor),
+            mapView!.bottomAnchor.constraint(equalTo: viewContrller.bottomLayoutGuide.topAnchor),
             ])
-        super.viewDidLoad()
 
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -170,20 +160,7 @@ class GoogleMapController: MapController, CLLocationManagerDelegate, MapDataRece
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    func didReceiveMemoryWarning() {
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

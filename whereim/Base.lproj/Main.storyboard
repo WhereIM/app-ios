@@ -62,7 +62,7 @@
         <!--🌏-->
         <scene sceneID="he6-ng-qzx">
             <objects>
-                <viewController id="5NF-Ic-YUF" customClass="GoogleMapController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5NF-Ic-YUF" customClass="MapController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Yde-HS-ed6"/>
                         <viewControllerLayoutGuide type="bottom" id="GWF-Un-3Rd"/>
