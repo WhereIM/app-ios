@@ -19,6 +19,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     let channelTitle = UILabel()
     let channelSubtitle = UILabel()
     let connectionStatusIndicator = UIActivityIndicatorView()
+    let shareButton = UIButton()
 
 
     override func viewDidLoad() {
@@ -58,10 +59,17 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         connectionStatusIndicator.startAnimating()
         navigator.addSubview(connectionStatusIndicator)
 
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.setImage(UIImage(named: "icon_share"), for: .normal)
+        shareButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        shareButton.addTarget(self, action: #selector(invite_join(sender:)), for: .touchUpInside)
+        navigator.addSubview(shareButton)
+
         layout.translatesAutoresizingMaskIntoConstraints = false
         connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([layout.leftAnchor.constraint(equalTo: navigator.leftAnchor, constant: -30), layout.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
-        NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: navigator.rightAnchor), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+        NSLayoutConstraint.activate([shareButton.rightAnchor.constraint(equalTo: navigator.rightAnchor), shareButton.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+        NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: shareButton.leftAnchor), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
 
         navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
@@ -70,6 +78,16 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         let attributes: [String: AnyObject] = [NSFontAttributeName:UIFont(name: "Apple Color Emoji", size: 18)!, NSForegroundColorAttributeName: UIColor.orange]
         appearance.setTitleTextAttributes(attributes, for: .normal)
         appearance.titlePositionAdjustment = UIOffsetMake(0, -10)
+    }
+
+    func invite_join(sender: UIButton) {
+        print("invite_join")
+        if let url = NSURL(string: "http://where.im/channel/\(channel!.id!)") {
+            let objectsToShare = ["action_invite".localized, url] as [Any]
+            let vc = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            vc.popoverPresentationController?.sourceView = sender
+            self.present(vc, animated: true, completion: nil)
+        }
     }
 
     deinit {
