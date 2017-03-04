@@ -122,9 +122,8 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
                 }
             }
         } else {
-            let vc = storyboard?.instantiateViewController(withIdentifier: "channel_list")
-            let navController = UINavigationController(rootViewController: vc!)
-            self.present(navController, animated:true, completion: nil)
+            let vc = storyboard?.instantiateViewController(withIdentifier: "startup")
+            self.present(vc!, animated:true, completion: nil)
         }
     }
 }

@@ -595,6 +595,10 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    func createChannel(channel_name: String, mate_name: String) {
+        publish("channel/create", [Key.CHANNEL_NAME: channel_name, Key.MATE_NAME: mate_name])
+    }
+
     func joinChannel(channel_id: String, channel_alias: String, mate_name: String) {
         publish("channel/\(channel_id)/join", [Key.CHANNEL_NAME: channel_alias, Key.MATE_NAME: mate_name])
     }

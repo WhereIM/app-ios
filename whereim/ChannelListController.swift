@@ -112,6 +112,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     var connectionStatusChangedCbKey: Int?
 
     @IBOutlet weak var channelListView: UITableView!
+    @IBOutlet weak var fab: UIButton!
 
     let connectionStatusIndicator = UIActivityIndicatorView()
     var adapter: ChannelListAdapter?
@@ -142,6 +143,14 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         channelListView.register(ChannelCell.self, forCellReuseIdentifier: "channel")
         channelListView.dataSource = adapter
         channelListView.delegate = adapter
+
+        fab.titleLabel?.baselineAdjustment = .alignCenters
+        fab.layer.cornerRadius = 32
+        fab.addTarget(self, action: #selector(create_channel(sender:)), for: .touchUpInside)
+    }
+
+    func create_channel(sender: UIButton) {
+        Dialog.create_channel(self)
     }
 
     override func viewDidAppear(_ animated: Bool) {
