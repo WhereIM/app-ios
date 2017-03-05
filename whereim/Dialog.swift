@@ -14,7 +14,7 @@ class Dialog {
         var display_name: UITextField?
 
         alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
-        let action = UIAlertAction(title: "ok".localized, style: .destructive){ _ in
+        let action = UIAlertAction(title: "ok".localized, style: .default){ _ in
             let service = CoreService.bind()
             let mate_name = (display_name?.text)!
             service.joinChannel(channel_id: channel_id, channel_alias: "", mate_name: mate_name)
@@ -48,7 +48,7 @@ class Dialog {
         var display_name: UITextField?
 
         alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
-        let action = UIAlertAction(title: "ok".localized, style: .destructive){ _ in
+        let action = UIAlertAction(title: "ok".localized, style: .default){ _ in
             let service = CoreService.bind()
             let _channel_name = (channel_name?.text)!
             let _mate_name = (display_name?.text)!
@@ -87,5 +87,21 @@ class Dialog {
         })
         check()
         viewController.present(alert, animated: true, completion: nil)
+    }
+
+    static func start_editing(_ mapController: MapController) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let create_enchantment = UIAlertAction(title: "create_enchantment".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            mapController.refreshEditing(.enchantment)
+        }
+
+        let create_marker = UIAlertAction(title: "create_marker".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            mapController.refreshEditing(.marker)
+        }
+
+        alert.addAction(create_enchantment)
+        alert.addAction(create_marker)
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        mapController.present(alert, animated: true, completion:nil)
     }
 }

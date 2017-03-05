@@ -9,12 +9,16 @@
 import UIKit
 import GoogleMaps
 
-class GoogleMapController: NSObject, MapControllerInterface, CLLocationManagerDelegate, MapDataReceiver {
-
+class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate, CLLocationManagerDelegate, MapDataReceiver {
+    var mapController: MapController?
     var locationManager = CLLocationManager()
     var didFindMyLocation = false
     var mapView: GMSMapView?
 
+    func setup(_ mapController: MapController) {
+        self.mapController = mapController
+        initmarkerTamplate()
+    }
 
     var markerTemplate = UIStackView()
     var markerTemplateText = UILabel()
@@ -50,6 +54,11 @@ class GoogleMapController: NSObject, MapControllerInterface, CLLocationManagerDe
         locationManager.requestAlwaysAuthorization()
 
         mapView!.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
+        mapView!.delegate = self
+    }
+
+    func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+        mapController!.startEditing(coordinate)
     }
 
     deinit {
@@ -73,9 +82,13 @@ class GoogleMapController: NSObject, MapControllerInterface, CLLocationManagerDe
         }
     }
 
-    var enchantmentCirclr = [String:GMSCircle]()
+    func refreshEditing() {
+        
+    }
+
+    var enchantmentCircle = [String:GMSCircle]()
     func onEnchantmentData(_ enchantment: Enchantment) {
-        if let c = self.enchantmentCirclr[enchantment.id!] {
+        if let c = self.enchantmentCircle[enchantment.id!] {
             c.map = nil
         }
         if enchantment.enable == true {
@@ -86,7 +99,7 @@ class GoogleMapController: NSObject, MapControllerInterface, CLLocationManagerDe
             c.strokeColor = enchantment.isPublic == true ? .red : .yellow
             c.map = self.mapView
 
-            self.enchantmentCirclr[enchantment.id!] = c
+            self.enchantmentCircle[enchantment.id!] = c
         }
     }
 
