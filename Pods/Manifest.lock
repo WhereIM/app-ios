@@ -30,6 +30,7 @@ PODS:
     - GoogleMaps/Base
   - Moscapsule (0.5.2)
   - OpenSSL-Universal (1.0.1.20)
+  - SDCAlertView (7.1)
 
 DEPENDENCIES:
   - Alamofire (~> 4.3)
@@ -39,6 +40,7 @@ DEPENDENCIES:
   - GoogleMaps
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
   - OpenSSL-Universal (~> 1.0.1.18)
+  - SDCAlertView (~> 7.1)
 
 EXTERNAL SOURCES:
   Moscapsule:
@@ -60,7 +62,8 @@ SPEC CHECKSUMS:
   GoogleMaps: a5b5bbe47734e2443bde781a6aa64e69fdb6d785
   Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
   OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
+  SDCAlertView: b92fd1f00e522e18a062005e15a16c1e8295c5b5
 
-PODFILE CHECKSUM: 954b4f78d8c9bb997e373d738e1fa43ab9d2e123
+PODFILE CHECKSUM: 895fe9ec55187ee2784c43b8b8f05f841465956d
 
 COCOAPODS: 1.2.0

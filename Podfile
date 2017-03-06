@@ -16,6 +16,8 @@ target 'whereim' do
 
   pod 'GoogleMaps'
 
+  pod 'SDCAlertView', '~> 7.1'
+
   target 'whereimTests' do
     inherit! :search_paths
     # Pods for testing
