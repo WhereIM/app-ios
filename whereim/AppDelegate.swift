@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         if let match = pattern.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
                             let channel_id = (link as NSString).substring(with: match.rangeAt(1))
                             DispatchQueue.main.async {
-                                Dialog.join_channel((self.window?.rootViewController!)!, channel_id)
+                                _ = DialogJoinChannel((self.window?.rootViewController!)!, channel_id)
                             }
                         }
                     } catch {

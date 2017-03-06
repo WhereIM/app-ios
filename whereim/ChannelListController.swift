@@ -150,7 +150,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     func create_channel(sender: UIButton) {
-        Dialog.create_channel(self)
+        _ = DialogCreateChannel(self)
     }
 
     override func viewDidAppear(_ animated: Bool) {

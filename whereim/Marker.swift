@@ -20,9 +20,23 @@ class Marker {
     var name: String?
     var latitude: Double?
     var longitude: Double?
-    var attr: NSDictionary?
+    var attr: [String: Any]?
     var isPublic: Bool?
     var enable: Bool?
+
+    static func getIconList() -> [String] {
+        return ["red",
+        "orange",
+        "yellow",
+        "green",
+        "cyan",
+        "azure",
+        "blue",
+        "violet",
+        "magenta",
+        "rose",
+        "grey"]
+    }
 
     func getIcon() -> UIImage {
         return Marker.getIcon(attr?[Key.COLOR] as? String)

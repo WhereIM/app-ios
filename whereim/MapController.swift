@@ -127,27 +127,31 @@ class MapController: UIViewController {
     }
 
     func enchantment_reduce(sender: UIButton) {
-        print("enchantment_reduce")
+        editingEnchantmentRadiusIndex = max(0, editingEnchantmentRadiusIndex-1)
+        mapControllerImpl!.refreshEditing()
     }
 
     func enchantment_enlarge(sender: UIButton) {
-        print("enchantment_enlarge")
+        editingEnchantmentRadiusIndex = min(Config.ENCHANTMENT_RADIUS.count-1, editingEnchantmentRadiusIndex+1)
+        mapControllerImpl!.refreshEditing()
     }
 
     func enchantment_cancel(sender: UIButton) {
-        print("enchantment_cancel")
+        refreshEditing(nil)
     }
 
     func enchantment_ok(sender: UIButton) {
-        print("enchantment_ok")
+        service!.createEnchantment(name: editingEnchantment.name!, channel_id: channel!.id!, ispublic: editingEnchantment.isPublic!, latitude: editingCoordinate.latitude, longitude: editingCoordinate.longitude, radius: Config.ENCHANTMENT_RADIUS[editingEnchantmentRadiusIndex], enable: true)
+        refreshEditing(nil)
     }
 
     func marker_cancel(sender: UIButton) {
-        print("marker_cancel")
+        refreshEditing(nil)
     }
 
     func marker_ok(sender: UIButton) {
-        print("marker_ok")
+        service!.createMarker(name: editingMarker.name!, channel_id: channel!.id!, ispublic: editingMarker.isPublic!, latitude: editingCoordinate.latitude, longitude: editingCoordinate.longitude, attr: editingMarker.attr!, enable: true)
+        refreshEditing(nil)
     }
 
     deinit {
@@ -166,6 +170,9 @@ class MapController: UIViewController {
 
     var editingType: EditingType?
     var editingCoordinate = CLLocationCoordinate2D()
+    var editingEnchantmentRadiusIndex = Config.DEFAULT_ENCHANTMENT_RADIUS_INDEX
+    var editingEnchantment = Enchantment()
+    var editingMarker = Marker()
     func startEditing(_ coordinate: CLLocationCoordinate2D) {
         editingCoordinate = coordinate
         if editingType != nil {
@@ -173,10 +180,13 @@ class MapController: UIViewController {
             return
         }
 
-        Dialog.start_editing(self)
+        _ = DialogStartEditing(self)
     }
 
-    func refreshEditing(_ type: EditingType) {
+    func refreshEditing(_ type: EditingType?) {
+        if editingType == nil {
+            editingEnchantmentRadiusIndex = Config.DEFAULT_ENCHANTMENT_RADIUS_INDEX
+        }
         editingType = type
         if editingType == nil {
             enchantmentPanel.isHidden = true

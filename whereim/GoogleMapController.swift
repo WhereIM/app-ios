@@ -82,8 +82,41 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
     }
 
+    var editingEnchantmentCircle: GMSCircle?
+    var editingMarkerMarker: GMSMarker?
     func refreshEditing() {
-        
+        if mapController!.editingType == .enchantment {
+            if editingEnchantmentCircle != nil {
+                editingEnchantmentCircle!.map = nil
+            }
+            let c = GMSCircle()
+            c.position = mapController!.editingCoordinate
+            c.radius = CLLocationDistance(Config.ENCHANTMENT_RADIUS[mapController!.editingEnchantmentRadiusIndex])
+            c.strokeWidth = 3
+            c.strokeColor = .orange
+            c.map = self.mapView
+            editingEnchantmentCircle = c
+        } else {
+            if editingEnchantmentCircle != nil {
+                editingEnchantmentCircle!.map = nil
+            }
+        }
+
+        if mapController!.editingType == .marker {
+            if editingMarkerMarker != nil {
+                editingMarkerMarker!.map = nil
+            }
+            let m = GMSMarker()
+            m.position = mapController!.editingCoordinate
+            m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+            m.icon = mapController!.editingMarker.getIcon()
+            m.map = self.mapView
+            editingMarkerMarker = m
+        } else {
+            if editingMarkerMarker != nil {
+                editingMarkerMarker!.map = nil
+            }
+        }
     }
 
     var enchantmentCircle = [String:GMSCircle]()

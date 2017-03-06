@@ -228,6 +228,23 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         return list
     }
 
+    func createEnchantment(name: String, channel_id: String, ispublic: Bool, latitude: Double, longitude: Double, radius: Int, enable: Bool) {
+        let data = [
+            Key.NAME: name,
+            Key.CHANNEL: channel_id,
+            Key.LATITUDE: latitude,
+            Key.LONGITUDE: longitude,
+            Key.RADIUS: radius,
+            Key.ENABLE: enable
+        ] as [String : Any]
+
+        if ispublic {
+            publish("channel/\(channel_id)/data/enchantment/put", data)
+        } else {
+            publish("client/\(clientId!)/enchantment/put", data)
+        }
+    }
+
     func toggleEnchantmentEnabled(_ enchantment: Enchantment) {
         if enchantment.enable == nil {
             return
@@ -305,7 +322,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         marker.latitude = data[Key.LATITUDE] as? Double ?? marker.latitude
         marker.longitude = data[Key.LONGITUDE] as? Double ?? marker.longitude
         if data[Key.ATTR] != nil {
-            marker.attr = data[Key.ATTR] as? NSDictionary
+            marker.attr = data[Key.ATTR] as? [String: Any]
         }
         marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
         marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
@@ -332,6 +349,23 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             }
         }
         return list
+    }
+
+    func createMarker(name: String, channel_id: String, ispublic: Bool, latitude: Double, longitude: Double, attr: [String: Any], enable: Bool) {
+        let data = [
+            Key.NAME: name,
+            Key.CHANNEL: channel_id,
+            Key.LATITUDE: latitude,
+            Key.LONGITUDE: longitude,
+            Key.ATTR: attr,
+            Key.ENABLE: enable
+        ] as [String: Any]
+
+        if ispublic {
+            publish("channel/\(channel_id)/data/marker/put", data)
+        } else {
+            publish("client/\(clientId!)/marker/put", data)
+        }
     }
 
     func toggleMarkerEnabled(_ marker: Marker) {
@@ -684,7 +718,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         unsubscribe("channel/\(channel_id)/location/private/get")
     }
 
-    func publish(_ topic: String, _ message: NSDictionary) {
+    func publish(_ topic: String, _ message: [String: Any]) {
         do {
             let json = try JSONSerialization.data(withJSONObject: message, options: [])
             print("publish \(topic) \(String(data: json, encoding: .utf8)!)")
@@ -755,19 +789,19 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
         lastLocationTime = time
         lastLocation = location
-        let data = [
+        var data = [
             Key.LATITUDE: location.coordinate.latitude,
             Key.LONGITUDE: location.coordinate.longitude,
             Key.ACCURACY: location.horizontalAccuracy,
             Key.ALTITUDE: location.altitude,
             Key.TIME: UInt64(time*1000),
             Key.PROVIDER: "iOS"
-        ] as NSMutableDictionary
+        ] as [String: Any]
         if location.course >= 0 {
-            data.setValue(location.course, forKey: Key.BEARING)
+            data[Key.BEARING] = location.course
         }
         if location.speed >= 0 {
-            data.setValue(location.speed, forKey: Key.SPEED)
+            data[Key.SPEED] = location.speed
         }
         publish("client/\(clientId!)/location/put", data)
     }
