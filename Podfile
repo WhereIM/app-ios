@@ -11,6 +11,8 @@ target 'whereim' do
   pod 'FacebookCore'
   pod 'FacebookLogin'
 
+  pod 'GRDB.swift'
+
   pod 'Moscapsule', :git => 'https://github.com/flightonary/Moscapsule.git'
   pod 'OpenSSL-Universal', '~> 1.0.1.18'
 

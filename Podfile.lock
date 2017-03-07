@@ -28,6 +28,7 @@ PODS:
   - GoogleMaps/Base (2.1.1)
   - GoogleMaps/Maps (2.1.1):
     - GoogleMaps/Base
+  - GRDB.swift (0.101.1)
   - Moscapsule (0.5.2)
   - OpenSSL-Universal (1.0.1.20)
   - SDCAlertView (7.1)
@@ -38,6 +39,7 @@ DEPENDENCIES:
   - FacebookCore
   - FacebookLogin
   - GoogleMaps
+  - GRDB.swift
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
   - OpenSSL-Universal (~> 1.0.1.18)
   - SDCAlertView (~> 7.1)
@@ -60,10 +62,11 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 894b2b6eda6a4c8c4204e92e59cc355709ef045c
   FBSDKLoginKit: 83ca4d8f12a2022570af9fd6aacf27f6b425b99f
   GoogleMaps: a5b5bbe47734e2443bde781a6aa64e69fdb6d785
+  GRDB.swift: bfa07c313355fe41424f03be0297953a4556e6ea
   Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
   OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
   SDCAlertView: b92fd1f00e522e18a062005e15a16c1e8295c5b5
 
-PODFILE CHECKSUM: 895fe9ec55187ee2784c43b8b8f05f841465956d
+PODFILE CHECKSUM: 5cd73b3cf2d6a1eb1c157ec1cc73e050f9d70886
 
 COCOAPODS: 1.2.0
