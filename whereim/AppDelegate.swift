@@ -7,6 +7,7 @@
 //
 
 import Branch
+import GRDB
 import UIKit
 import FBSDKCoreKit
 import GoogleMaps
@@ -17,14 +18,35 @@ extension String {
     }
 }
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    let DB_FILE = "whereim.sqlite"
+    var dbConn: DatabaseQueue?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GMSServices.provideAPIKey(Config.GOOGLE_MAP_KEY)
+
+        do {
+            let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let db_file = folder.appendingPathComponent(DB_FILE).path
+            dbConn = try DatabaseQueue(path: db_file)
+
+            try dbConn!.inDatabase { db in
+                let db_version = try Int.fetchOne(db, "PRAGMA user_version")!
+                print("db_version", db_version)
+
+                try Message.migrate(db, db_version)
+                print("db migration finished")
+
+                try db.execute("PRAGMA user_version = \(Config.DB_VERSION)")
+            }
+        } catch {
+            print("Error opening db \(error)")
+        }
 
         _ = CoreService.bind()
 

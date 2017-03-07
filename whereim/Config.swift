@@ -8,6 +8,8 @@
 
 
 class Config {
+    static let DB_VERSION = 1
+
     static let GOOGLE_MAP_KEY = "AIzaSyAtP4_TFI7E_88lUQQTo9NBqJvF9KcC8HA"
 
     static let FACEBOOK_SLUG = "facebook"

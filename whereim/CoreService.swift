@@ -80,7 +80,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         mqttConfig.onMessageCallback = { mqttMessage in
             NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
             do {
-                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload, options: []) as! NSDictionary
+                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload, options: []) as! [String: Any]
                 self.mqttOnMessage(mqttMessage.topic, data)
             } catch {
                 print("error decoding message")
@@ -89,6 +89,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         mqttConfig.onDisconnectCallback = { reasonCode in
             self.mqttConnected = false
             self.channelDataCheckedOut.removeAll()
+            self.channelMessageSync.removeAll()
             NSLog("Reason Code is \(reasonCode.description)")
             DispatchQueue.main.async {
                 for listener in self.connectionStatusChangedListener {
@@ -115,14 +116,14 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         publish("client/\(clientId!)/channel/sync", [Key.TS: 0])
     }
 
-    func mqttOnMessage(_ topic: String, _ data: NSDictionary) {
+    func mqttOnMessage(_ topic: String, _ data: [String: Any]) {
         do {
             let clientChannelPattern = try NSRegularExpression(pattern: "^client/[a-f0-9]{32}/([^/]+)/get$", options: [])
             if let match = clientChannelPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
                 let t = (topic as NSString).substring(with: match.rangeAt(1))
                 switch t {
                 case "unicast":
-                    mqttOnMessage(data["topic"] as! String, data["message"] as! NSDictionary)
+                    mqttOnMessage(data["topic"] as! String, data["message"] as! [String: Any])
                 case "channel":
                     self.mqttClientChannelHandler(data)
                 case "enchantment":
@@ -147,7 +148,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
                 case "mate":
                     mqttChannelMateHandler(channel_id, data)
                 case "message":
-                    mqttChannelMessageHandler(channel_id, data, true)
+                    mqttChannelMessageHandler(channel_id, data)
                 case "enchantment":
                     mqttChannelEnchantmentHandler(data)
                 case "marker":
@@ -161,7 +162,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    func mqttChannelMateHandler(_ channel_id: String, _ data: NSDictionary) {
+    func mqttChannelMateHandler(_ channel_id: String, _ data: [String: Any]) {
         let mate_id = data[Key.ID] as! String
         let mate = getChannelMate(channel_id, mate_id)
 
@@ -177,11 +178,21 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    func mqttChannelMessageHandler(_ channel_id: String, _ data: NSDictionary, _ isPublic: Bool) {
+    func mqttChannelMessageHandler(_ channel_id: String, _ data: [String: Any]) {
+        let m = Message(data)
+
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.dbConn!.inDatabase { db in
+            do {
+                try m.save(db)
+            } catch {
+                print("Error saving message \(error)")
+            }
+        }
     }
 
     var channelEnchantment = [String:[String:Enchantment]]()
-    func mqttChannelEnchantmentHandler(_ data: NSDictionary) {
+    func mqttChannelEnchantmentHandler(_ data: [String:Any]) {
         let enchantment_id = data[Key.ID] as! String
         let channel_id = data[Key.CHANNEL] as! String
 
@@ -303,7 +314,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
     }
 
     var channelMarker = [String:[String:Marker]]()
-    func mqttChannelMarkerHandler(_ data: NSDictionary) {
+    func mqttChannelMarkerHandler(_ data: [String:Any]) {
         let marker_id = data[Key.ID] as! String
         let channel_id = data[Key.CHANNEL] as! String
 
@@ -425,10 +436,15 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    func getMessages(_ channel_id: String) -> BundledMessages {
+        return Message.getMessages(channel_id)
+    }
+
+    var channelMessageSync = [String:Bool]()
     var channelDataCheckedOut = [String:Bool]()
     var channelMap = [String:Channel]()
     var channelList = [Channel]()
-    func mqttClientChannelHandler(_ data: NSDictionary) {
+    func mqttClientChannelHandler(_ data: [String:Any]) {
         let channel_id = data[Key.CHANNEL] as! String
         var channel = channelMap[channel_id]
         if channel == nil {
@@ -451,10 +467,18 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             publish("client/\(clientId!)/channel_data/sync", [Key.TS: 0, Key.CHANNEL: channel_id])
         }
 
+        if channelMessageSync[channel_id] == nil {
+            channelMessageSync[channel_id] = true
+            DispatchQueue.main.async {
+                let data = Message.getMessages(channel_id)
+                self.publish("client/\(self.clientId!)/message/sync", [Key.CHANNEL: channel_id, "after": data.lastId])
+            }
+        }
+
         notifyChannelListChangedListeners()
     }
 
-    func mqttChannelLocationHandler(_ channel_id: String, _ data: NSDictionary) {
+    func mqttChannelLocationHandler(_ channel_id: String, _ data: [String:Any]) {
         let mate_id = data[Key.MATE] as! String
         let mate = getChannelMate(channel_id, mate_id)
         mate.channel_id = channel_id
@@ -504,7 +528,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         Alamofire.request(Config.AWS_API_GATEWAY_REGISTER_CLIENT, method: .post, parameters: data, encoding: JSONEncoding.default).responseJSON{ response in
             if let result = response.result.value {
                 print(result)
-                let data = result as! NSDictionary
+                let data = result as! [String:Any]
                 let status = data["status"] as! String
                 if status == "exhausted" {
                     callback.onExhausted()
