@@ -80,7 +80,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         mqttConfig.onMessageCallback = { mqttMessage in
             NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
             do {
-                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload, options: []) as! [String: Any]
+                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload!, options: []) as! [String: Any]
                 self.mqttOnMessage(mqttMessage.topic, data)
             } catch {
                 print("error decoding message")

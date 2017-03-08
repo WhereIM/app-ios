@@ -8,6 +8,7 @@
 
 import UIKit
 import GRDB
+import JSQMessagesViewController
 
 class BundledMessages {
     let message: [Message]
@@ -46,6 +47,23 @@ class BundledMessages {
 }
 
 class Message: Record {
+    let service = CoreService.bind()
+
+    var jsqMessage: JSQMessage?
+    func getJSQMessage() -> JSQMessage {
+        if jsqMessage == nil {
+            var displayName: String?
+            if channel_id == nil {
+                displayName = "system"
+            } else {
+                displayName = service.getChannelMate(channel_id!, mate_id!).getDisplayName()
+            }
+            let date = Date(timeIntervalSince1970: TimeInterval(time!))
+            jsqMessage = JSQMessage(senderId: mate_id!, senderDisplayName: displayName!, date: date, text: "\(type!): \(message!)")
+        }
+        return jsqMessage!
+    }
+
     static let TABLE_NAME = "message";
 
     static let COL_ID = "_id"

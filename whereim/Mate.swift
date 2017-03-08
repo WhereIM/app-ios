@@ -20,7 +20,7 @@ class Mate {
     var speed: Double?
     var time: UInt64?
 
-    func getDisplayName() -> String? {
-        return user_mate_name ?? mate_name
+    func getDisplayName() -> String {
+        return user_mate_name ?? mate_name ?? ""
     }
 }

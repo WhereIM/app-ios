@@ -89,24 +89,9 @@
                     <view key="view" contentMode="scaleToFill" id="Iu7-zV-mQU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZAJ-zD-ByN">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="ZAJ-zD-ByN" firstAttribute="top" secondItem="CKa-AH-9Tw" secondAttribute="bottom" id="S1A-BS-RS6"/>
-                            <constraint firstItem="cwb-f8-AQc" firstAttribute="top" secondItem="ZAJ-zD-ByN" secondAttribute="bottom" id="YGl-vF-KHB"/>
-                            <constraint firstAttribute="trailing" secondItem="ZAJ-zD-ByN" secondAttribute="trailing" id="aaD-Al-TYT"/>
-                            <constraint firstItem="ZAJ-zD-ByN" firstAttribute="leading" secondItem="Iu7-zV-mQU" secondAttribute="leading" id="c4U-zE-KDO"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="💬" id="bM9-iZ-gLE"/>
-                    <connections>
-                        <outlet property="messageListView" destination="ZAJ-zD-ByN" id="k7q-Yw-HD1"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uCI-UI-ZTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -236,7 +221,7 @@
             <objects>
                 <navigationController storyboardIdentifier="startup" automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
