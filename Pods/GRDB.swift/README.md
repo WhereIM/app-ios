@@ -3,7 +3,7 @@ GRDB.swift [![Swift](https://img.shields.io/badge/swift-3-orange.svg?style=flat)
 
 ### A Swift application toolkit for SQLite databases.
 
-**Latest release**: January 20, 2017 &bull; version 0.101.1 &bull; [CHANGELOG](CHANGELOG.md)
+**Latest release**: March 2, 2017 &bull; version 0.102.0 &bull; [CHANGELOG](CHANGELOG.md)
 
 **Requirements**: iOS 8.0+ / OSX 10.9+ / watchOS 2.0+ &bull; Xcode 8.1+ &bull; Swift 3
 
@@ -182,7 +182,7 @@ Documentation
 
 **Reference**
 
-- [GRDB Reference](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/index.html) (on cocoadocs.org)
+- [GRDB Reference](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/index.html) (on cocoadocs.org)
 
 **Getting Started**
 
@@ -266,7 +266,7 @@ See [Custom SQLite builds](Documentation/CustomSQLiteBuilds.md) for the installa
 
 1. Make sure Xcode is installed in the /Applications folder, with its regular name Xcode.
 
-2. [Download](https://github.com/groue/GRDB.swift/releases/tag/v0.101.1) a copy of GRDB.swift, or clone its repository and make sure you use the latest tagged version with the `git checkout v0.101.1` command.
+2. [Download](https://github.com/groue/GRDB.swift/releases/tag/v0.102.0) a copy of GRDB.swift, or clone its repository and make sure you use the latest tagged version with the `git checkout v0.102.0` command.
 
 3. Embed the `GRDB.xcodeproj` project in your own project.
 
@@ -363,7 +363,7 @@ let dbQueue = try DatabaseQueue(
     configuration: config)
 ```
 
-See [Configuration](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/Configuration.html) for more details.
+See [Configuration](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/Configuration.html) for more details.
 
 
 ## Database Pools
@@ -440,7 +440,7 @@ let dbPool = try DatabasePool(
     configuration: config)
 ```
 
-See [Configuration](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/Configuration.html) for more details.
+See [Configuration](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/Configuration.html) for more details.
 
 
 Database pools are more memory-hungry than database queues. See [Memory Management](#memory-management) for more information.
@@ -590,7 +590,7 @@ try Type.fetchOne(...)    // Type?
 
 **Whenever you consume several rows from the database, you can fetch a Cursor, or an Array**.
 
-Array contains copies of database values and may be consumed on any thread. But they can take a lot of memory. Conversely, cursors iterate over database results in a lazy fashion, don't consume much memory, and are generally more efficient. But they must be consumed in a [protected dispatch queue](#database-connections):
+Arrays contain copies of database values and may be consumed on any thread. But they can take a lot of memory. Conversely, cursors iterate over database results in a lazy fashion, don't consume much memory, and are generally more efficient. But they must be consumed in a [protected dispatch queue](#database-connections):
 
 ```swift
 let rows = try Row.fetchAll(db, "SELECT ...")    // [Row]
@@ -674,7 +674,7 @@ let rows = try Row.fetchAll(db,
     arguments: ["name": "Arthur"])
 ```
 
-See [Values](#values) for more information on supported arguments types (Bool, Int, String, Date, Swift enums, etc.), and [StatementArguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html) for a detailed documentation of SQLite arguments.
+See [Values](#values) for more information on supported arguments types (Bool, Int, String, Date, Swift enums, etc.), and [StatementArguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html) for a detailed documentation of SQLite arguments.
 
 Unlike row arrays that contain copies of the database rows, row cursors are close to the SQLite metal, and require a little care:
 
@@ -859,8 +859,9 @@ Yet rows are not real dictionaries: they are ordered, and may contain duplicate 
 
 ```swift
 let row = try Row.fetchOne(db, "SELECT 1 AS foo, 2 AS foo")!
-row.columnNames     // ["foo", "foo"]
-row.databaseValues  // [1, 2]
+row.columnNames         // ["foo", "foo"]
+row.databaseValues      // [1, 2]
+row.value(named: "foo") // 1 (leftmost matching column)
 for (columnName, databaseValue) in row { ... } // ("foo", 1), ("foo", 2)
 ```
 
@@ -905,7 +906,7 @@ GRDB ships with built-in support for the following value types:
 
 - Generally speaking, all types that adopt the [DatabaseValueConvertible](#custom-value-types) protocol.
 
-Values can be used as [statement arguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html):
+Values can be used as [statement arguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html):
 
 ```swift
 let url: URL = ...
@@ -1296,7 +1297,7 @@ try dbQueue.inDatabase { db in
 }
 ```
 
-The `?` and colon-prefixed keys like `:name` in the SQL query are the statement arguments. You set them with arrays or dictionaries (arguments are actually of type [StatementArguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html), which happens to adopt the ExpressibleByArrayLiteral and ExpressibleByDictionaryLiteral protocols).
+The `?` and colon-prefixed keys like `:name` in the SQL query are the statement arguments. You set them with arrays or dictionaries (arguments are actually of type [StatementArguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html), which happens to adopt the ExpressibleByArrayLiteral and ExpressibleByDictionaryLiteral protocols).
 
 ```swift
 updateStatement.arguments = ["name": "Arthur", "age": 41]
@@ -1511,7 +1512,7 @@ row.value(named: "consumed") // "Hello"
 row.value(named: "produced") // nil
 ```
 
-Row adapters are values that adopt the [RowAdapter](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Protocols/RowAdapter.html) protocol. You can implement your own custom adapters, or use one of the four built-in adapters:
+Row adapters are values that adopt the [RowAdapter](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Protocols/RowAdapter.html) protocol. You can implement your own custom adapters, or use one of the four built-in adapters:
 
 
 ### ColumnMapping
@@ -1664,21 +1665,21 @@ Before jumping in the low-level wagon, here is the list of all SQLite APIs used 
 
 - `sqlite3_backup_finish`, `sqlite3_backup_init`, `sqlite3_backup_step`: see [Backup](#backup)
 - `sqlite3_bind_blob`, `sqlite3_bind_double`, `sqlite3_bind_int64`, `sqlite3_bind_null`, `sqlite3_bind_parameter_count`, `sqlite3_bind_parameter_name`, `sqlite3_bind_text`, `sqlite3_clear_bindings`, `sqlite3_column_blob`, `sqlite3_column_bytes`, `sqlite3_column_count`, `sqlite3_column_double`, `sqlite3_column_int64`, `sqlite3_column_name`, `sqlite3_column_text`, `sqlite3_column_type`, `sqlite3_exec`, `sqlite3_finalize`, `sqlite3_prepare_v2`, `sqlite3_reset`, `sqlite3_step`: see [Executing Updates](#executing-updates), [Fetch Queries](#fetch-queries), [Prepared Statements](#prepared-statements), [Values](#values)
-- `sqlite3_busy_handler`, `sqlite3_busy_timeout`: see [Configuration.busyMode](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/Configuration.html)
-- `sqlite3_changes`, `sqlite3_total_changes`: see [Database.changesCount and Database.totalChangesCount](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Classes/Database.html)
+- `sqlite3_busy_handler`, `sqlite3_busy_timeout`: see [Configuration.busyMode](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/Configuration.html)
+- `sqlite3_changes`, `sqlite3_total_changes`: see [Database.changesCount and Database.totalChangesCount](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Classes/Database.html)
 - `sqlite3_close`, `sqlite3_close_v2`, `sqlite3_next_stmt`, `sqlite3_open_v2`: see [Database Connections](#database-connections)
 - `sqlite3_commit_hook`, `sqlite3_rollback_hook`, `sqlite3_update_hook`: see [Database Changes Observation](#database-changes-observation), [FetchedRecordsController](#fetchedrecordscontroller)
 - `sqlite3_create_collation_v2`: see [String Comparison](#string-comparison)
 - `sqlite3_create_function_v2`, `sqlite3_result_blob`, `sqlite3_result_double`, `sqlite3_result_error`, `sqlite3_result_error_code`, `sqlite3_result_int64`, `sqlite3_result_null`, `sqlite3_result_text`, `sqlite3_user_data`, `sqlite3_value_blob`, `sqlite3_value_bytes`, `sqlite3_value_double`, `sqlite3_value_int64`, `sqlite3_value_text`, `sqlite3_value_type`: see [Custom SQL Functions](#custom-sql-functions)
 - `sqlite3_db_release_memory`: see [Memory Management](#memory-management)
-- `sqlite3_errcode`, `sqlite3_errmsg`: see [Error Handling](#error-handling)
+- `sqlite3_errcode`, `sqlite3_errmsg`, `sqlite3_errstr`, `sqlite3_extended_result_codes`: see [Error Handling](#error-handling)
 - `sqlite3_key`, `sqlite3_rekey`: see [Encryption](#encryption)
 - `sqlite3_last_insert_rowid`: see [Executing Updates](#executing-updates)
 - `sqlite3_preupdate_count`, `sqlite3_preupdate_depth`, `sqlite3_preupdate_hook`, `sqlite3_preupdate_new`, `sqlite3_preupdate_old`: see [Support for SQLite Pre-Update Hooks](#support-for-sqlite-pre-update-hooks)
 - `sqlite3_set_authorizer`: **reserved by GRDB**
-- `sqlite3_sql`: see [Statement.sql](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Classes/Statement.html)
-- `sqlite3_trace`: see [Configuration.trace](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/Configuration.html)
-- `sqlite3_wal_checkpoint_v2`: see [DatabasePool.checkpoint](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Classes/DatabasePool.html)
+- `sqlite3_sql`: see [Statement.sql](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Classes/Statement.html)
+- `sqlite3_trace`: see [Configuration.trace](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/Configuration.html)
+- `sqlite3_wal_checkpoint_v2`: see [DatabasePool.checkpoint](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Classes/DatabasePool.html)
 
 
 Records
@@ -1870,7 +1871,7 @@ try PointOfInterest.fetchAll(db, "SELECT ...", arguments:...)    // [PointOfInte
 try PointOfInterest.fetchOne(db, "SELECT ...", arguments:...)    // PointOfInterest?
 ```
 
-See [fetching methods](#fetching-methods) for information about the `fetchCursor`, `fetchAll` and `fetchOne` methods. See [StatementArguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html) for more information about the query arguments.
+See [fetching methods](#fetching-methods) for information about the `fetchCursor`, `fetchAll` and `fetchOne` methods. See [StatementArguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html) for more information about the query arguments.
 
 
 ### RowConvertible and Row Adapters
@@ -2509,7 +2510,7 @@ let count = try request.fetchCount(db)  // Int
 <a name="list-of-record-methods-3">³</a> See [SQL queries](#fetch-queries):
 
 ```swift
-let persons = try request.fetchAll("SELECT * FROM persons WHERE id = ?", arguments: [1])  // [Person]
+let persons = try Person.fetchAll("SELECT * FROM persons WHERE id = ?", arguments: [1]) // [Person]
 ```
 
 <a name="list-of-record-methods-4">⁴</a> See [Prepared Statements](#prepared-statements):
@@ -2865,7 +2866,7 @@ Person                          // SELECT * FROM persons
 ```
 
 
-Raw SQL snippets are also accepted, with eventual [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html):
+Raw SQL snippets are also accepted, with eventual [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html):
 
 ```swift
 // SELECT DATE(creationDate), COUNT(*) FROM persons WHERE name = 'Arthur' GROUP BY date(creationDate)
@@ -3240,17 +3241,17 @@ try request.deleteAll()
 
 ```swift
 // Custom SQL is always welcome
-try Person.fetchAll(db, "SELECT ...")       // [Person]
+try Person.fetchAll(db, "SELECT ...")   // [Person]
 ```
 
 But you may prefer to bring some elegance back in, and build custom requests on top of the `Request` and `TypedRequest` protocols:
 
 ```swift
 // No custom SQL in sight
-try Person.someCustomRequest().fetchAll(db) // [Person]
+try Person.customRequest().fetchAll(db) // [Person]
 ```
 
-Unlike QueryInterfaceRequest, these protocols can't count or delete. But they can fetch:
+Unlike QueryInterfaceRequest, these protocols can't delete. But they can fetch and count:
 
 ```swift
 /// The protocol for all types that define a way to fetch values from
@@ -3259,6 +3260,9 @@ protocol Request {
     /// A tuple that contains a prepared statement that is ready to be
     /// executed, and an eventual row adapter.
     func prepare(_ db: Database) throws -> (SelectStatement, RowAdapter?)
+    
+    /// The number of rows fetched by the request.
+    func fetchCount(_ db: Database) throws -> Int
 }
 
 /// The protocol for typed fetch requests.
@@ -3268,7 +3272,12 @@ protocol TypedRequest : Request {
 }
 ```
 
-The `prepare(_:)` function returns a tuple made of a [prepared statement](#prepared-statements) and an optional [row adapter](#row-adapters). The prepared statement tells which SQL query should be executed. The row adapter can help *presenting* the fetched rows in the way expected by the row consumers (we'll see an example below).
+The `prepare` method returns a tuple made of a [prepared statement](#prepared-statements) and an optional [row adapter](#row-adapters). The prepared statement tells which SQL query should be executed. The row adapter can help *presenting* the fetched rows in the way expected by the row consumers (we'll see an example below).
+
+The `fetchCount` method has a default implementation that builds a correct but naive SQL query from the statement returned by `prepare`: `SELECT COUNT(*) FROM (...)`. Adopting types can refine the counting SQL by customizing their `fetchCount` implementation.
+
+
+### Fetching From Custom Requests
 
 A Request doesn't know what to fetch, but it can feed the [fetching methods](#fetching-methods) of any fetchable type ([Row](#fetching-rows), [value](#value-queries), or [record](#records)):
 
@@ -3288,19 +3297,21 @@ try request.fetchAll(db)         // [Person]
 try request.fetchOne(db)         // Person?
 ```
 
-**To build requests**, you can create your own type that adopts the protocols, derive requests from other requests, or use one of the built-in concrete types:
 
-- [Request](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Protocols/Request.html): the protocol for all requests
-- [TypedRequest](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Protocols/TypedRequest.html): the protocol for all typed requests
-- [SQLRequest](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/SQLRequest.html): a Request built from raw SQL
-- [AnyRequest](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/AnyRequest.html): a type-erased Request
-- [AnyTypedRequest](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/AnyTypedRequest.html): a type-erased TypedRequest
+### Building Custom Requests
+
+**To build custom requests**, you can create your own type that adopts the protocols, or derive requests from other requests, or use one of the built-in concrete types:
+
+- [Request](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Protocols/Request.html): the protocol for all requests
+- [TypedRequest](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Protocols/TypedRequest.html): the protocol for all typed requests
+- [SQLRequest](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/SQLRequest.html): a Request built from raw SQL
+- [AnyRequest](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/AnyRequest.html): a type-erased Request
+- [AnyTypedRequest](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/AnyTypedRequest.html): a type-erased TypedRequest
 
 Rebind the fetched type of requests:
 
 ```swift
-let maxScore = Player // Int?
-    .select(max(scoreColumn))
+let maxScore = Player.select(max(scoreColumn))
     .bound(to: Int.self)
     .fetchOne(db)
 ```
@@ -3309,13 +3320,14 @@ Bind custom SQL requests to your record types:
 
 ```swift
 extension Person {
-    static func someCustomRequest() -> AnyTypedRequest<Person> {
-        let sqlRequest = SQLRequest("SELECT * FROM persons")
-        return sqlRequest.bound(to: Person.self)
+    static func customRequest(...) -> AnyTypedRequest<Person> {
+        let request = SQLRequest("SELECT ...", arguments: ...)
+        return request.bound(to: Person.self)
     }
 }
 
-try Person.someCustomRequest().fetchAll(db) // [Person]
+try Person.customRequest(...).fetchAll(db)   // [Person]
+try Person.customRequest(...).fetchCount(db) // Int
 ```
 
 Use [row adapters](#row-adapters) to ease the consumption of complex rows:
@@ -3410,11 +3422,11 @@ try migrator.migrate(dbQueue) // or migrator.migrate(dbPool)
 
 SQLite does not support many schema changes, and won't let you drop a table column with "ALTER TABLE ... DROP COLUMN ...", for example.
 
-Yet any kind of schema change is still possible. The SQLite documentation explains in detail how to do so: https://www.sqlite.org/lang_altertable.html#otheralter. This technique requires the temporary disabling of foreign key checks, and is supported by the `registerMigrationWithDisabledForeignKeyChecks` function:
+Yet any kind of schema change is still possible. The SQLite documentation explains in detail how to do so: https://www.sqlite.org/lang_altertable.html#otheralter. This technique requires the temporary disabling of foreign key checks, and is supported by the `registerMigrationWithDeferredForeignKeyCheck` function:
 
 ```swift
 // Add a NOT NULL constraint on persons.name:
-migrator.registerMigrationWithDisabledForeignKeyChecks("AddNotNullCheckOnName") { db in
+migrator.registerMigrationWithDeferredForeignKeyCheck("AddNotNullCheckOnName") { db in
     try db.create(table: "new_persons") { t in
         t.column("id", .integer).primaryKey()
         t.column("name", .text).notNull()
@@ -3709,7 +3721,9 @@ let pattern = FTS3Pattern(matchingAnyTokenIn: "")  // nil
 let pattern = FTS3Pattern(matchingAnyTokenIn: "*") // nil
 ```
 
-FTS3Pattern are regular [values](#values). You can use them as query [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html):
+> :warning: **Warning**: when GRDB uses the SQLite library that ships with the host system, those three initializers do not work until iOS 8.2 and macOS 10.10. Don't use them if your application targets previous systems.
+
+FTS3Pattern are regular [values](#values). You can use them as query [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html):
 
 ```swift
 let documents = try Document.fetchAll(db,
@@ -3922,7 +3936,7 @@ let pattern = FTS5Pattern(matchingAnyTokenIn: "")  // nil
 let pattern = FTS5Pattern(matchingAnyTokenIn: "*") // nil
 ```
 
-FTS5Pattern are regular [values](#values). You can use them as query [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html):
+FTS5Pattern are regular [values](#values). You can use them as query [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html):
 
 ```swift
 let documents = try Document.fetchAll(db,
@@ -3987,6 +4001,32 @@ The eventual content already present in the regular table is indexed, and every 
 For more information, see the SQLite documentation about external content tables: [FTS4](https://www.sqlite.org/fts3.html#_external_content_fts4_tables_), [FTS5](https://sqlite.org/fts5.html#external_content_tables).
 
 See also [WWDC Companion](https://github.com/groue/WWDCCompanion), a sample app that uses external content tables to store, display, and let the user search the WWDC 2016 sessions.
+
+
+#### Querying External Content Full-Text Tables
+
+When you need to perform a full-text search, and the external content table contains all the data you need, you can simply query the full-text table.
+
+But if you need to load columns from the regular table, and in the same time perform a full-text search, then you will need to query both tables at the same time.
+
+That is because SQLite will throw an error when you try to perform a full-text search on a regular table:
+
+```swift
+// SQLite error 1: unable to use function MATCH in the requested context
+// SELECT * FROM books WHERE books MATCH '...'
+let books = Book.matching(pattern).fetchAll(db)
+```
+
+The solution is to perform a joined request, using raw SQL:
+
+```swift
+let sql = "SELECT books.* " +
+          "FROM books " +
+          "JOIN books_ft ON " +
+          "books_ft.rowid = books.rowid AND " +
+          "books_ft MATCH ?"
+let books = Book.fetchAll(db, sql, arguments: [pattern])
+```
 
 
 ### Full-Text Records
@@ -4164,7 +4204,7 @@ class PersonObserver: TransactionObserver {
 }
 ```
 
-The `databaseDidChange` method is invoked for each insertion, deletion, and update of individual rows. When there are many changed rows, the observer will spend of a lot of time performing the same check again and again.
+The `databaseDidChange` method is invoked for each insertion, deletion, and update of individual rows, of any table. When there are many changed rows, the observer will spend of a lot of time performing the same check again and again.
 
 Instead, filter events in the `observes(eventsOfKind:)` method. This will prevent `databaseDidChange` from being called for changes you're not interested into, and is *much more* efficient:
 
@@ -4572,7 +4612,7 @@ This requires a manual installation of GRDB:
     
     ```sh
     cd [GRDB.swift directory]
-    git checkout v0.101.1
+    git checkout v0.102.0
     git submodule update --init SQLCipher/src
     ````
     
@@ -4678,7 +4718,7 @@ DROP TABLE students;
 --' WHERE id = 1
 ```
 
-To avoid those problems, **never embed raw values in your SQL queries**. The only correct technique is to provide [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/StatementArguments.html) to your SQL queries:
+To avoid those problems, **never embed raw values in your SQL queries**. The only correct technique is to provide [arguments](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/StatementArguments.html) to your SQL queries:
 
 ```swift
 // Good
@@ -4702,7 +4742,7 @@ Considering that a local database is not some JSON loaded from a remote server, 
 
 ### DatabaseError
 
-**DatabaseError** are thrown on SQLite errors (see [the list of SQLite error codes](https://www.sqlite.org/rescode.html)):
+**DatabaseError** are thrown on SQLite errors:
 
 ```swift
 do {
@@ -4711,7 +4751,10 @@ do {
         arguments: [1, "Bobby"])
 } catch let error as DatabaseError {
     // The SQLite error code: 19 (SQLITE_CONSTRAINT)
-    error.code
+    error.resultCode
+    
+    // The extended error code: 787 (SQLITE_CONSTRAINT_FOREIGNKEY)
+    error.extendedResultCode
     
     // The eventual SQLite message: FOREIGN KEY constraint failed
     error.message
@@ -4719,11 +4762,44 @@ do {
     // The eventual erroneous SQL query
     // "INSERT INTO pets (masterId, name) VALUES (?, ?)"
     error.sql
-
+    
     // Full error description:
-    // "SQLite error 19 with statement `INSERT INTO pets (masterId, name)
+    // "SQLite error 787 with statement `INSERT INTO pets (masterId, name)
     //  VALUES (?, ?)` arguments [1, "Bobby"]: FOREIGN KEY constraint failed""
     error.description
+}
+```
+
+**SQLite uses codes to distinguish between various errors:**
+
+```swift
+do {
+    try ...
+} catch let error as DatabaseError where error.extendedResultCode == .SQLITE_CONSTRAINT_FOREIGNKEY {
+    // foreign key constraint error
+} catch let error as DatabaseError where error.resultCode == .SQLITE_CONSTRAINT {
+    // any other constraint error
+} catch let error as DatabaseError {
+    // any other database error
+}
+```
+
+In the example above, `error.extendedResultCode` is a precise [extended result code](https://www.sqlite.org/rescode.html#extended_result_code_list), and `error.resultCode` is a less precise [primary result code](https://www.sqlite.org/rescode.html#primary_result_code_list). Extended result codes are refinements of primary result codes, as `SQLITE_CONSTRAINT_FOREIGNKEY` is to `SQLITE_CONSTRAINT`, for example. See [SQLite result codes](https://www.sqlite.org/rescode.html) for more information.
+
+As a convenience, extended result codes match their primary result code in a switch statement:
+
+```swift
+do {
+    try ...
+} catch let error as DatabaseError {
+    switch error.extendedResultCode {
+    case ResultCode.SQLITE_CONSTRAINT_FOREIGNKEY:
+        // foreign key constraint error
+    case ResultCode.SQLITE_CONSTRAINT:
+        // any other constraint error
+    default:
+        // any other database error
+    }
 }
 ```
 
@@ -5171,7 +5247,7 @@ try dbPool.write { db in
 
 ### DatabaseWriter and DatabaseReader Protocols
 
-Both DatabaseQueue and DatabasePool adopt the [DatabaseReader](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Protocols/DatabaseReader.html) and [DatabaseWriter](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Protocols/DatabaseWriter.html) protocols.
+Both DatabaseQueue and DatabasePool adopt the [DatabaseReader](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Protocols/DatabaseReader.html) and [DatabaseWriter](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Protocols/DatabaseWriter.html) protocols.
 
 These protocols provide a unified API that lets you write safe concurrent code that targets both classes.
 
@@ -5180,9 +5256,9 @@ However, database queues are not database pools, and DatabaseReader and Database
 - Pools are less forgiving than queues when one overlooks a transaction (see [concurrency rule 3](#guarantees-and-rules)).
 - DatabaseReader.read does not prevent a queue from writing.
 - DatabaseWriter.readFromCurrentState is synchronous, or asynchronous, depending on whether it is run by a queue or a pool (see [advanced DatabasePool](#advanced-databasepool)). It thus requires higher libDispatch skills, and more complex synchronization code.
-- The definition of "current state" in DatabaseWriter.readFromCurrentState is [delicate](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Protocols/DatabaseWriter.html#/s:FP4GRDB14DatabaseWriter20readFromCurrentStateFzFCS_8DatabaseT_T_).
+- The definition of "current state" in DatabaseWriter.readFromCurrentState is [delicate](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Protocols/DatabaseWriter.html#/s:FP4GRDB14DatabaseWriter20readFromCurrentStateFzFCS_8DatabaseT_T_).
 
-DatabaseReader and DatabaseWriter are not a tool for applications that hesitate between DatabaseQueue and DatabasePool, and look for a common API. As seen above, the protocols actually make applications harder to write correctly. Instead, they target reusable agnostic code that has *both* queues and pools in mind.
+DatabaseReader and DatabaseWriter are not a tool for applications that hesitate between DatabaseQueue and DatabasePool, and look for a common API. As seen above, the protocols actually make applications harder to write correctly. Instead, they target reusable agnostic code that has *both* queues and pools in mind. For example, GRDB uses those protocols for [migrations](#migrations) and [FetchedRecordsController](#fetchedrecordscontroller), two tools that accept both queues and pools.
 
 
 ### Dealing with External Connections
@@ -5199,7 +5275,7 @@ If you absolutely need multiple connections, then:
 - Read about [isolation in SQLite](https://www.sqlite.org/isolation.html)
 - Learn about [locks and transactions](https://www.sqlite.org/lang_transaction.html)
 - Become a master of the [WAL mode](https://www.sqlite.org/wal.html)
-- Prepare to setup a [busy handler](https://www.sqlite.org/c3ref/busy_handler.html) with [Configuration.busyMode](http://cocoadocs.org/docsets/GRDB.swift/0.101.1/Structs/Configuration.html)
+- Prepare to setup a [busy handler](https://www.sqlite.org/c3ref/busy_handler.html) with [Configuration.busyMode](http://cocoadocs.org/docsets/GRDB.swift/0.102.0/Structs/Configuration.html)
 - [Ask questions](https://github.com/groue/GRDB.swift/issues)
 
 
@@ -5443,19 +5519,9 @@ FAQ
 
 ### How do I close a database connection?
     
-The short answer is:
-
-```swift
-// Eventually close all database connections
-dbQueue = nil
-dbPool = nil
-```
-
-You do not explicitely close a database connection: it is managed by a [database queue](#database-queues) or [pool](#database-pools). The connection is closed when all usages of this connection are completed, and when its database queue or pool gets deallocated.
+Database connections are managed by [database queues](#database-queues) and [pools](#database-pools). A connection is closed when its database queue or pool is deallocated, and all usages of this connection are completed.
 
 Database accesses that run in background threads postpone the closing of connections.
-
-The `releaseMemory` method of DatabasePool ([documentation](#memory-management)) will actually close some connections, but the pool will open another connection as soon as you access the database again.
 
 
 ### How do I open a database stored as a resource of my application?
@@ -5579,6 +5645,6 @@ Sample Code
 **Thanks**
 
 - [Pierlis](http://pierlis.com), where we write great software.
-- [Vladimir Babin](https://github.com/Chiliec), [Pascal Edmond](https://github.com/pakko972), [Cristian Filipov](https://github.com/cfilipov), [@peter-ss](https://github.com/peter-ss), [Pierre-Loïc Raynaud](https://github.com/pierlo), [Steven Schveighoffer](https://github.com/schveiguy), [@swiftlyfalling](https://github.com/swiftlyfalling), and [Kevin Wooten](https://github.com/kdubb) for their contributions, help, and feedback on GRDB.
+- [Vladimir Babin](https://github.com/Chiliec), [Pascal Edmond](https://github.com/pakko972), [Cristian Filipov](https://github.com/cfilipov), [David Hart](https://github.com/hartbit), [@peter-ss](https://github.com/peter-ss), [Pierre-Loïc Raynaud](https://github.com/pierlo), [Steven Schveighoffer](https://github.com/schveiguy), [@swiftlyfalling](https://github.com/swiftlyfalling), and [Kevin Wooten](https://github.com/kdubb) for their contributions, help, and feedback on GRDB.
 - [@aymerick](https://github.com/aymerick) and [Mathieu "Kali" Poumeyrol](https://github.com/kali) because SQL.
 - [ccgus/fmdb](https://github.com/ccgus/fmdb) for its excellency.

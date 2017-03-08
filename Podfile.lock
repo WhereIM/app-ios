@@ -1,16 +1,16 @@
 PODS:
-  - Alamofire (4.3.0)
+  - Alamofire (4.4.0)
   - Bolts (1.8.4):
     - Bolts/AppLinks (= 1.8.4)
     - Bolts/Tasks (= 1.8.4)
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - Branch (0.12.27):
-    - Branch/Core (= 0.12.27)
-    - Branch/without-IDFA (= 0.12.27)
-  - Branch/Core (0.12.27)
-  - Branch/without-IDFA (0.12.27)
+  - Branch (0.13.5):
+    - Branch/Core (= 0.13.5)
+    - Branch/without-IDFA (= 0.13.5)
+  - Branch/Core (0.13.5)
+  - Branch/without-IDFA (0.13.5)
   - FacebookCore (0.2.0):
     - Bolts (~> 1.8)
     - FBSDKCoreKit (~> 4.15)
@@ -19,19 +19,22 @@ PODS:
     - FacebookCore (~> 0.2)
     - FBSDKCoreKit (~> 4.15)
     - FBSDKLoginKit (~> 4.15)
-  - FBSDKCoreKit (4.19.0):
+  - FBSDKCoreKit (4.20.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.19.0):
+  - FBSDKLoginKit (4.20.0):
     - FBSDKCoreKit
-  - GoogleMaps (2.1.1):
-    - GoogleMaps/Maps (= 2.1.1)
-  - GoogleMaps/Base (2.1.1)
-  - GoogleMaps/Maps (2.1.1):
+  - GoogleMaps (2.2.0):
+    - GoogleMaps/Maps (= 2.2.0)
+  - GoogleMaps/Base (2.2.0)
+  - GoogleMaps/Maps (2.2.0):
     - GoogleMaps/Base
-  - GRDB.swift (0.101.1)
+  - GRDB.swift (0.102.0)
+  - JSQMessagesViewController (7.3.4):
+    - JSQSystemSoundPlayer (~> 2.0.1)
+  - JSQSystemSoundPlayer (2.0.1)
   - Moscapsule (0.5.2)
   - OpenSSL-Universal (1.0.1.20)
-  - SDCAlertView (7.1)
+  - SDCAlertView (7.1.1)
 
 DEPENDENCIES:
   - Alamofire (~> 4.3)
@@ -40,6 +43,7 @@ DEPENDENCIES:
   - FacebookLogin
   - GoogleMaps
   - GRDB.swift
+  - JSQMessagesViewController
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
   - OpenSSL-Universal (~> 1.0.1.18)
   - SDCAlertView (~> 7.1)
@@ -50,23 +54,25 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Moscapsule:
-    :commit: c7025ecde754c7d080cbb7c374ca0d4041b43bf6
+    :commit: 3a159cbd8e8d31502a4207ce17858aa9a817098f
     :git: https://github.com/flightonary/Moscapsule.git
 
 SPEC CHECKSUMS:
-  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Branch: 41404cc6de82e84368a26961f66d657b0662ca02
+  Branch: 08e40d84f20b188443fd808fe01dadcc13d1727e
   FacebookCore: 2cb3f0fbff218e9d3119cec84bae983b232412de
   FacebookLogin: c9d606504735780a9e3002465a615512e0a691a5
-  FBSDKCoreKit: 894b2b6eda6a4c8c4204e92e59cc355709ef045c
-  FBSDKLoginKit: 83ca4d8f12a2022570af9fd6aacf27f6b425b99f
-  GoogleMaps: a5b5bbe47734e2443bde781a6aa64e69fdb6d785
-  GRDB.swift: bfa07c313355fe41424f03be0297953a4556e6ea
+  FBSDKCoreKit: 2d16979b28fe28c2b95af0d275ad5f9703c6c8de
+  FBSDKLoginKit: a9d9391506c687e2304a590bf9312837fce7f375
+  GoogleMaps: 104c418d61ab8a05dff06ed0784c25ea9d37da45
+  GRDB.swift: d91023bca3912810d46a76ff5d1e1ac30da278e1
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
+  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
   OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
-  SDCAlertView: b92fd1f00e522e18a062005e15a16c1e8295c5b5
+  SDCAlertView: 4798cda4a480f90b24313d3cb07640243943d129
 
-PODFILE CHECKSUM: 5cd73b3cf2d6a1eb1c157ec1cc73e050f9d70886
+PODFILE CHECKSUM: 148adbea048cda5df7b1b629eaab8b139939664e
 
 COCOAPODS: 1.2.0

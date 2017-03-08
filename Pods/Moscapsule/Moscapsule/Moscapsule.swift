@@ -130,25 +130,15 @@ public func moscapsule_cleanup() {
 }
 
 public struct MQTTReconnOpts {
-    public let reconnect_delay_s: UInt32
-    public let reconnect_delay_max_s: UInt32
-    public let reconnect_exponential_backoff: Bool
-    
-    public static func disabledReconn() -> MQTTReconnOpts {
-        return MQTTReconnOpts(delay: UInt32.max, max: UInt32.max, backoff: false)
-    }
-    
-    public init(delay: UInt32, max: UInt32, backoff: Bool) {
-        reconnect_delay_max_s = max
-        reconnect_exponential_backoff = backoff
-        reconnect_delay_s = delay
-    }
-    
-    internal init(reconnect_delay_s: UInt32, reconnect_delay_max_s: UInt32, reconnect_exponential_backoff: Bool) {
-        self.reconnect_delay_s = reconnect_delay_s
-        self.reconnect_delay_max_s = reconnect_delay_max_s
-        self.reconnect_exponential_backoff = reconnect_exponential_backoff
-    }
+	public let reconnect_delay_s: UInt32
+	public let reconnect_delay_max_s: UInt32
+	public let reconnect_exponential_backoff: Bool
+
+	public init(delay: UInt32, max: UInt32, exponentialBackoff: Bool) {
+		reconnect_delay_max_s = max
+		reconnect_exponential_backoff = exponentialBackoff
+		reconnect_delay_s = delay
+	}
 }
 
 public struct MQTTWillOpts {
@@ -246,11 +236,11 @@ public struct MQTTPsk {
 public struct MQTTMessage {
     public let messageId: Int
     public let topic: String
-    public let payload: Data
+    public let payload: Data?
     public let qos: Int32
     public let retain: Bool
     
-    public init(messageId: Int, topic: String, payload: Data, qos: Int32, retain: Bool) {
+    public init(messageId: Int, topic: String, payload: Data?, qos: Int32, retain: Bool) {
         self.messageId = messageId
         self.topic = topic
         self.payload = payload
@@ -270,7 +260,8 @@ public struct MQTTMessage {
         ]
         
         for encoding in encodingsToTry {
-            if let string = String(data: payload, encoding: encoding) {
+            if let payload = payload,
+                let string = String(data: payload, encoding: encoding) {
                 return string
             }
         }
@@ -285,7 +276,7 @@ public final class MQTTConfig {
     public let port: Int32
     public let keepAlive: Int32
     public var cleanSession: Bool
-    public var mqttReconnOpts: MQTTReconnOpts
+    public var mqttReconnOpts: MQTTReconnOpts?
     public var mqttWillOpts: MQTTWillOpts?
     public var mqttAuthOpts: MQTTAuthOpts?
     public var mqttPublishOpts: MQTTPublishOpts?
@@ -307,7 +298,7 @@ public final class MQTTConfig {
         self.port = port
         self.keepAlive = keepAlive
         self.cleanSession = true
-        mqttReconnOpts = MQTTReconnOpts(reconnect_delay_s: 1, reconnect_delay_max_s: 60 * 30, reconnect_exponential_backoff: true)
+        mqttReconnOpts = MQTTReconnOpts(delay: 1, max: 60 * 30, exponentialBackoff: true)
     }
 }
 
@@ -338,11 +329,15 @@ public final class MQTT {
         mosquitto_context_setup(mqttConfig.clientId.cCharArray, mqttConfig.cleanSession, mosquittoContext)
         
         // set MQTT Reconnection Options
-        mosquitto_reconnect_delay_set(mosquittoContext.mosquittoHandler,
-                                      mqttConfig.mqttReconnOpts.reconnect_delay_s,
-                                      mqttConfig.mqttReconnOpts.reconnect_delay_max_s,
-                                      mqttConfig.mqttReconnOpts.reconnect_exponential_backoff)
-        
+		if let options = mqttConfig.mqttReconnOpts {
+			mosquitto_reconnect_delay_set(mosquittoContext.mosquittoHandler,
+										  options.reconnect_delay_s,
+										  options.reconnect_delay_max_s,
+										  options.reconnect_exponential_backoff)
+		} else {
+			mosquitto_reconnect_disable(mosquittoContext.mosquittoHandler)
+		}
+		
         // set MQTT Will Options
         if let mqttWillOpts = mqttConfig.mqttWillOpts {
             mqttWillOpts.payload.withUnsafeBytes {
@@ -408,7 +403,8 @@ public final class MQTT {
             let message = rawMessage.pointee
             // If there are issues with topic string, drop message on the floor
             let topic = String(cString: message.topic)
-            let payload = Data(bytes: message.payload, count: Int(message.payloadlen))
+            let payload = message.payload != nil ?
+                Data(bytes: message.payload, count: Int(message.payloadlen)) : nil
             let mqttMessage = MQTTMessage(messageId: Int(message.mid), topic: topic, payload: payload, qos: message.qos, retain: message.retain)
             callback(mqttMessage)
         }
@@ -511,7 +507,8 @@ public final class MQTTClient {
     }
     
     public func disconnect(_ requestCompletion: ((MosqResult) -> ())? = nil) {
-        guard isRunning == true else { return }
+		guard isRunning == true
+			else { requestCompletion?(.mosq_success); return }
         
         self.isRunning = false
         addRequestToQueue { mosqContext in
