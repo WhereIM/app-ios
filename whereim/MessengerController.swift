@@ -52,6 +52,16 @@ class MessengerController: JSQMessagesViewController {
         self.collectionView?.layoutIfNeeded()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        // topLayoutGuide.length is 0 at the moment ...
+        let inset = collectionView.contentInset
+        let newinset = UIEdgeInsetsMake(inset.top + 60, 0, inset.bottom, 0)
+        collectionView.contentInset = newinset
+        collectionView.scrollIndicatorInsets = newinset
+    }
+
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         self.finishSendingMessage(animated: true)
         self.collectionView?.reloadData()
