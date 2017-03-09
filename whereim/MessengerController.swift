@@ -63,8 +63,8 @@ class MessengerController: JSQMessagesViewController {
     }
 
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
+        service!.sendMessage(channel!.id!, text)
         self.finishSendingMessage(animated: true)
-        self.collectionView?.reloadData()
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

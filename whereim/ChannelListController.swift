@@ -182,7 +182,6 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     func onConnectionStatusChanged(_ connected: Bool) {
-        print("onConnectionStatusChanged", connected)
         connectionStatusIndicator.isHidden = connected
     }
 

@@ -520,6 +520,10 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         return Message.getMessages(channel_id)
     }
 
+    func sendMessage(_ channel_id: String, _ text: String) {
+        publish("channel/\(channel_id)/data/message/put", [Key.MESSAGE: text])
+    }
+
     var channelMessageSync = [String:Bool]()
     var channelChannelSync = false
     var channelDataSync = [String:Bool]()
