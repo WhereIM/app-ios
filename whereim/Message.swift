@@ -99,10 +99,10 @@ class Message: Record {
                 COL_TYPE + " TEXT, " +
                 COL_MESSAGE + " TEXT, " +
                 COL_TIME + " INTEGER)"
-            try db.execute(sql);
+            try db.execute(sql)
 
             sql = "CREATE INDEX message_index ON "+TABLE_NAME+" ("+COL_CHANNEL+")"
-            try db.execute(sql);
+            try db.execute(sql)
 
             version = 1
         }

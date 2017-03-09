@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import GRDB
 import UIKit
 
 class MarkerList {
@@ -14,7 +15,18 @@ class MarkerList {
     var private_list = [Marker]()
 }
 
-class Marker {
+class Marker: Record {
+    static let TABLE_NAME = "marker"
+
+    static let COL_ID = "_id"
+    static let COL_CHANNEL_ID = "channel_id"
+    static let COL_NAME = "name"
+    static let COL_LATITUDE = "latitude"
+    static let COL_LONGITUDE = "longitude"
+    static let COL_ATTR = "attr"
+    static let COL_PUBLIC = "public"
+    static let COL_ENABLE = "enable"
+
     var id: String?
     var channel_id: String?
     var name: String?
@@ -23,6 +35,90 @@ class Marker {
     var attr: [String: Any]?
     var isPublic: Bool?
     var enable: Bool?
+
+    static func migrate(_ db: Database, _ db_version: Int) throws {
+        var version = db_version
+
+        if version < 1 {
+            var sql: String
+            sql = "CREATE TABLE " + TABLE_NAME + " (" +
+                COL_ID + " TEXT PRIMARY KEY, " +
+                COL_CHANNEL_ID + " TEXT, " +
+                COL_NAME + " TEXT, " +
+                COL_LATITUDE + " DOUBLE PRECISION, " +
+                COL_LONGITUDE + " DOUBLE PRECISION, " +
+                COL_ATTR + " TEXT, " +
+                COL_PUBLIC + " INTEGER, " +
+                COL_ENABLE + " INTEGER)"
+            try db.execute(sql)
+
+            sql = "CREATE INDEX marker_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"
+            try db.execute(sql)
+
+            version = 1
+        }
+    }
+
+    override class var databaseTableName: String {
+        return TABLE_NAME
+    }
+
+    required init(row: Row) {
+        do {
+            id = row.value(named: Marker.COL_ID)
+            channel_id = row.value(named: Marker.COL_CHANNEL_ID)
+            name = row.value(named: Marker.COL_NAME)
+            latitude = row.value(named: Marker.COL_LATITUDE)
+            longitude = row.value(named: Marker.COL_LONGITUDE)
+            let attr_string = row.value(named: Marker.COL_ATTR) as! String
+            attr = try JSONSerialization.jsonObject(with: attr_string.data(using: .utf8)!, options: []) as? [String: Any]
+            isPublic = row.value(named: Marker.COL_PUBLIC)
+            enable = row.value(named: Marker.COL_ENABLE)
+        } catch {
+            print("Error in decoding marker.attr")
+        }
+        super.init(row: row)
+    }
+
+    override init() {
+        super.init()
+    }
+
+    override var persistentDictionary: [String: DatabaseValueConvertible?] {
+        do {
+            let json = try JSONSerialization.data(withJSONObject: attr ?? [], options: [])
+            return [
+                Marker.COL_ID: id,
+                Marker.COL_CHANNEL_ID: channel_id,
+                Marker.COL_NAME: name,
+                Marker.COL_LATITUDE: latitude,
+                Marker.COL_LONGITUDE: longitude,
+                Marker.COL_ATTR: String(data: json, encoding: .utf8)!,
+                Marker.COL_PUBLIC: isPublic,
+                Marker.COL_ENABLE: enable
+            ]
+        } catch {
+            print("Error encoding marker.attr")
+            return [:]
+        }
+    }
+
+    static func getAll() -> [Marker] {
+        var ret = [Marker]()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        do {
+            try appDelegate.dbConn!.inDatabase { db in
+                let markers = try Marker.fetchAll(db, "SELECT * FROM "+TABLE_NAME+" ORDER BY "+COL_NAME+" ASC")
+
+                for m in markers {
+                    ret.append(m)
+                }
+            }
+        } catch {
+            print("Error checking out markers")
+        }
+        return ret
+    }
 
     static func getIconList() -> [String] {
         return ["red",

@@ -36,6 +36,7 @@ protocol Callback {
 
 class CoreService: NSObject, CLLocationManagerDelegate {
     private static var service: CoreService?
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     static func bind() -> CoreService{
         if service == nil {
@@ -63,7 +64,36 @@ class CoreService: NSObject, CLLocationManagerDelegate {
     var mqttConnected = false
     var mqttClient: MQTTClient?
     func onAuthed() {
-        let mqttConfig = MQTTConfig(clientId: clientId!, host: Config.AWS_IOT_MQTT_ENDPOINT, port: Int32(Config.AWS_IOT_MQTT_PORT), keepAlive: 60)
+        subscribe("client/\(clientId!)/+/get")
+
+        for c in Channel.getAll() {
+            channelList.append(c)
+            channelMap[c.id!] = c
+            clientChannelHandler(c)
+        }
+        for m in Mate.getAll() {
+            if channelMate[m.channel_id!] == nil {
+                channelMate[m.channel_id!] = [String:Mate]()
+            }
+            channelMate[m.channel_id!]![m.id!] = m
+            channelMateHandler(m)
+        }
+        for m in Marker.getAll() {
+            if channelMarker[m.channel_id!] == nil {
+                channelMarker[m.channel_id!] = [String:Marker]()
+            }
+            channelMarker[m.channel_id!]![m.id!] = m
+            channelMarkerHandler(m)
+        }
+        for e in Enchantment.getAll() {
+            if channelEnchantment[e.channel_id!] == nil {
+                channelEnchantment[e.channel_id!] = [String:Enchantment]()
+            }
+            channelEnchantment[e.channel_id!]![e.id!] = e
+            channelEnchantmentHandler(e)
+        }
+
+        let mqttConfig = MQTTConfig(clientId: clientId!, host: Config.AWS_IOT_MQTT_ENDPOINT, port: Int32(Config.AWS_IOT_MQTT_PORT), keepAlive: 15)
         mqttConfig.cleanSession = true
         mqttConfig.onConnectCallback = { returnCode in
             if returnCode != .success {
@@ -88,7 +118,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
         mqttConfig.onDisconnectCallback = { reasonCode in
             self.mqttConnected = false
-            self.channelDataCheckedOut.removeAll()
+            self.channelDataSync.removeAll()
             self.channelMessageSync.removeAll()
             NSLog("Reason Code is \(reasonCode.description)")
             DispatchQueue.main.async {
@@ -112,8 +142,11 @@ class CoreService: NSObject, CLLocationManagerDelegate {
     }
 
     func mqttOnConnected() {
-        subscribe("client/\(clientId!)/+/get")
-        publish("client/\(clientId!)/channel/sync", [Key.TS: 0])
+        publish("client/\(clientId!)/channel/sync", [Key.TS: getTS()])
+
+        for topic in subscribedTopics {
+            mqttClient!.subscribe(topic, qos: 1)
+        }
     }
 
     func mqttOnMessage(_ topic: String, _ data: [String: Any]) {
@@ -169,8 +202,24 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         mate.mate_name = data[Key.MATE_NAME] as? String ?? mate.mate_name
         mate.user_mate_name = data[Key.USER_MATE_NAME] as? String ?? mate.user_mate_name
 
+        if let ts = data[Key.TS] {
+            setTS(channel_id, ts as! UInt64)
+        }
+
+        appDelegate.dbConn!.inDatabase { db in
+            do {
+                try mate.save(db)
+            } catch {
+                print("Error saving mate \(error)")
+            }
+        }
+
+        channelMateHandler(mate)
+    }
+
+    func channelMateHandler(_ mate: Mate) {
         DispatchQueue.main.async {
-            if let receivers = self.mapDataReceiver[channel_id] {
+            if let receivers = self.mapDataReceiver[mate.channel_id!] {
                 for receiver in receivers {
                     receiver.value.onMateData(mate)
                 }
@@ -181,7 +230,6 @@ class CoreService: NSObject, CLLocationManagerDelegate {
     func mqttChannelMessageHandler(_ channel_id: String, _ data: [String: Any]) {
         let m = Message(data)
 
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.dbConn!.inDatabase { db in
             do {
                 try m.save(db)
@@ -214,15 +262,31 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         enchantment.isPublic = data[Key.PUBLIC] as? Bool ?? enchantment.isPublic
         enchantment.enable = data[Key.ENABLE] as? Bool ?? enchantment.enable
 
+        if let ts = data[Key.TS] {
+            setTS(channel_id, ts as! UInt64)
+        }
+
+        appDelegate.dbConn!.inDatabase { db in
+            do {
+                try enchantment.save(db)
+            } catch {
+                print("Error saving enchantment \(error)")
+            }
+        }
+
+        channelEnchantmentHandler(enchantment)
+    }
+
+    func channelEnchantmentHandler(_ enchantment: Enchantment) {
         DispatchQueue.main.async {
-            if let receivers = self.mapDataReceiver[channel_id] {
+            if let receivers = self.mapDataReceiver[enchantment.channel_id!] {
                 for receiver in receivers {
                     receiver.value.onEnchantmentData(enchantment)
                 }
             }
         }
 
-        notifyChannelEnchantmentListChangedListeners(channel_id)
+        notifyChannelEnchantmentListChangedListeners(enchantment.channel_id!)
     }
 
     func getChannelEnchantment(_ channel_id: String) -> EnchantmentList {
@@ -338,14 +402,30 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
         marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
 
+        if let ts = data[Key.TS] {
+            setTS(channel_id, ts as! UInt64)
+        }
+
+        appDelegate.dbConn!.inDatabase { db in
+            do {
+                try marker.save(db)
+            } catch {
+                print("Error saving marker \(error)")
+            }
+        }
+
+        channelMarkerHandler(marker)
+    }
+
+    func channelMarkerHandler(_ marker: Marker) {
         DispatchQueue.main.async {
-            if let receivers = self.mapDataReceiver[channel_id] {
+            if let receivers = self.mapDataReceiver[marker.channel_id!] {
                 for receiver in receivers {
                     receiver.value.onMarkerData(marker)
                 }
             }
         }
-        notifyChannelMarkerListChangedListeners(channel_id)
+        notifyChannelMarkerListChangedListeners(marker.channel_id!)
     }
 
     func getChannelMarker(_ channel_id: String) -> MarkerList {
@@ -441,7 +521,8 @@ class CoreService: NSObject, CLLocationManagerDelegate {
     }
 
     var channelMessageSync = [String:Bool]()
-    var channelDataCheckedOut = [String:Bool]()
+    var channelChannelSync = false
+    var channelDataSync = [String:Bool]()
     var channelMap = [String:Channel]()
     var channelList = [Channel]()
     func mqttClientChannelHandler(_ data: [String:Any]) {
@@ -460,13 +541,40 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             channel!.enable = enable
         }
 
-        subscribe("channel/\(channel_id)/data/+/get")
-
-        if channelDataCheckedOut[channel_id] == nil {
-            channelDataCheckedOut[channel_id] = true
-            publish("client/\(clientId!)/channel_data/sync", [Key.TS: 0, Key.CHANNEL: channel_id])
+        if let ts = data[Key.TS] {
+            setTS(ts as! UInt64)
         }
 
+        appDelegate.dbConn!.inDatabase { db in
+            do {
+                try channel!.save(db)
+            } catch {
+                print("Error saving channel \(error)")
+            }
+        }
+
+        clientChannelHandler(channel!)
+    }
+
+    func clientChannelHandler(_ channel: Channel) {
+        let channel_id = channel.id!
+
+        subscribe("channel/\(channel_id)/data/+/get")
+
+        syncChannelData(channel_id)
+        syncChannelMessage(channel_id)
+
+        notifyChannelListChangedListeners()
+    }
+
+    func syncChannelData(_ channel_id: String) {
+        if channelDataSync[channel_id] == nil {
+            channelDataSync[channel_id] = true
+            publish("client/\(clientId!)/channel_data/sync", [Key.TS: getTS(channel_id), Key.CHANNEL: channel_id])
+        }
+    }
+
+    func syncChannelMessage(_ channel_id: String) {
         if channelMessageSync[channel_id] == nil {
             channelMessageSync[channel_id] = true
             DispatchQueue.main.async {
@@ -474,8 +582,6 @@ class CoreService: NSObject, CLLocationManagerDelegate {
                 self.publish("client/\(self.clientId!)/message/sync", [Key.CHANNEL: channel_id, "after": data.lastId])
             }
         }
-
-        notifyChannelListChangedListeners()
     }
 
     func mqttChannelLocationHandler(_ channel_id: String, _ data: [String:Any]) {
@@ -503,6 +609,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         if channelMate[channel_id]![mate_id] == nil {
             let mate = Mate()
             mate.id = mate_id
+            mate.channel_id = channel_id
             channelMate[channel_id]![mate_id] = mate
         }
         return channelMate[channel_id]![mate_id]!
@@ -709,6 +816,35 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    var ts: UInt64 = UInt64(UserDefaults.standard.object(forKey: Key.TS) as? NSNumber ?? 0)
+    var initTs: UInt64 = UInt64(UserDefaults.standard.object(forKey: Key.TS) as? NSNumber ?? 0)
+    var channelTs = [String:UInt64]()
+
+    func setTS(_ ts: UInt64) {
+        if ts > self.ts {
+            UserDefaults.standard.set(NSNumber(value: ts), forKey: Key.TS)
+            self.ts = ts
+        }
+    }
+
+    func getTS() -> UInt64 {
+        return ts
+    }
+
+    func setTS(_ channel_id: String, _ ts: UInt64) {
+        if channelTs[channel_id] == nil || ts > channelTs[channel_id]! {
+            setTS(ts)
+            channelTs[channel_id] = ts
+        }
+    }
+
+    func getTS(_ channel_id: String) -> UInt64 {
+        if let ts = channelTs[channel_id] {
+            return ts
+        }
+        return initTs
+    }
+
     var isForeground = false
     func _checkLocationService() {
         var pending = false
@@ -746,18 +882,23 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         do {
             let json = try JSONSerialization.data(withJSONObject: message, options: [])
             print("publish \(topic) \(String(data: json, encoding: .utf8)!)")
-            mqttClient!.publish(json, topic: topic, qos: 1, retain: false)
+            if let client = mqttClient {
+                client.publish(json, topic: topic, qos: 1, retain: false)
+            }
         } catch {
             print("error in publish()")
         }
     }
 
     var subscribedTopics = [String]()
-    func subscribe(_ topicFilter: String) {
-        if subscribedTopics.index(of: topicFilter) != nil {
+    func subscribe(_ topic: String) {
+        if subscribedTopics.contains(topic) {
             return
         }
-        mqttClient!.subscribe(topicFilter, qos: 1)
+        subscribedTopics.append(topic)
+        if let client = mqttClient {
+            client.subscribe(topic, qos: 1)
+        }
     }
 
     func unsubscribe(_ topicFilter: String) {

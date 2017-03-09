@@ -39,6 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let db_version = try Int.fetchOne(db, "PRAGMA user_version")!
                 print("db_version", db_version)
 
+                try Channel.migrate(db, db_version)
+                try Mate.migrate(db, db_version)
+                try Marker.migrate(db, db_version)
+                try Enchantment.migrate(db, db_version)
                 try Message.migrate(db, db_version)
                 print("db migration finished")
 
