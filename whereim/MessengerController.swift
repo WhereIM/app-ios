@@ -9,7 +9,7 @@
 import UIKit
 import JSQMessagesViewController
 
-class MessengerController: JSQMessagesViewController {
+class MessengerController: JSQMessagesViewController, Callback {
     var messageList: BundledMessages?
     var service: CoreService?
     var channel: Channel?
@@ -43,6 +43,8 @@ class MessengerController: JSQMessagesViewController {
 
         service = CoreService.bind()
 
+        cbkey = service!.addMessageListener(channel!, cbkey, self)
+
         senderId = channel!.mate_id!
         senderDisplayName = service!.getChannelMate(channel!.id!, senderId).getDisplayName()
 
@@ -50,6 +52,17 @@ class MessengerController: JSQMessagesViewController {
 
         self.collectionView?.reloadData()
         self.collectionView?.layoutIfNeeded()
+    }
+
+    deinit {
+        if let sv = service {
+            sv.removeMessageListener(channel!, cbkey)
+        }
+    }
+
+    func onCallback() {
+        messageList = service!.getMessages(channel!.id!)
+        self.finishReceivingMessage(animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {

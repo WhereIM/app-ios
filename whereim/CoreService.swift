@@ -152,10 +152,8 @@ class CoreService: NSObject, CLLocationManagerDelegate {
 
     func checkMQTT() {
         DispatchQueue.main.async {
-            print("checkMQTT")
             if let client = self.mqttClient {
                 if !client.isConnected {
-                    print("Reconnect")
                     client.disconnect()
                     client.reconnect()
                 }
@@ -259,6 +257,8 @@ class CoreService: NSObject, CLLocationManagerDelegate {
                 print("Error saving message \(error)")
             }
         }
+
+        notifyChannelMessageListeners(channel_id)
     }
 
     var channelEnchantment = [String:[String:Enchantment]]()
@@ -544,6 +544,45 @@ class CoreService: NSObject, CLLocationManagerDelegate {
 
     func sendMessage(_ channel_id: String, _ text: String) {
         publish("channel/\(channel_id)/data/message/put", [Key.MESSAGE: text])
+    }
+
+    var messageListener = [String:[Int:Callback]]()
+    func addMessageListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
+        if messageListener[channel.id!] == nil {
+            messageListener[channel.id!] = [Int:Callback]()
+        }
+
+        var key = okey
+        if key == nil{
+            acc_lock.sync {
+                while messageListener[channel.id!]![acc] != nil {
+                    acc += 1
+                }
+                key = acc
+            }
+        }
+
+        messageListener[channel.id!]![key!] = callback
+
+        return acc
+    }
+
+    func removeMessageListener(_ channel: Channel, _ key: Int?) {
+        if let k = key {
+            if var listeners = messageListener[channel.id!] {
+                listeners.removeValue(forKey: k)
+            }
+        }
+    }
+
+    func notifyChannelMessageListeners(_ channel_id: String) {
+        DispatchQueue.main.async {
+            if let listeners = self.messageListener[channel_id] {
+                for l in listeners {
+                    l.value.onCallback()
+                }
+            }
+        }
     }
 
     var channelMessageSync = [String:Bool]()
