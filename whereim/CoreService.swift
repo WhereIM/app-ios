@@ -61,8 +61,10 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    var timer: Timer?
     var mqttConnected = false
     var mqttClient: MQTTClient?
+
     func onAuthed() {
         subscribe("client/\(clientId!)/+/get")
 
@@ -108,7 +110,6 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             }
         }
         mqttConfig.onMessageCallback = { mqttMessage in
-            NSLog("MQTT Message received: payload=\(mqttMessage.payloadString)")
             do {
                 let data = try JSONSerialization.jsonObject(with: mqttMessage.payload!, options: []) as! [String: Any]
                 self.mqttOnMessage(mqttMessage.topic, data)
@@ -120,12 +121,16 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             self.mqttConnected = false
             self.channelDataSync.removeAll()
             self.channelMessageSync.removeAll()
-            NSLog("Reason Code is \(reasonCode.description)")
             DispatchQueue.main.async {
                 for listener in self.connectionStatusChangedListener {
                     listener.value.onConnectionStatusChanged(false)
                 }
+
+                self.mqttClient?.disconnect()
+                self.mqttClient?.reconnect()
             }
+
+            print("Disconnected", reasonCode.description)
         }
 
         let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -136,9 +141,26 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         let certFile = Bundle(for: type(of: self)).bundleURL.appendingPathComponent("aws.bundle").appendingPathComponent("rootCA.pem").path
         mqttConfig.mqttServerCert = MQTTServerCert(cafile: certFile, capath: nil)
 
+
+        mqttConfig.mqttReconnOpts = nil
         mqttConfig.mqttTlsOpts = MQTTTlsOpts(tls_insecure: false, cert_reqs: .ssl_verify_peer, tls_version: "tlsv1.2", ciphers: nil)
 
         mqttClient = MQTT.newConnection(mqttConfig)
+
+        timer = Timer.scheduledTimer(timeInterval: TimeInterval(15), target: self, selector: #selector(checkMQTT), userInfo: nil, repeats: true)
+    }
+
+    func checkMQTT() {
+        DispatchQueue.main.async {
+            print("checkMQTT")
+            if let client = self.mqttClient {
+                if !client.isConnected {
+                    print("Reconnect")
+                    client.disconnect()
+                    client.reconnect()
+                }
+            }
+        }
     }
 
     func mqttOnConnected() {
