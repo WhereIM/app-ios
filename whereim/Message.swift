@@ -59,7 +59,7 @@ class Message: Record {
                 displayName = service.getChannelMate(channel_id!, mate_id!).getDisplayName()
             }
             let date = Date(timeIntervalSince1970: TimeInterval(time!))
-            jsqMessage = JSQMessage(senderId: mate_id!, senderDisplayName: displayName!, date: date, text: "\(type!): \(message!)")
+            jsqMessage = JSQMessage(senderId: mate_id!, senderDisplayName: displayName!, date: date, text: getText())
         }
         return jsqMessage!
     }
@@ -105,6 +105,38 @@ class Message: Record {
             try db.execute(sql)
 
             version = 1
+        }
+    }
+
+    func getText() -> String {
+        if type == "text" {
+            return message!
+        } else {
+            do {
+                let attr = try JSONSerialization.jsonObject(with: message!.data(using: .utf8)!, options: []) as? [String: Any]
+                switch type! {
+                case "enchantment_create":
+                    let s = String(format: "message_enchantment_create".localized, (attr?[Key.NAME] as? String) ?? "")
+                    return s
+                case "enchantment_emerge":
+                    let s = String(format: "message_enchantment_emerge".localized, (attr?[Key.NAME] as? String) ?? "")
+                    return s
+                case "enchantment_in":
+                    let s = String(format: "message_enchantment_in".localized, (attr?[Key.NAME] as? String) ?? "")
+                    return s
+                case "enchantment_out":
+                    let s = String(format: "message_enchantment_out".localized, (attr?[Key.NAME] as? String) ?? "")
+                    return s
+                case "marker_create":
+                    let s = String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")
+                    return s
+                default:
+                    return ""
+                }
+            } catch {
+                print("Error decoding message attr")
+                return ""
+            }
         }
     }
 
