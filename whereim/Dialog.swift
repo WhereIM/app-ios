@@ -175,7 +175,7 @@ class DialogCreateEnchantment {
 
         ispublic_label.translatesAutoresizingMaskIntoConstraints = false
         ispublic_label.adjustsFontSizeToFitWidth = false
-        ispublic_label.text = "public".localized
+        ispublic_label.text = "is_public".localized
         ispublic.addArrangedSubview(ispublic_label)
 
         ispublic.addArrangedSubview(ispublic_switch)
@@ -318,7 +318,7 @@ class DialogCreateMarker {
 
         ispublic_label.translatesAutoresizingMaskIntoConstraints = false
         ispublic_label.adjustsFontSizeToFitWidth = false
-        ispublic_label.text = "public".localized
+        ispublic_label.text = "is_public".localized
         ispublic.addArrangedSubview(ispublic_label)
 
         ispublic.addArrangedSubview(ispublic_switch)
