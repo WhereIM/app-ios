@@ -1,0 +1,39 @@
+/* 
+  Localizable.strings
+  whereim
+
+  Created by Buganini Q on 11/03/2017.
+  Copyright © 2017 Where.IM. All rights reserved.
+*/
+
+"lang" = "zh-TW";
+
+"action_invite" = "邀請";
+"action_quit" = "關閉程式";
+
+"retry" = "再試一次";
+
+"channel_name" = "群組名稱";
+"display_name" = "個人暱稱";
+"create_channel" = "建立群組";
+"ok" = "好";
+"cancel" = "取消";
+"join_channel" = "加入群組";
+"create_enchantment" = "設立結界 ⭕";
+"create_marker" = "放置圖釘 📍";
+"name" = "名稱";
+"icon" = "圖示";
+"mock" = "假資料";
+
+"is_public" = "公用";
+"is_private" = "自用";
+
+"error_exhausted" = "可註冊數量已滿，請稍後再試。";
+
+"message_enchantment_create" = "%1$s 結界已設立.";
+"message_enchantment_emerge" = "出現在 %1$s 結界";
+"message_enchantment_in" = "進入 %1$s 結界";
+"message_enchantment_out" = "離開 %1$s 結界";
+"message_marker_create" = "放了 %1$s 圖釘 {icon}";
+"mock_location_service_not_running" = "定位傳送功能未啟用，無法傳送假資料";
+"mock_confirm_disable" = "確定不再傳送假資料？";

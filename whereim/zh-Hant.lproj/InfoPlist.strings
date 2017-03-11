@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  whereim
+
+  Created by Buganini Q on 11/03/2017.
+  Copyright © 2017 Where.IM. All rights reserved.
+*/
+
+"NSLocationAlwaysUsageDescription" = "本程式需要定位功能才能運作喔";

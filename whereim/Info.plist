@@ -46,8 +46,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<false/>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allowing access to your location, you can spot your position on the map.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

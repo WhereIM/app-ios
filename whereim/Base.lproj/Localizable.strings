@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  whereim
+
+  Created by Buganini Q on 11/03/2017.
+  Copyright © 2017 Where.IM. All rights reserved.
+*/
+
+"lang" = "en";
+
+"app_name" = "Where.IM";
+"action_invite" = "Invite";
+"action_quit" = "Quit";
+
+"retry" = "Retry";
+
+"channel_name" = "Channel Name";
+"display_name" = "Display Name";
+"create_channel" = "Create Channel";
+"ok" = "OK";
+"cancel" = "Cancel";
+"join_channel" = "Join Channel";
+"create_enchantment" = "New Enchantment ⭕";
+"create_marker" = "New Marker 📍";
+"name" = "Name";
+"icon" = "Icon";
+"mock" = "Mock";
+
+"is_public" = "Public";
+"is_private" = "Private";
+
+"error_exhausted" = "Client capacity is exhausted, please try later.";
+
+"message_enchantment_create" = "Enchantment %1$s is created.";
+"message_enchantment_emerge" = "Emerged in enchantment %1$s.";
+"message_enchantment_in" = "Entered enchantment %1$s.";
+"message_enchantment_out" = "Left enchantment %1$s.";
+"message_marker_create" = "Marker %1$s is created. {icon}";
+"mock_location_service_not_running" = "Location service is not running, mock data is not sending.";
+"mock_confirm_disable" = "Are you sure to finish mocking?";
