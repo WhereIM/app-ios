@@ -987,6 +987,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         lm.delegate = self
         lm.allowsBackgroundLocationUpdates = true
         lm.pausesLocationUpdatesAutomatically = false
+        lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(UPDATE_MIN_DISTANCE), timeout: TimeInterval(UPDATE_MIN_TIME))
         lm.startUpdatingLocation()
     }
