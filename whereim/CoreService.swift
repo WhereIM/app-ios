@@ -130,7 +130,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
                 self.mqttClient?.reconnect()
             }
 
-            print("Disconnected", reasonCode.description)
+            Log.insert("Disconnected: \(reasonCode.description) (\(reasonCode))")
         }
 
         let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

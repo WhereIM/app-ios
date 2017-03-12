@@ -59,6 +59,43 @@
             </objects>
             <point key="canvasLocation" x="972" y="830.73463268365822"/>
         </scene>
+        <!--Log Controller-->
+        <scene sceneID="IJk-mb-Vth">
+            <objects>
+                <tableViewController storyboardIdentifier="log" id="tyM-kU-Xjq" customClass="LogController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="OGQ-kz-PkQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="v3G-BH-edS" style="IBUITableViewCellStyleDefault" id="t07-UT-fNY">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="t07-UT-fNY" id="Tz1-EV-ByS">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="v3G-BH-edS">
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="tyM-kU-Xjq" id="5pJ-ax-NhW"/>
+                            <outlet property="delegate" destination="tyM-kU-Xjq" id="CTC-Vb-ehS"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="thR-qf-71p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="972" y="1560"/>
+        </scene>
         <!--🌏-->
         <scene sceneID="he6-ng-qzx">
             <objects>
@@ -221,7 +258,7 @@
             <objects>
                 <navigationController storyboardIdentifier="startup" automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

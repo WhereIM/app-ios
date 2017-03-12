@@ -44,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 try Marker.migrate(db, db_version)
                 try Enchantment.migrate(db, db_version)
                 try Message.migrate(db, db_version)
+                try Log.migrate(db, db_version)
                 print("db migration finished")
 
                 try db.execute("PRAGMA user_version = \(Config.DB_VERSION)")

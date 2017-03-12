@@ -11,6 +11,7 @@
 		581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */; };
 		58202AB61E743B6A00BC7FCD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 58202AB41E743B6A00BC7FCD /* Localizable.strings */; };
 		58202AC11E74434400BC7FCD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 58202ABF1E74434400BC7FCD /* InfoPlist.strings */; };
+		58202AC41E74854A00BC7FCD /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58202AC31E74854A00BC7FCD /* Log.swift */; };
 		582046D41E69CA400027DE51 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582046D31E69CA400027DE51 /* Dialog.swift */; };
 		58230E111E6EEB7400AF4087 /* MessengerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58230E101E6EEB7400AF4087 /* MessengerController.swift */; };
 		5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33A1E5CB95600A7EB0E /* Marker.swift */; };
@@ -27,6 +28,7 @@
 		58568FCD1E51ADF2002FAD41 /* whereimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FCC1E51ADF2002FAD41 /* whereimTests.swift */; };
 		58568FD81E51ADF2002FAD41 /* whereimUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FD71E51ADF2002FAD41 /* whereimUITests.swift */; };
 		58568FE51E542E1D002FAD41 /* Pods_whereim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		586091301E75B60600377ADF /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5860912F1E75B60600377ADF /* LogController.swift */; };
 		5895F8541E5F638B00E00F02 /* AUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8531E5F638B00E00F02 /* AUIView.swift */; };
 		5895F8561E5F63B100E00F02 /* UICompactStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8551E5F63B100E00F02 /* UICompactStackView.swift */; };
 		5895F8581E5F671000E00F02 /* UIFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8571E5F671000E00F02 /* UIFrameView.swift */; };
@@ -76,6 +78,7 @@
 		58202AB91E743C9200BC7FCD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "whereim/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		58202AC01E74434400BC7FCD /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = whereim/Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		58202AC21E74439400BC7FCD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "whereim/zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		58202AC31E74854A00BC7FCD /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		582046D31E69CA400027DE51 /* Dialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		58230E101E6EEB7400AF4087 /* MessengerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerController.swift; sourceTree = "<group>"; };
 		5831E33A1E5CB95600A7EB0E /* Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
@@ -97,6 +100,7 @@
 		58568FD71E51ADF2002FAD41 /* whereimUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = whereimUITests.swift; sourceTree = "<group>"; };
 		58568FD91E51ADF2002FAD41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		585A0E691E68344500C5E9CB /* whereim.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = whereim.entitlements; sourceTree = "<group>"; };
+		5860912F1E75B60600377ADF /* LogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogController.swift; sourceTree = "<group>"; };
 		5895F8531E5F638B00E00F02 /* AUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUIView.swift; sourceTree = "<group>"; };
 		5895F8551E5F63B100E00F02 /* UICompactStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICompactStackView.swift; sourceTree = "<group>"; };
 		5895F8571E5F671000E00F02 /* UIFrameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFrameView.swift; sourceTree = "<group>"; };
@@ -218,6 +222,7 @@
 				58230E101E6EEB7400AF4087 /* MessengerController.swift */,
 				5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */,
 				5831E3401E5D632900A7EB0E /* MarkerController.swift */,
+				5860912F1E75B60600377ADF /* LogController.swift */,
 				582046D31E69CA400027DE51 /* Dialog.swift */,
 				58A6EB871E56F5CF00C29A49 /* CoreService.swift */,
 				58A6EB861E56F5CF00C29A49 /* Config.swift */,
@@ -259,6 +264,7 @@
 				5831E33A1E5CB95600A7EB0E /* Marker.swift */,
 				5831E33C1E5CC96500A7EB0E /* Enchantment.swift */,
 				58D1C03F1E6DA52B005A904F /* Message.swift */,
+				58202AC31E74854A00BC7FCD /* Log.swift */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -559,9 +565,11 @@
 			files = (
 				58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */,
 				58568FBD1E51ADF2002FAD41 /* whereim.xcdatamodeld in Sources */,
+				58202AC41E74854A00BC7FCD /* Log.swift in Sources */,
 				58230E111E6EEB7400AF4087 /* MessengerController.swift in Sources */,
 				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
+				586091301E75B60600377ADF /* LogController.swift in Sources */,
 				5895F8541E5F638B00E00F02 /* AUIView.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,
 				58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */,

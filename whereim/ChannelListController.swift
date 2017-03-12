@@ -127,6 +127,13 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         title.text = "Where.IM"
         navigator.addSubview(title)
 
+        if Config.LOGGING {
+            let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(openLogController(recognizer:)))
+            tapGesture.numberOfTapsRequired = 1
+            title.isUserInteractionEnabled =  true
+            title.addGestureRecognizer(tapGesture)
+        }
+
         connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
         connectionStatusIndicator.activityIndicatorViewStyle = .gray
         connectionStatusIndicator.startAnimating()
@@ -147,6 +154,12 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         fab.titleLabel?.baselineAdjustment = .alignCenters
         fab.layer.cornerRadius = 32
         fab.addTarget(self, action: #selector(create_channel(sender:)), for: .touchUpInside)
+    }
+
+    func openLogController(recognizer: UITapGestureRecognizer) {
+        print(openLogController)
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: "log")
+        self.show(vc, sender: self)
     }
 
     func create_channel(sender: UIButton) {
