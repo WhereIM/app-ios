@@ -154,6 +154,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         DispatchQueue.main.async {
             if let client = self.mqttClient {
                 if !client.isConnected {
+                    Log.insert("reconnect")
                     client.disconnect()
                     client.reconnect()
                 }
