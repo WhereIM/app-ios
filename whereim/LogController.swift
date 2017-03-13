@@ -51,10 +51,18 @@ class LogController: UITableViewController {
 
         formatter.dateFormat = "MM-dd hh:mm"
 
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearLogs))
+
         self.tableView!.register(LogCell.self, forCellReuseIdentifier: "log")
         self.tableView!.allowsSelection = false
 
         logs = Log.getAll()
+    }
+
+    func clearLogs() {
+        Log.clear()
+        logs = Log.getAll()
+        self.tableView!.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
