@@ -197,6 +197,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         for topic in subscribedTopics {
             mqttSession?.mqttClient?.subscribe(topic, qos: 1)
         }
+        for channel in channelList {
+            syncChannelData(channel.id!)
+            syncChannelMessage(channel.id!)
+        }
     }
 
     func mqttOnDisconnected() {
