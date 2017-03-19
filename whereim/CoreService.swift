@@ -34,7 +34,73 @@ protocol Callback {
     func onCallback()
 }
 
-class CoreService: NSObject, CLLocationManagerDelegate {
+protocol MQTTCallback {
+    func mqttOnConnected()
+    func mqttOnDisconnected()
+    func mqttOnReconnect()
+    func mqttOnMessage(_ topic: String, _ data: [String: Any])
+}
+
+
+class MQTTSession {
+    var mqttClient: MQTTClient?
+    var mqttCallback: MQTTCallback
+    var destroyed = false
+
+    init(clientId: String, host: String, port: Int32, keepAlive: Int32, callback: MQTTCallback) {
+        print("new connection")
+        mqttCallback = callback
+
+        let mqttConfig = MQTTConfig(clientId: clientId, host: host, port: port, keepAlive: keepAlive)
+
+        mqttConfig.cleanSession = true
+        mqttConfig.onConnectCallback = { returnCode in
+            if returnCode != .success {
+                return
+            }
+            self.mqttCallback.mqttOnConnected()
+        }
+        mqttConfig.onMessageCallback = { mqttMessage in
+            do {
+                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload!, options: []) as! [String: Any]
+                self.mqttCallback.mqttOnMessage(mqttMessage.topic, data)
+            } catch {
+                print("error decoding message")
+            }
+        }
+        mqttConfig.onDisconnectCallback = { reasonCode in
+            self.mqttCallback.mqttOnDisconnected()
+
+            if !self.destroyed {
+                self.mqttCallback.mqttOnReconnect()
+            }
+
+            Log.insert("Disconnected: \(reasonCode.description) (\(reasonCode))")
+        }
+
+        let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let key_file = folder.appendingPathComponent(Config.KEY_FILE).path
+        let crt_file = folder.appendingPathComponent(Config.CRT_FILE).path
+        mqttConfig.mqttClientCert = MQTTClientCert(certfile: crt_file, keyfile: key_file, keyfile_passwd: nil)
+
+        let certFile = Bundle(for: type(of: self)).bundleURL.appendingPathComponent("aws.bundle").appendingPathComponent("rootCA.pem").path
+        mqttConfig.mqttServerCert = MQTTServerCert(cafile: certFile, capath: nil)
+
+
+        mqttConfig.mqttReconnOpts = nil
+        mqttConfig.mqttTlsOpts = MQTTTlsOpts(tls_insecure: false, cert_reqs: .ssl_verify_peer, tls_version: "tlsv1.2", ciphers: nil)
+
+        mqttClient = MQTT.newConnection(mqttConfig)
+    }
+
+    func destroy() {
+        print("destroy")
+        destroyed = true
+        mqttClient?.disconnect()
+    }
+}
+
+class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     private static var service: CoreService?
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
@@ -46,8 +112,6 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         return service!
     }
 
-    let KEY_FILE = "whereim.key"
-    let CRT_FILE = "whereim.crt"
     private var otp: String?
     private var clientId: String?
 
@@ -63,10 +127,20 @@ class CoreService: NSObject, CLLocationManagerDelegate {
 
     var timer: Timer?
     var mqttConnected = false
-    var mqttClient: MQTTClient?
+    var mqttSession: MQTTSession?
+
+    func resetMQTT() {
+        if let session = mqttSession {
+            session.destroy()
+        }
+        print("resetMQTT")
+        mqttSession = MQTTSession(clientId: clientId!, host: Config.AWS_IOT_MQTT_ENDPOINT, port: Int32(Config.AWS_IOT_MQTT_PORT), keepAlive: 15, callback: self)
+    }
 
     func onAuthed() {
         subscribe("client/\(clientId!)/+/get")
+
+        resetMQTT()
 
         for c in Channel.getAll() {
             channelList.append(c)
@@ -95,78 +169,52 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             channelEnchantmentHandler(e)
         }
 
-        let mqttConfig = MQTTConfig(clientId: clientId!, host: Config.AWS_IOT_MQTT_ENDPOINT, port: Int32(Config.AWS_IOT_MQTT_PORT), keepAlive: 15)
-        mqttConfig.cleanSession = true
-        mqttConfig.onConnectCallback = { returnCode in
-            if returnCode != .success {
-                return
-            }
-            self.mqttConnected = true
-            self.mqttOnConnected()
-            DispatchQueue.main.async {
-                for listener in self.connectionStatusChangedListener {
-                    listener.value.onConnectionStatusChanged(true)
-                }
-            }
-        }
-        mqttConfig.onMessageCallback = { mqttMessage in
-            do {
-                let data = try JSONSerialization.jsonObject(with: mqttMessage.payload!, options: []) as! [String: Any]
-                self.mqttOnMessage(mqttMessage.topic, data)
-            } catch {
-                print("error decoding message")
-            }
-        }
-        mqttConfig.onDisconnectCallback = { reasonCode in
-            self.mqttConnected = false
-            self.channelDataSync.removeAll()
-            self.channelMessageSync.removeAll()
-            DispatchQueue.main.async {
-                for listener in self.connectionStatusChangedListener {
-                    listener.value.onConnectionStatusChanged(false)
-                }
-
-                self.mqttClient?.disconnect()
-                self.mqttClient?.reconnect()
-            }
-
-            Log.insert("Disconnected: \(reasonCode.description) (\(reasonCode))")
-        }
-
-        let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let key_file = folder.appendingPathComponent(self.KEY_FILE).path
-        let crt_file = folder.appendingPathComponent(self.CRT_FILE).path
-        mqttConfig.mqttClientCert = MQTTClientCert(certfile: crt_file, keyfile: key_file, keyfile_passwd: nil)
-
-        let certFile = Bundle(for: type(of: self)).bundleURL.appendingPathComponent("aws.bundle").appendingPathComponent("rootCA.pem").path
-        mqttConfig.mqttServerCert = MQTTServerCert(cafile: certFile, capath: nil)
-
-
-        mqttConfig.mqttReconnOpts = nil
-        mqttConfig.mqttTlsOpts = MQTTTlsOpts(tls_insecure: false, cert_reqs: .ssl_verify_peer, tls_version: "tlsv1.2", ciphers: nil)
-
-        mqttClient = MQTT.newConnection(mqttConfig)
-
         timer = Timer.scheduledTimer(timeInterval: TimeInterval(15), target: self, selector: #selector(checkMQTT), userInfo: nil, repeats: true)
     }
 
     func checkMQTT() {
         DispatchQueue.main.async {
-            if let client = self.mqttClient {
+            if let client = self.mqttSession?.mqttClient {
                 if !client.isConnected {
                     Log.insert("reconnect")
-                    client.disconnect()
-                    client.reconnect()
+                    self.resetMQTT()
                 }
             }
         }
     }
 
     func mqttOnConnected() {
+        print("mqttOnConnected()")
+        self.mqttConnected = true
+        DispatchQueue.main.async {
+            for listener in self.connectionStatusChangedListener {
+                listener.value.onConnectionStatusChanged(true)
+            }
+        }
+
         publish("client/\(clientId!)/channel/sync", [Key.TS: getTS()])
 
         for topic in subscribedTopics {
-            mqttClient!.subscribe(topic, qos: 1)
+            mqttSession?.mqttClient?.subscribe(topic, qos: 1)
+        }
+    }
+
+    func mqttOnDisconnected() {
+        print("mqttOnDisconnected()")
+        self.mqttConnected = false
+        self.channelDataSync.removeAll()
+        self.channelMessageSync.removeAll()
+        DispatchQueue.main.async {
+            for listener in self.connectionStatusChangedListener {
+                listener.value.onConnectionStatusChanged(false)
+            }
+        }
+    }
+
+    func mqttOnReconnect(){
+        print("mqttOnReconnect()")
+        DispatchQueue.main.async {
+            self.resetMQTT()
         }
     }
 
@@ -722,8 +770,8 @@ class CoreService: NSObject, CLLocationManagerDelegate {
                             let crt = response.result.value!
 
                             let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                            let key_file = folder.appendingPathComponent(self.KEY_FILE).path
-                            let crt_file = folder.appendingPathComponent(self.CRT_FILE).path
+                            let key_file = folder.appendingPathComponent(Config.KEY_FILE).path
+                            let crt_file = folder.appendingPathComponent(Config.CRT_FILE).path
 
                             do {
                                 try key.write(toFile: key_file, atomically: true, encoding: .ascii)
@@ -948,7 +996,7 @@ class CoreService: NSObject, CLLocationManagerDelegate {
         do {
             let json = try JSONSerialization.data(withJSONObject: message, options: [])
             print("publish \(topic) \(String(data: json, encoding: .utf8)!)")
-            if let client = mqttClient {
+            if let client = mqttSession?.mqttClient {
                 client.publish(json, topic: topic, qos: 1, retain: false)
             }
         } catch {
@@ -962,13 +1010,15 @@ class CoreService: NSObject, CLLocationManagerDelegate {
             return
         }
         subscribedTopics.append(topic)
-        if let client = mqttClient {
+        if let client = mqttSession?.mqttClient {
             client.subscribe(topic, qos: 1)
         }
     }
 
     func unsubscribe(_ topicFilter: String) {
-        mqttClient!.unsubscribe(topicFilter)
+        if let client = mqttSession?.mqttClient {
+            client.unsubscribe(topicFilter)
+        }
         if let index = subscribedTopics.index(of: topicFilter) {
             subscribedTopics.remove(at: index)
         }

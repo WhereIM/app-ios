@@ -12,6 +12,9 @@ class Config {
 
     static let DB_VERSION = 1
 
+    static let KEY_FILE = "whereim.key"
+    static let CRT_FILE = "whereim.crt"
+
     static let GOOGLE_MAP_KEY = "AIzaSyAtP4_TFI7E_88lUQQTo9NBqJvF9KcC8HA"
 
     static let FACEBOOK_SLUG = "facebook"
