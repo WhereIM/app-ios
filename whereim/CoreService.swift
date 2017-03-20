@@ -184,13 +184,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func mqttOnConnected() {
-        print("mqttOnConnected()")
+        print("mqttOnConnected() \(clientId!)")
         self.mqttConnected = true
         DispatchQueue.main.async {
             for listener in self.connectionStatusChangedListener {
                 listener.value.onConnectionStatusChanged(true)
             }
         }
+
+        sendPushToken()
 
         publish("client/\(clientId!)/channel/sync", [Key.TS: getTS()])
 
@@ -236,6 +238,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     mqttChannelEnchantmentHandler(data)
                 case "marker":
                     mqttChannelMarkerHandler(data)
+                case "profile":
+                    mqttClientProfileHandler(data)
                 default:
                     break
                 }
@@ -265,6 +269,26 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         } catch {
             print("error in mqttOnMessage")
+        }
+    }
+
+
+    var pendingPushToken: String?
+    func setPushToken(_ token: String) {
+        pendingPushToken = token
+        sendPushToken()
+    }
+
+    func sendPushToken() {
+        if let token = pendingPushToken {
+            publish("client/\(clientId!)/profile/put", ["apns_token":token])
+        }
+    }
+
+    func mqttClientProfileHandler(_ data: [String: Any]) {
+        let token = data["apns_token"] as? String
+        if token == pendingPushToken {
+            pendingPushToken = nil
         }
     }
 

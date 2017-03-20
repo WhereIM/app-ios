@@ -49,7 +49,7 @@ class LogController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        formatter.dateFormat = "MM-dd hh:mm"
+        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearLogs))
 

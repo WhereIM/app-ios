@@ -11,6 +11,7 @@ import GRDB
 import UIKit
 import FBSDKCoreKit
 import GoogleMaps
+import UserNotifications
 
 extension String {
     var localized: String {
@@ -25,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     let DB_FILE = "whereim.sqlite"
+    var service: CoreService?
     var dbConn: DatabaseQueue?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -53,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Error opening db \(error)")
         }
 
-        _ = CoreService.bind()
+        service = CoreService.bind()
 
         let branch = Branch.getInstance()
         branch!.initSession(launchOptions: launchOptions, automaticallyDisplayDeepLinkController: true, deepLinkHandler: { params, error in
@@ -74,7 +76,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
 
+        if #available(iOS 10, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
+            application.registerForRemoteNotifications()
+        }
+        else if #available(iOS 9, *) {
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+
         return true
+    }
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+
+        print("APNs device token: \(deviceTokenString)")
+
+        service?.setPushToken(deviceTokenString)
     }
 
     // Respond to URI scheme links
