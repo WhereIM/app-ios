@@ -141,7 +141,9 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let m = self.markerMarker[marker.id!] {
             m.map = nil
         }
-        if marker.enable == true {
+        if marker.deleted {
+            self.markerMarker.removeValue(forKey: marker.id!)
+        } else if marker.enable == true {
             let m = GMSMarker()
             m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)

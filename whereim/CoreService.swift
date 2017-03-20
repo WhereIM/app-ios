@@ -500,6 +500,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
         marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
         marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
+        marker.deleted = data[Key.DELETED] as? Bool ?? marker.deleted
 
         if let ts = data[Key.TS] {
             setTS(channel_id, ts as! UInt64)
@@ -524,6 +525,18 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
             }
         }
+
+        if marker.deleted {
+            channelMarker[marker.channel_id!]!.removeValue(forKey: marker.id!)
+            appDelegate.dbConn!.inDatabase { db in
+                do {
+                    try marker.delete(db)
+                } catch {
+                    print("Error deleting marker \(error)")
+                }
+            }
+        }
+
         notifyChannelMarkerListChangedListeners(marker.channel_id!)
     }
 

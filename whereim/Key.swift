@@ -18,6 +18,7 @@ class Key {
     static let CLIENT_ID = "client_id"
     static let COLOR = "color"
 
+    static let DELETED = "deleted"
     static let DESC = "desc"
 
     static let ENABLE = "enable"

@@ -35,6 +35,7 @@ class Marker: Record {
     var attr: [String: Any]?
     var isPublic: Bool?
     var enable: Bool?
+    var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
