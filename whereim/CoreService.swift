@@ -692,6 +692,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.channel_name = data["channel_name"] as? String ?? channel!.channel_name
         channel!.user_channel_name = data["user_channel_name"] as? String ?? channel!.user_channel_name
         channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
+        channel!.deleted = data[Key.DELETED] as? Bool ?? channel!.deleted
         if let enable = data[Key.ENABLE] as! Bool? {
             channel!.enable = enable
         }
@@ -714,10 +715,25 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     func clientChannelHandler(_ channel: Channel) {
         let channel_id = channel.id!
 
-        subscribe("channel/\(channel_id)/data/+/get")
+        if channel.deleted {
+            unsubscribe("channel/\(channel_id)/data/+/get")
+            channelMap.removeValue(forKey: channel.id!)
+            if let idx = channelList.index(where: { $0.id! == channel.id! }) {
+                channelList.remove(at: idx)
+            }
+            appDelegate.dbConn!.inDatabase { db in
+                do {
+                    try channel.delete(db)
+                } catch {
+                    print("Error deleting channel \(error)")
+                }
+            }
+        } else {
+            subscribe("channel/\(channel_id)/data/+/get")
 
-        syncChannelData(channel_id)
-        syncChannelMessage(channel_id)
+            syncChannelData(channel_id)
+            syncChannelMessage(channel_id)
+        }
 
         notifyChannelListChangedListeners()
     }

@@ -23,6 +23,7 @@ class Channel: Record {
     var user_channel_name: String?
     var mate_id: String?
     var enable: Bool?
+    var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
