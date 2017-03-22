@@ -10,7 +10,7 @@ import CoreLocation
 import UIKit
 
 protocol MapControllerInterface {
-    func setup(_ mapController: MapController)
+    init(_ mapController: MapController)
     func viewDidLoad(_ viewContrller: UIViewController)
     func didReceiveMemoryWarning()
     func refreshEditing()
@@ -33,8 +33,7 @@ class MapController: UIViewController {
     }
 
     func _init() {
-        mapControllerImpl = GoogleMapController()
-        mapControllerImpl!.setup(self)
+        mapControllerImpl = GoogleMapController(self)
     }
 
     let enchantmentPanel = UICompactStackView()

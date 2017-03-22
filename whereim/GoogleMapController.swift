@@ -10,13 +10,14 @@ import UIKit
 import GoogleMaps
 
 class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate, CLLocationManagerDelegate, MapDataReceiver {
-    var mapController: MapController?
+    unowned var mapController: MapController
     var locationManager = CLLocationManager()
     var didFindMyLocation = false
     var mapView: GMSMapView?
 
-    func setup(_ mapController: MapController) {
+    required init(_ mapController: MapController) {
         self.mapController = mapController
+        super.init()
         initmarkerTamplate()
     }
 
@@ -58,7 +59,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-        mapController!.startEditing(coordinate)
+        mapController.startEditing(coordinate)
     }
 
     deinit {
@@ -85,13 +86,13 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     var editingEnchantmentCircle: GMSCircle?
     var editingMarkerMarker: GMSMarker?
     func refreshEditing() {
-        if mapController!.editingType == .enchantment {
+        if mapController.editingType == .enchantment {
             if editingEnchantmentCircle != nil {
                 editingEnchantmentCircle!.map = nil
             }
             let c = GMSCircle()
-            c.position = mapController!.editingCoordinate
-            c.radius = CLLocationDistance(Config.ENCHANTMENT_RADIUS[mapController!.editingEnchantmentRadiusIndex])
+            c.position = mapController.editingCoordinate
+            c.radius = CLLocationDistance(Config.ENCHANTMENT_RADIUS[mapController.editingEnchantmentRadiusIndex])
             c.strokeWidth = 3
             c.strokeColor = .orange
             c.map = self.mapView
@@ -102,14 +103,14 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             }
         }
 
-        if mapController!.editingType == .marker {
+        if mapController.editingType == .marker {
             if editingMarkerMarker != nil {
                 editingMarkerMarker!.map = nil
             }
             let m = GMSMarker()
-            m.position = mapController!.editingCoordinate
+            m.position = mapController.editingCoordinate
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-            m.icon = mapController!.editingMarker.getIcon()
+            m.icon = mapController.editingMarker.getIcon()
             m.map = self.mapView
             editingMarkerMarker = m
         } else {
