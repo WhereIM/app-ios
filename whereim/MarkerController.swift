@@ -8,6 +8,46 @@
 
 import UIKit
 
+class MarkerCell: UITableViewCell {
+    let icon = UIImageView()
+    let title = UILabel()
+    let loadingSwitch = UILoadingSwitch()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.frame = CGRect(x: 0, y: 0, width: 43, height: 43)
+
+        title.adjustsFontSizeToFitWidth = false
+        title.translatesAutoresizingMaskIntoConstraints = false
+
+        loadingSwitch.requestLayout()
+        loadingSwitch.translatesAutoresizingMaskIntoConstraints = false
+
+        self.contentView.addSubview(icon)
+        self.contentView.addSubview(title)
+        self.contentView.addSubview(loadingSwitch)
+
+        NSLayoutConstraint.activate([
+            icon.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            icon.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            title.leadingAnchor.constraint(equalTo: self.icon.trailingAnchor),
+            title.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            loadingSwitch.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant:-15),
+            loadingSwitch.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var markerList: MarkerList
     let service: CoreService
@@ -43,10 +83,11 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! UITableViewCellWIthTextLoadingSwitch
+        let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
 
         let marker = getMarker(indexPath.section, indexPath.row)!
 
+        cell.icon.image = marker.getIcon()
         cell.title.text = marker.name
         cell.loadingSwitch.setEnabled(marker.enable)
         cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
@@ -93,7 +134,7 @@ class MarkerController: UIViewController, Callback {
         service = CoreService.bind()
         adapter = ChannelMarkerAdapter((service)!, channel!)
         markerListView.allowsSelection = false
-        markerListView.register(UITableViewCellWIthTextLoadingSwitch.self, forCellReuseIdentifier: "marker")
+        markerListView.register(MarkerCell.self, forCellReuseIdentifier: "marker")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter
     }
