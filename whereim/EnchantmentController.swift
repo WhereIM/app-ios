@@ -8,6 +8,37 @@
 
 import UIKit
 
+class EnchantmentCell: UITableViewCell {
+    let title = UILabel()
+    let loadingSwitch = UILoadingSwitch()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        title.adjustsFontSizeToFitWidth = false
+        title.translatesAutoresizingMaskIntoConstraints = false
+
+        loadingSwitch.requestLayout()
+        loadingSwitch.translatesAutoresizingMaskIntoConstraints = false
+
+        self.contentView.addSubview(title)
+        self.contentView.addSubview(loadingSwitch)
+
+        NSLayoutConstraint.activate([
+            title.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15),
+            title.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            loadingSwitch.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant:-15),
+            loadingSwitch.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var enchantmentList: EnchantmentList
     let service: CoreService
@@ -43,7 +74,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! UITableViewCellWIthTextLoadingSwitch
+        let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! EnchantmentCell
 
         let enchantment = getEnchantment(indexPath.section, indexPath.row)!
 
@@ -93,7 +124,7 @@ class EnchantmentController: UIViewController, Callback {
         service = CoreService.bind()
         adapter = ChannelEnchantmentAdapter((service)!, channel!)
         enchantmentListView.allowsSelection = false
-        enchantmentListView.register(UITableViewCellWIthTextLoadingSwitch.self, forCellReuseIdentifier: "enchantment")
+        enchantmentListView.register(EnchantmentCell.self, forCellReuseIdentifier: "enchantment")
         enchantmentListView.dataSource = adapter
         enchantmentListView.delegate = adapter
     }
