@@ -400,8 +400,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
             }
         }
-        list.public_list.sort(by: {$0.name! < $1.name!})
-        list.private_list.sort(by: {$0.name! < $1.name!})
+        list.public_list.sort(by: {$0.name!.localizedCompare($1.name!) == .orderedAscending})
+        list.private_list.sort(by: {$0.name!.localizedCompare($1.name!) == .orderedAscending})
         return list
     }
 
@@ -554,8 +554,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
             }
         }
-        list.public_list.sort(by: {$0.name! < $1.name!})
-        list.private_list.sort(by: {$0.name! < $1.name!})
+        list.public_list.sort(by: {$0.name!.localizedCompare($1.name!) == .orderedAscending})
+        list.private_list.sort(by: {$0.name!.localizedCompare($1.name!) == .orderedAscending})
         return list
     }
 
