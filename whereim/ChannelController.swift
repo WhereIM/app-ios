@@ -24,8 +24,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
     override func viewDidLoad() {
         service = CoreService.bind()
-        channelListChangedCbkey = service?.addChannelListChangedListener(channelListChangedCbkey, self)
-        connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
 
         let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
 
@@ -89,7 +87,14 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         }
     }
 
-    deinit {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        channelListChangedCbkey = service?.addChannelListChangedListener(channelListChangedCbkey, self)
+        connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
             if channelListChangedCbkey != nil {
                 sv.removeChannelListChangedListener(channelListChangedCbkey)
@@ -100,6 +105,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
                 connectionStatusChangedCbKey = nil
             }
         }
+        super.viewWillDisappear(animated)
     }
 
     func channelListChanged() {

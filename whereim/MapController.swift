@@ -12,6 +12,8 @@ import UIKit
 protocol MapControllerInterface {
     init(_ mapController: MapController)
     func viewDidLoad(_ viewContrller: UIViewController)
+    func viewWillAppear(_ viewContrller: UIViewController)
+    func viewWillDisappear(_ viewContrller: UIViewController)
     func didReceiveMemoryWarning()
     func refreshEditing()
 }
@@ -44,7 +46,6 @@ class MapController: UIViewController {
         service = CoreService.bind()
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
-        cbkey = service!.openMap(channel!, cbkey, mapControllerImpl as! MapDataReceiver)
 
         mapControllerImpl!.viewDidLoad(self)
 
@@ -125,6 +126,20 @@ class MapController: UIViewController {
         markerPanel.isHidden = true
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        mapControllerImpl!.viewWillAppear(self)
+        cbkey = service!.openMap(channel!, cbkey, mapControllerImpl as! MapDataReceiver)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        service!.closeMap(channel: channel!, key: cbkey!)
+        mapControllerImpl!.viewWillDisappear(self)
+
+        super.viewWillDisappear(animated)
+    }
+
     func enchantment_reduce(sender: UIButton) {
         editingEnchantmentRadiusIndex = max(0, editingEnchantmentRadiusIndex-1)
         mapControllerImpl!.refreshEditing()
@@ -151,10 +166,6 @@ class MapController: UIViewController {
     func marker_ok(sender: UIButton) {
         service!.createMarker(name: editingMarker.name!, channel_id: channel!.id!, ispublic: editingMarker.isPublic!, latitude: editingCoordinate.latitude, longitude: editingCoordinate.longitude, attr: editingMarker.attr!, enable: true)
         refreshEditing(nil)
-    }
-
-    deinit {
-        service!.closeMap(channel: channel!, key: cbkey!)
     }
 
     override func didReceiveMemoryWarning() {

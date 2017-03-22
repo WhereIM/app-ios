@@ -62,6 +62,7 @@ class MQTTSession {
         }
         mqttConfig.onMessageCallback = { mqttMessage in
             do {
+                print("receive \(mqttMessage.payloadString!)")
                 let data = try JSONSerialization.jsonObject(with: mqttMessage.payload!, options: []) as! [String: Any]
                 self.mqttCallback.mqttOnMessage(mqttMessage.topic, data)
             } catch {

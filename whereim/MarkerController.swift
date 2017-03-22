@@ -98,14 +98,18 @@ class MarkerController: UIViewController, Callback {
         markerListView.delegate = adapter
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         cbkey = service!.addMarkerListener(channel!, cbkey, self)
     }
 
-    deinit {
+    override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
             sv.removeMarkerListener(channel!, cbkey)
         }
+
+        super.viewWillDisappear(animated)
     }
 
     func onCallback() {

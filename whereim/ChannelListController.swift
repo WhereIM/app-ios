@@ -172,11 +172,15 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
             self.present(vc!, animated: true)
             return
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         channelListChangedCbkey = service!.addChannelListChangedListener(channelListChangedCbkey, self)
         connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
     }
 
-    deinit {
+    override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
             if channelListChangedCbkey != nil {
                 sv.removeChannelListChangedListener(channelListChangedCbkey)
@@ -187,6 +191,8 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
                 connectionStatusChangedCbKey = nil
             }
         }
+
+        super.viewWillDisappear(animated)
     }
 
     func channelListChanged() {

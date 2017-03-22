@@ -98,14 +98,18 @@ class EnchantmentController: UIViewController, Callback {
         enchantmentListView.delegate = adapter
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         cbkey = service!.addEnchantmentListener(channel!, cbkey, self)
     }
 
-    deinit {
+    override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
             sv.removeEnchantmentListener(channel!, cbkey)
         }
+
+        super.viewWillDisappear(animated)
     }
 
     func onCallback() {

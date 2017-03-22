@@ -53,18 +53,19 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+    }
 
+    func viewWillAppear(_ viewContrller: UIViewController) {
         mapView!.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         mapView!.delegate = self
     }
 
-    func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-        mapController.startEditing(coordinate)
+    func viewWillDisappear(_ viewContrller: UIViewController) {
+        mapView!.removeObserver(self, forKeyPath: "myLocation")
     }
 
-    deinit {
-        mapView!.removeObserver(self, forKeyPath: "myLocation")
-
+    func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+        mapController.startEditing(coordinate)
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

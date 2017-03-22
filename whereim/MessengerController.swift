@@ -43,8 +43,6 @@ class MessengerController: JSQMessagesViewController, Callback {
 
         service = CoreService.bind()
 
-        cbkey = service!.addMessageListener(channel!, cbkey, self)
-
         senderId = channel!.mate_id!
         senderDisplayName = service!.getChannelMate(channel!.id!, senderId).getDisplayName()
 
@@ -52,12 +50,6 @@ class MessengerController: JSQMessagesViewController, Callback {
 
         self.collectionView?.reloadData()
         self.collectionView?.layoutIfNeeded()
-    }
-
-    deinit {
-        if let sv = service {
-            sv.removeMessageListener(channel!, cbkey)
-        }
     }
 
     func onCallback() {
@@ -68,11 +60,21 @@ class MessengerController: JSQMessagesViewController, Callback {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        cbkey = service!.addMessageListener(channel!, cbkey, self)
+
         // topLayoutGuide.length is 0 at the moment ...
         let inset = collectionView.contentInset
-        let newinset = UIEdgeInsetsMake(inset.top + 60, 0, inset.bottom, 0)
+        let newinset = UIEdgeInsetsMake(60, 0, inset.bottom, 0)
         collectionView.contentInset = newinset
         collectionView.scrollIndicatorInsets = newinset
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        if let sv = service {
+            sv.removeMessageListener(channel!, cbkey)
+        }
+
+        super.viewWillDisappear(animated)
     }
 
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
