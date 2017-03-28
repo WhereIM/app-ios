@@ -41,7 +41,6 @@ protocol MQTTCallback {
     func mqttOnMessage(_ topic: String, _ data: [String: Any])
 }
 
-
 class MQTTSession {
     var mqttClient: MQTTClient?
     var mqttCallback: MQTTCallback

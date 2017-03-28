@@ -34,6 +34,6 @@
 "message_enchantment_emerge" = "出現在 %1$@ 結界";
 "message_enchantment_in" = "進入 %1$@ 結界";
 "message_enchantment_out" = "離開 %1$@ 結界";
-"message_marker_create" = "放了 %1$@ 圖釘 {icon}";
+"message_marker_create" = "放了 %1$@ 圖釘";
 "mock_location_service_not_running" = "定位傳送功能未啟用，無法傳送假資料";
 "mock_confirm_disable" = "確定不再傳送假資料？";
