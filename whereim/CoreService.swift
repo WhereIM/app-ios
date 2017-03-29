@@ -991,33 +991,26 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
-    var ts: UInt64 = UInt64(UserDefaults.standard.object(forKey: Key.TS) as? NSNumber ?? 0)
-    var initTs: UInt64 = UInt64(UserDefaults.standard.object(forKey: Key.TS) as? NSNumber ?? 0)
-    var channelTs = [String:UInt64]()
-
     func setTS(_ ts: UInt64) {
-        if ts > self.ts {
+        let ots = getTS()
+        if ts > ots {
             UserDefaults.standard.set(NSNumber(value: ts), forKey: Key.TS)
-            self.ts = ts
         }
     }
 
     func getTS() -> UInt64 {
-        return ts
+        return UInt64(UserDefaults.standard.object(forKey: Key.TS) as? NSNumber ?? 0)
     }
 
     func setTS(_ channel_id: String, _ ts: UInt64) {
-        if channelTs[channel_id] == nil || ts > channelTs[channel_id]! {
-            setTS(ts)
-            channelTs[channel_id] = ts
+        let ots = getTS(channel_id)
+        if ts > ots {
+            UserDefaults.standard.set(NSNumber(value: ts), forKey: "\(Key.TS)/\(channel_id)")
         }
     }
 
     func getTS(_ channel_id: String) -> UInt64 {
-        if let ts = channelTs[channel_id] {
-            return ts
-        }
-        return initTs
+        return UInt64(UserDefaults.standard.object(forKey: "\(Key.TS)/\(channel_id)") as? NSNumber ?? 0)
     }
 
     var isForeground = false
