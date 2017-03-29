@@ -15,6 +15,7 @@ protocol MapControllerInterface {
     func viewWillAppear(_ viewContrller: UIViewController)
     func viewWillDisappear(_ viewContrller: UIViewController)
     func didReceiveMemoryWarning()
+    func moveTo(marker: Marker)
     func refreshEditing()
 }
 
@@ -46,6 +47,7 @@ class MapController: UIViewController {
         service = CoreService.bind()
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
+        parent.setMapCtrl(self)
 
         mapControllerImpl!.viewDidLoad(self)
 
@@ -139,6 +141,11 @@ class MapController: UIViewController {
 
         super.viewWillDisappear(animated)
     }
+
+    func moveTo(marker: Marker) {
+        mapControllerImpl?.moveTo(marker: marker)
+    }
+
 
     func enchantment_reduce(sender: UIButton) {
         editingEnchantmentRadiusIndex = max(0, editingEnchantmentRadiusIndex-1)

@@ -20,7 +20,18 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     let channelSubtitle = UILabel()
     let connectionStatusIndicator = UIActivityIndicatorView()
     let shareButton = UIButton()
+    var mapController: MapController?
 
+    func setMapCtrl(_ mc: MapController) {
+        mapController = mc
+    }
+
+    func moveTo(marker: Marker) {
+        if let mc = mapController {
+            mc.moveTo(marker: marker)
+            self.selectedIndex = 0
+        }
+    }
 
     override func viewDidLoad() {
         service = CoreService.bind()

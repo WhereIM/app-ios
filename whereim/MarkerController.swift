@@ -52,11 +52,13 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     var markerList: MarkerList
     let service: CoreService
     let channel: Channel
+    let channelController: ChannelController
     let numberOfSections = 2
 
-    init(_ service: CoreService, _ channel: Channel) {
+    init(_ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.service = service
         self.channel = channel
+        self.channelController = channelController
         self.markerList = service.getChannelMarker(channel.id!)
     }
 
@@ -96,6 +98,12 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
         return cell
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let marker = getMarker(indexPath.section, indexPath.row)!
+        channelController.moveTo(marker: marker)
+    }
+
     func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
@@ -132,8 +140,7 @@ class MarkerController: UIViewController, Callback {
         channel = parent.channel
 
         service = CoreService.bind()
-        adapter = ChannelMarkerAdapter((service)!, channel!)
-        markerListView.allowsSelection = false
+        adapter = ChannelMarkerAdapter((service)!, channel!, parent)
         markerListView.register(MarkerCell.self, forCellReuseIdentifier: "marker")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter

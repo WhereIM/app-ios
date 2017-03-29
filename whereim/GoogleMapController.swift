@@ -140,7 +140,11 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
     var markerMarker = [String:GMSMarker]()
     func onMarkerData(_ marker: Marker) {
+        var focus = false
         if let m = self.markerMarker[marker.id!] {
+            if m == mapView!.selectedMarker {
+                focus = true
+            }
             m.map = nil
         }
         if marker.deleted {
@@ -154,6 +158,17 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             m.map = self.mapView
 
             self.markerMarker[marker.id!] = m
+
+            if focus {
+                mapView?.selectedMarker = m
+            }
+        }
+    }
+
+    func moveTo(marker: Marker) {
+        mapView!.animate(toLocation: CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!))
+        if let m = markerMarker[marker.id!] {
+            mapView!.selectedMarker = m
         }
     }
 
