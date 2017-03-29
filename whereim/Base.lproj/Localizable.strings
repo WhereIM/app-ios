@@ -26,6 +26,7 @@
 "icon" = "Icon";
 "mock" = "Mock";
 
+"mate" = "Mate";
 "is_public" = "Public";
 "is_private" = "Private";
 

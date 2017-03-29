@@ -8,6 +8,43 @@
 
 import UIKit
 
+
+class MateCell: UITableViewCell {
+    let titleLayout = UICompactStackView()
+    let title = UILabel()
+    let subtitle = UILabel()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        titleLayout.axis = .vertical
+        titleLayout.alignment = .leading
+        titleLayout.distribution = .fill
+
+        title.adjustsFontSizeToFitWidth = false
+        titleLayout.addArrangedSubview(title)
+
+        subtitle.font = subtitle.font.withSize(12)
+        subtitle.adjustsFontSizeToFitWidth = false
+        titleLayout.addArrangedSubview(subtitle)
+
+        titleLayout.requestLayout()
+
+        titleLayout.translatesAutoresizingMaskIntoConstraints = false
+
+        self.contentView.addSubview(titleLayout)
+
+        NSLayoutConstraint.activate([
+            titleLayout.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15),
+            titleLayout.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class MarkerCell: UITableViewCell {
     let icon = UIImageView()
     let title = UILabel()
@@ -49,23 +86,26 @@ class MarkerCell: UITableViewCell {
 }
 
 class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
+    var mateList: [Mate]
     var markerList: MarkerList
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
-    let numberOfSections = 2
+    let numberOfSections = 3
 
     init(_ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.service = service
         self.channel = channel
         self.channelController = channelController
+        self.mateList = service.getChannelMate(channel.id!)
         self.markerList = service.getChannelMarker(channel.id!)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return markerList.public_list.count
-        case 1: return markerList.private_list.count
+        case 0: return mateList.count
+        case 1: return markerList.public_list.count
+        case 2: return markerList.private_list.count
         default:
             return 0
         }
@@ -77,31 +117,55 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return "is_public".localized
-        case 1: return "is_private".localized
+        case 0: return "mate".localized
+        case 1: return "is_public".localized
+        case 2: return "is_private".localized
         default:
             return nil
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mate", for: indexPath) as! MateCell
 
-        let marker = getMarker(indexPath.section, indexPath.row)!
+            let mate = getMate(indexPath.section, indexPath.row)!
+            if mate.user_mate_name != nil && !mate.user_mate_name!.isEmpty {
+                cell.title.text = mate.user_mate_name
+                cell.subtitle.text = mate.mate_name
+                cell.subtitle.isHidden = false
+            } else {
+                cell.title.text = mate.mate_name
+                cell.subtitle.text = nil
+                cell.subtitle.isHidden = true
+            }
+            cell.titleLayout.requestLayout()
 
-        cell.icon.image = marker.getIcon()
-        cell.title.text = marker.name
-        cell.loadingSwitch.setEnabled(marker.enable)
-        cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
-        cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
 
-        return cell
+            let marker = getMarker(indexPath.section, indexPath.row)!
+
+            cell.icon.image = marker.getIcon()
+            cell.title.text = marker.name
+            cell.loadingSwitch.setEnabled(marker.enable)
+            cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
+            cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
+
+            return cell
+        }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let marker = getMarker(indexPath.section, indexPath.row)!
-        channelController.moveTo(marker: marker)
+        if indexPath.section == 0 {
+            let mate = getMate(indexPath.section, indexPath.row)!
+            channelController.moveTo(mate: mate)
+        } else {
+            let marker = getMarker(indexPath.section, indexPath.row)!
+            channelController.moveTo(marker: marker)
+        }
     }
 
     func switchClicked(sender: UISwitch) {
@@ -111,10 +175,14 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
         service.toggleMarkerEnabled(marker)
     }
 
+    func getMate(_ section: Int, _ row: Int) -> Mate? {
+        return mateList[row]
+    }
+
     func getMarker(_ section: Int, _ row: Int) -> Marker? {
         switch section {
-        case 0: return markerList.public_list[row]
-        case 1: return markerList.private_list[row]
+        case 1: return markerList.public_list[row]
+        case 2: return markerList.private_list[row]
         default:
             return nil
         }
@@ -129,7 +197,8 @@ class MarkerController: UIViewController, Callback {
     var service: CoreService?
     var channel: Channel?
     var adapter: ChannelMarkerAdapter?
-    var cbkey: Int?
+    var cbMatekey: Int?
+    var cbMarkerkey: Int?
 
     @IBOutlet weak var markerListView: UITableView!
 
@@ -141,6 +210,7 @@ class MarkerController: UIViewController, Callback {
 
         service = CoreService.bind()
         adapter = ChannelMarkerAdapter((service)!, channel!, parent)
+        markerListView.register(MateCell.self, forCellReuseIdentifier: "mate")
         markerListView.register(MarkerCell.self, forCellReuseIdentifier: "marker")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter
@@ -149,12 +219,14 @@ class MarkerController: UIViewController, Callback {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        cbkey = service!.addMarkerListener(channel!, cbkey, self)
+        cbMatekey = service!.addMateListener(channel!, cbMatekey, self)
+        cbMarkerkey = service!.addMarkerListener(channel!, cbMarkerkey, self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
-            sv.removeMarkerListener(channel!, cbkey)
+            sv.removeMateListener(channel!, cbMatekey)
+            sv.removeMarkerListener(channel!, cbMarkerkey)
         }
 
         super.viewWillDisappear(animated)

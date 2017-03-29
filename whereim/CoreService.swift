@@ -324,6 +324,35 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
+    var mateListener = [String:[Int:Callback]]()
+    func addMateListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
+        if mateListener[channel.id!] == nil {
+            mateListener[channel.id!] = [Int:Callback]()
+        }
+
+        var key = okey
+        if key == nil{
+            acc_lock.sync {
+                while mateListener[channel.id!]![acc] != nil {
+                    acc += 1
+                }
+                key = acc
+            }
+        }
+
+        mateListener[channel.id!]![key!] = callback
+
+        return acc
+    }
+
+    func removeMateListener(_ channel: Channel, _ key: Int?) {
+        if let k = key {
+            if var listeners = mateListener[channel.id!] {
+                listeners.removeValue(forKey: k)
+            }
+        }
+    }
+
     func mqttChannelMessageHandler(_ channel_id: String, _ data: [String: Any]) {
         let m = Message(data)
 
@@ -777,6 +806,17 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     var channelMate = [String:[String:Mate]]()
+    func getChannelMate(_ channel_id: String) -> [Mate] {
+        var list = [Mate]()
+        if channelMate[channel_id] != nil {
+            for mate in channelMate[channel_id]!.values {
+                list.append(mate)
+            }
+        }
+        list.sort(by: {$0.getDisplayName().localizedCompare($1.getDisplayName()) == .orderedAscending})
+        return list
+    }
+
     func getChannelMate(_ channel_id: String, _ mate_id: String) -> Mate {
         if channelMate[channel_id] == nil {
             channelMate[channel_id] = [String:Mate]()

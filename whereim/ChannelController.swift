@@ -26,6 +26,16 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         mapController = mc
     }
 
+    func moveTo(mate: Mate) {
+        if mate.latitude == nil {
+            return
+        }
+        if let mc = mapController {
+            mc.moveTo(mate: mate)
+            self.selectedIndex = 0
+        }
+    }
+
     func moveTo(marker: Marker) {
         if let mc = mapController {
             mc.moveTo(marker: marker)

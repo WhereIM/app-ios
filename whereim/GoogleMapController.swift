@@ -225,6 +225,13 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
     }
 
+    func moveTo(mate: Mate) {
+        if mate.latitude == nil {
+            return
+        }
+        mapView!.animate(toLocation: CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!))
+    }
+
     func didReceiveMemoryWarning() {
         // Dispose of any resources that can be recreated.
     }
