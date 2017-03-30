@@ -29,6 +29,7 @@ class Mate: Record {
     var bearing: Double?
     var speed: Double?
     var time: UInt64?
+    var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version

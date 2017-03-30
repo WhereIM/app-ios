@@ -298,6 +298,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         mate.mate_name = data[Key.MATE_NAME] as? String ?? mate.mate_name
         mate.user_mate_name = data[Key.USER_MATE_NAME] as? String ?? mate.user_mate_name
+        mate.deleted = data[Key.DELETED] as? Bool ?? mate.deleted
 
         if let ts = data[Key.TS] {
             setTS(channel_id, ts as! UInt64)
@@ -319,6 +320,18 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             if let receivers = self.mapDataReceiver[mate.channel_id!] {
                 for receiver in receivers {
                     receiver.value.onMateData(mate)
+                }
+            }
+        }
+
+        if mate.deleted {
+            print("deleted \(mate.id!)")
+            channelMate[mate.channel_id!]!.removeValue(forKey: mate.id!)
+            appDelegate.dbConn!.inDatabase { db in
+                do {
+                    try mate.delete(db)
+                } catch {
+                    print("Error deleting mate \(error)")
                 }
             }
         }
