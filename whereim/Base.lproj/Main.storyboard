@@ -72,11 +72,11 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="t07-UT-fNY" id="Tz1-EV-ByS">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="v3G-BH-edS">
-                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -134,7 +134,7 @@
             </objects>
             <point key="canvasLocation" x="2788" y="830.73463268365822"/>
         </scene>
-        <!--📍-->
+        <!--🚩-->
         <scene sceneID="LJX-E6-oY0">
             <objects>
                 <viewController id="Q1c-bl-8rd" customClass="MarkerController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
@@ -159,7 +159,7 @@
                             <constraint firstAttribute="trailing" secondItem="tTX-Jw-Kwd" secondAttribute="trailing" id="soT-GP-uin"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="📍" id="hwa-Zo-CjZ"/>
+                    <tabBarItem key="tabBarItem" title="🚩" id="hwa-Zo-CjZ"/>
                     <connections>
                         <outlet property="markerListView" destination="tTX-Jw-Kwd" id="DoD-tT-cZS"/>
                     </connections>
@@ -258,7 +258,7 @@
             <objects>
                 <navigationController storyboardIdentifier="startup" automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
