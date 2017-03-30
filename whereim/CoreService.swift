@@ -325,7 +325,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         if mate.deleted {
-            print("deleted \(mate.id!)")
             channelMate[mate.channel_id!]!.removeValue(forKey: mate.id!)
             appDelegate.dbConn!.inDatabase { db in
                 do {
@@ -402,6 +401,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         enchantment.radius = data[Key.RADIUS] as? Double ?? enchantment.radius
         enchantment.isPublic = data[Key.PUBLIC] as? Bool ?? enchantment.isPublic
         enchantment.enable = data[Key.ENABLE] as? Bool ?? enchantment.enable
+        enchantment.deleted = data[Key.DELETED] as? Bool ?? enchantment.deleted
 
         if let ts = data[Key.TS] {
             setTS(channel_id, ts as! UInt64)
@@ -423,6 +423,17 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             if let receivers = self.mapDataReceiver[enchantment.channel_id!] {
                 for receiver in receivers {
                     receiver.value.onEnchantmentData(enchantment)
+                }
+            }
+        }
+
+        if enchantment.deleted {
+            channelEnchantment[enchantment.channel_id!]!.removeValue(forKey: enchantment.id!)
+            appDelegate.dbConn!.inDatabase { db in
+                do {
+                    try enchantment.delete(db)
+                } catch {
+                    print("Error deleting enchantment \(error)")
                 }
             }
         }

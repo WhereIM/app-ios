@@ -34,6 +34,7 @@ class Enchantment: Record {
     var radius: Double?
     var isPublic: Bool?
     var enable: Bool?
+    var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
