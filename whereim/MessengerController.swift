@@ -99,12 +99,16 @@ class MessengerController: JSQMessagesViewController, Callback {
     }
 
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
-        let mate = service!.getChannelMate(channel!.id!, messageList!.message[indexPath.item].mate_id!)
-        return NSAttributedString(string: mate.getDisplayName())
+        if messageList!.message[indexPath.item].mate_id == nil {
+            return NSAttributedString(string: "")
+        } else {
+            let mate = service!.getChannelMate(channel!.id!, messageList!.message[indexPath.item].mate_id!)
+            return NSAttributedString(string: mate.getDisplayName())
+        }
     }
 
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAt indexPath: IndexPath!) -> CGFloat {
-        return messageList!.message[indexPath.item].mate_id! == channel!.mate_id! ? 0 : kJSQMessagesCollectionViewCellLabelHeightDefault
+        return messageList!.message[indexPath.item].mate_id == channel!.mate_id! ? 0 : kJSQMessagesCollectionViewCellLabelHeightDefault
     }
 
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {

@@ -56,10 +56,14 @@ class Message: Record {
             if channel_id == nil {
                 displayName = "system"
             } else {
-                displayName = service.getChannelMate(channel_id!, mate_id!).getDisplayName()
+                if mate_id == nil {
+                    displayName = ""
+                } else {
+                    displayName = service.getChannelMate(channel_id!, mate_id!).getDisplayName()
+                }
             }
             let date = Date(timeIntervalSince1970: TimeInterval(time!))
-            jsqMessage = JSQMessage(senderId: mate_id!, senderDisplayName: displayName!, date: date, text: getText())
+            jsqMessage = JSQMessage(senderId: mate_id ?? "", senderDisplayName: displayName!, date: date, text: getText())
         }
         return jsqMessage!
     }
