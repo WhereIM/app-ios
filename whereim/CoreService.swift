@@ -280,6 +280,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func sendPushToken() {
+        if clientId == nil {
+            return
+        }
         if let token = pendingPushToken {
             publish("client/\(clientId!)/profile/put", ["apns_token":token])
         }
