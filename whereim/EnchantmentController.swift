@@ -43,7 +43,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     var enchantmentList: EnchantmentList
     let service: CoreService
     let channel: Channel
-    let numberOfSections = 2
+    let numberOfSections = 3
 
     init(_ service: CoreService, _ channel: Channel) {
         self.service = service
@@ -53,8 +53,9 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return enchantmentList.public_list.count
-        case 1: return enchantmentList.private_list.count
+        case 0: return 1
+        case 1: return enchantmentList.public_list.count
+        case 2: return enchantmentList.private_list.count
         default:
             return 0
         }
@@ -66,8 +67,9 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return "is_public".localized
-        case 1: return "is_private".localized
+        case 0: return "self".localized
+        case 1: return "is_public".localized
+        case 2: return "is_private".localized
         default:
             return nil
         }
@@ -76,10 +78,16 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! EnchantmentCell
 
-        let enchantment = getEnchantment(indexPath.section, indexPath.row)!
+        if indexPath.section == 0 {
+            cell.title.text = String(format: "radius_m".localized, channel.radius!)
+            cell.loadingSwitch.setEnabled(channel.enable_radius)
+        } else {
+            let enchantment = getEnchantment(indexPath.section, indexPath.row)!
 
-        cell.title.text = enchantment.name
-        cell.loadingSwitch.setEnabled(enchantment.enable)
+            cell.title.text = enchantment.name
+            cell.loadingSwitch.setEnabled(enchantment.enable)
+        }
+
         cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
         cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 
@@ -89,14 +97,18 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
-        let enchantment = getEnchantment(section, row)!
-        service.toggleEnchantmentEnabled(enchantment)
+        if section == 0 {
+            service.toggleRadiusEnabled(channel)
+        } else {
+            let enchantment = getEnchantment(section, row)!
+            service.toggleEnchantmentEnabled(enchantment)
+        }
     }
 
     func getEnchantment(_ section: Int, _ row: Int) -> Enchantment? {
         switch section {
-        case 0: return enchantmentList.public_list[row]
-        case 1: return enchantmentList.private_list[row]
+        case 1: return enchantmentList.public_list[row]
+        case 2: return enchantmentList.private_list[row]
         default:
             return nil
         }
@@ -107,11 +119,12 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 }
 
-class EnchantmentController: UIViewController, Callback {
+class EnchantmentController: UIViewController, Callback, ChannelChangedListener {
     var service: CoreService?
     var channel: Channel?
     var adapter: ChannelEnchantmentAdapter?
     var cbkey: Int?
+    var channelCbkey: Int?
 
     @IBOutlet weak var enchantmentListView: UITableView!
     
@@ -133,11 +146,13 @@ class EnchantmentController: UIViewController, Callback {
         super.viewWillAppear(animated)
 
         cbkey = service!.addEnchantmentListener(channel!, cbkey, self)
+        channelCbkey = service!.addChannelChangedListener(channel!, cbkey, self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
             sv.removeEnchantmentListener(channel!, cbkey)
+            sv.removeChannelChangedListener(channel!, channelCbkey)
         }
 
         super.viewWillDisappear(animated)
@@ -145,6 +160,10 @@ class EnchantmentController: UIViewController, Callback {
 
     func onCallback() {
         adapter!.reload()
+        enchantmentListView.reloadData()
+    }
+
+    func channelChanged() {
         enchantmentListView.reloadData()
     }
 

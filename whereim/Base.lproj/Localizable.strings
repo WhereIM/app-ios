@@ -26,6 +26,9 @@
 "icon" = "Icon";
 "mock" = "Mock";
 
+"radius_m" = "%1$.0f m";
+
+"self" = "Self";
 "mate" = "Mate";
 "is_public" = "Public";
 "is_private" = "Private";

@@ -22,6 +22,7 @@ class Key {
     static let DESC = "desc"
 
     static let ENABLE = "enable"
+    static let ENABLE_RADIUS = "enable_radius"
 
     static let FACEBOOK = "facebook"
 

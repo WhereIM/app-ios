@@ -48,8 +48,8 @@ class Enchantment: Record {
                 COL_LATITUDE + " DOUBLE PRECISION, " +
                 COL_LONGITUDE + " DOUBLE PRECISION, " +
                 COL_RADIUS + " DOUBLE PRECISION, " +
-                COL_PUBLIC + " INTEGER, " +
-                COL_ENABLE + " INTEGER)";
+                COL_PUBLIC + " BOOLEAN, " +
+                COL_ENABLE + " BOOLEAN)";
             try db.execute(sql)
 
             sql = "CREATE INDEX enchantment_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"

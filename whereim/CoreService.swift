@@ -20,6 +20,10 @@ protocol ChannelListChangedListener {
     func channelListChanged()
 }
 
+protocol ChannelChangedListener {
+    func channelChanged()
+}
+
 protocol MapDataReceiver {
     func onMateData(_ mate: Mate)
     func onEnchantmentData(_ enchantment: Enchantment)
@@ -380,6 +384,16 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         notifyChannelMessageListeners(channel_id)
+    }
+
+    func toggleRadiusEnabled(_ channel: Channel) {
+        if channel.enable_radius == nil {
+            return
+        }
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ENABLE_RADIUS: !channel.enable_radius!])
+        channel.enable_radius = nil
+
+        notifyChannelChangedListeners(channel.id!)
     }
 
     var channelEnchantment = [String:[String:Enchantment]]()
@@ -753,9 +767,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.user_channel_name = data["user_channel_name"] as? String ?? channel!.user_channel_name
         channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
         channel!.deleted = data[Key.DELETED] as? Bool ?? channel!.deleted
-        if let enable = data[Key.ENABLE] as! Bool? {
-            channel!.enable = enable
-        }
+        channel!.enable_radius = data[Key.ENABLE_RADIUS] as? Bool ?? channel!.enable_radius
+        channel!.radius = data[Key.RADIUS] as? Double ?? channel!.radius
+        channel!.enable = data[Key.ENABLE] as? Bool ?? channel!.enable
 
         if let ts = data[Key.TS] {
             setTS(ts as! UInt64)
@@ -795,6 +809,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             syncChannelMessage(channel_id)
         }
 
+        notifyChannelChangedListeners(channel.id!)
         notifyChannelListChangedListeners()
     }
 
@@ -967,6 +982,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     let acc_lock = DispatchQueue(label: "acc")
     var acc = 0
+
     var channelListChangedListener = [Int:ChannelListChangedListener]()
     func addChannelListChangedListener(_ okey: Int?, _ callback: ChannelListChangedListener) -> Int {
         var key = okey
@@ -999,6 +1015,45 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 cb.value.channelListChanged()
             }
             self._checkLocationService()
+        }
+    }
+
+    var channelChangedListener = [String:[Int:ChannelChangedListener]]()
+    func addChannelChangedListener(_ channel: Channel, _ okey: Int?, _ callback: ChannelChangedListener) -> Int {
+        if channelChangedListener[channel.id!] == nil {
+            channelChangedListener[channel.id!] = [Int:ChannelChangedListener]()
+        }
+
+        var key = okey
+        if key == nil{
+            acc_lock.sync {
+                while channelChangedListener[channel.id!]![acc] != nil {
+                    acc += 1
+                }
+                key = acc
+            }
+        }
+
+        channelChangedListener[channel.id!]![key!] = callback
+
+        return acc
+    }
+
+    func removeChannelChangedListener(_ channel: Channel, _ key: Int?) {
+        if let k = key {
+            if var listeners = channelChangedListener[channel.id!] {
+                listeners.removeValue(forKey: k)
+            }
+        }
+    }
+
+    func notifyChannelChangedListeners(_ channel_id: String) {
+        DispatchQueue.main.async {
+            if let listeners = self.channelChangedListener[channel_id] {
+                for l in listeners.values {
+                    l.channelChanged()
+                }
+            }
         }
     }
 

@@ -17,12 +17,16 @@ class Channel: Record {
     static let COL_USER_CHANNEL_NAME = "user_channel_name"
     static let COL_MATE = "mate"
     static let COL_ENABLE = "enable"
+    static let COL_ENABLE_RADIUS = "enable_radius"
+    static let COL_RADIUS = "radius"
 
     var id: String?
     var channel_name: String?
     var user_channel_name: String?
     var mate_id: String?
     var enable: Bool?
+    var enable_radius: Bool?
+    var radius: Double?
     var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
@@ -35,7 +39,10 @@ class Channel: Record {
                 COL_CHANNEL_NAME + " TEXT, " +
                 COL_USER_CHANNEL_NAME + " TEXT, " +
                 COL_MATE + " TEXT, " +
-                COL_ENABLE + " INTEGER)"
+                COL_ENABLE + " BOOLEAN, " +
+                COL_ENABLE_RADIUS + " BOOLEAN, " +
+                COL_RADIUS + " DOUBLE PRECISION" +
+            ")";
             try db.execute(sql)
 
             version = 1
@@ -52,6 +59,8 @@ class Channel: Record {
         user_channel_name = row.value(named: Channel.COL_USER_CHANNEL_NAME)
         mate_id = row.value(named: Channel.COL_MATE)
         enable = row.value(named: Channel.COL_ENABLE)
+        enable_radius = row.value(named: Channel.COL_ENABLE_RADIUS)
+        radius = row.value(named: Channel.COL_RADIUS)
         super.init(row: row)
     }
 
@@ -65,7 +74,9 @@ class Channel: Record {
             Channel.COL_CHANNEL_NAME: channel_name,
             Channel.COL_USER_CHANNEL_NAME: user_channel_name,
             Channel.COL_MATE: mate_id,
-            Channel.COL_ENABLE: enable
+            Channel.COL_ENABLE: enable,
+            Channel.COL_ENABLE_RADIUS: enable_radius,
+            Channel.COL_RADIUS: radius
         ]
     }
 
