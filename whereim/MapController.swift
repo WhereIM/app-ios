@@ -15,15 +15,17 @@ protocol MapControllerInterface {
     func viewWillAppear(_ viewContrller: UIViewController)
     func viewWillDisappear(_ viewContrller: UIViewController)
     func didReceiveMemoryWarning()
+    func channelChanged()
     func moveTo(mate: Mate)
     func moveTo(marker: Marker)
     func refreshEditing()
 }
 
-class MapController: UIViewController {
+class MapController: UIViewController, ChannelChangedListener {
     var service: CoreService?
     var channel: Channel?
     var cbkey: Int?
+    var channelCbkey: Int?
     var mapControllerImpl: MapControllerInterface?
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)   {
@@ -134,13 +136,19 @@ class MapController: UIViewController {
 
         mapControllerImpl!.viewWillAppear(self)
         cbkey = service!.openMap(channel!, cbkey, mapControllerImpl as! MapDataReceiver)
+        channelCbkey = service!.addChannelChangedListener(channel!, channelCbkey, self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         service!.closeMap(channel: channel!, key: cbkey!)
+        service!.removeChannelChangedListener(channel!, channelCbkey)
         mapControllerImpl!.viewWillDisappear(self)
 
         super.viewWillDisappear(animated)
+    }
+
+    func channelChanged() {
+        mapControllerImpl?.channelChanged()
     }
 
     func moveTo(mate: Mate) {

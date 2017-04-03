@@ -13,6 +13,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     unowned var mapController: MapController
     var locationManager = CLLocationManager()
     var didFindMyLocation = false
+    var selfMate: Mate?
     var mapView: GMSMapView?
 
     required init(_ mapController: MapController) {
@@ -95,7 +96,11 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             c.position = mapController.editingCoordinate
             c.radius = CLLocationDistance(Config.ENCHANTMENT_RADIUS[mapController.editingEnchantmentRadiusIndex])
             c.strokeWidth = 3
-            c.strokeColor = .orange
+            if mapController.editingEnchantment.isPublic == true {
+                c.strokeColor = .red
+            } else {
+                c.strokeColor = .orange
+            }
             c.map = self.mapView
             editingEnchantmentCircle = c
         } else {
@@ -131,7 +136,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
             c.radius = enchantment.radius!
             c.strokeWidth = 3
-            c.strokeColor = enchantment.isPublic == true ? .red : .yellow
+            c.strokeColor = enchantment.isPublic == true ? .red : .orange
             c.map = self.mapView
 
             self.enchantmentCircle[enchantment.id!] = c
@@ -165,6 +170,10 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
     }
 
+    func channelChanged() {
+        updateSelfMate()
+    }
+
     func moveTo(marker: Marker) {
         mapView!.animate(toLocation: CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!))
         if let m = markerMarker[marker.id!] {
@@ -172,6 +181,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
     }
 
+    var radiusCircle: GMSCircle?
     var mateCircle = [String:GMSCircle]()
     var mateMarker = [String:GMSMarker]()
     func onMateData(_ mate: Mate) {
@@ -188,7 +198,8 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 let c = GMSCircle()
                 c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
                 c.radius = mate.accuracy!
-                c.strokeColor = .blue
+                c.strokeColor = .clear
+                c.fillColor = UIColor.gray.withAlphaComponent(0.25)
                 c.map = self.mapView
                 self.mateCircle[mate.id!] = c
             }
@@ -203,6 +214,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         } else {
             if mate.latitude != nil {
                 let m = GMSMarker()
+                m.zIndex = 10
                 m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
                 m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
                 m.map = self.mapView
@@ -221,6 +233,43 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 UIGraphicsEndImageContext()
 
                 self.mateMarker[mate.id!] = m
+            }
+        }
+        if mate.id! == mapController.channel!.mate_id! {
+            selfMate = mate
+            updateSelfMate()
+        }
+    }
+
+    func updateSelfMate() {
+        if selfMate == nil {
+            return
+        }
+        if let c = radiusCircle {
+            if selfMate!.latitude != nil && mapController.channel!.enable_radius==true {
+                c.position = CLLocationCoordinate2DMake(selfMate!.latitude!, selfMate!.longitude!)
+                c.radius = mapController.channel!.radius!
+                if mapController.channel!.enable == true {
+                    c.strokeColor = .magenta
+                } else {
+                    c.strokeColor = .gray
+                }
+            } else {
+                c.map = nil
+            }
+        } else {
+            if selfMate!.latitude != nil && mapController.channel!.enable_radius==true {
+                let c = GMSCircle()
+                c.position = CLLocationCoordinate2DMake(selfMate!.latitude!, selfMate!.longitude!)
+                c.radius = mapController.channel!.radius!
+                c.strokeWidth = 3
+                if mapController.channel!.enable == true {
+                    c.strokeColor = .magenta
+                } else {
+                    c.strokeColor = .gray
+                }
+                c.map = self.mapView
+                radiusCircle = c
             }
         }
     }
