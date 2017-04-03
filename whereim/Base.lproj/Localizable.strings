@@ -40,5 +40,7 @@
 "message_enchantment_in" = "Entered enchantment %1$@.";
 "message_enchantment_out" = "Left enchantment %1$@.";
 "message_marker_create" = "Marker %1$@ is created.";
+"message_radius_report" = "In: %2$@\nOut: %3$@  (%1$@ m)";
+
 "mock_location_service_not_running" = "Location service is not running, mock data is not sending.";
 "mock_confirm_disable" = "Are you sure to finish mocking?";

@@ -118,6 +118,9 @@ class Message: Record {
         } else {
             do {
                 let attr = try JSONSerialization.jsonObject(with: message!.data(using: .utf8)!, options: []) as? [String: Any]
+                if attr==nil || attr!.count==0 {
+                    return ""
+                }
                 switch type! {
                 case "enchantment_create":
                     let s = String(format: "message_enchantment_create".localized, (attr?[Key.NAME] as? String) ?? "")
@@ -134,8 +137,11 @@ class Message: Record {
                 case "marker_create":
                     let s = String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")
                     return s
+                case "radius_report":
+                    let s = String(format: "message_radius_report".localized, attr![Key.RADIUS] as? String ?? "", attr!["in"] as? String ?? "", attr!["out"] as? String ?? "")
+                    return s
                 default:
-                    return ""
+                    return type!+": "+message!
                 }
             } catch {
                 print("Error decoding message attr")
