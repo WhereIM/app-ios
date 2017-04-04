@@ -68,11 +68,20 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return channelList.count
+        return channelList.count + 2
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "channel", for: indexPath) as! ChannelCell
+
+        if indexPath.row >= channelList.count {
+            cell.titleLayout.isHidden = true
+            cell.loadingSwitch.isHidden = true
+            return cell
+        } else {
+            cell.titleLayout.isHidden = false
+            cell.loadingSwitch.isHidden = false
+        }
 
         if channelList[indexPath.row].user_channel_name != nil && !channelList[indexPath.row].user_channel_name!.isEmpty {
             cell.title.text = channelList[indexPath.row].user_channel_name
@@ -95,6 +104,20 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     func switchClicked(sender: UISwitch) {
         let channel = channelList[sender.tag]
         service.toggleChannelEnabled(channel)
+    }
+
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.row < channelList.count {
+            return indexPath
+        }
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.row < channelList.count {
+            return true
+        }
+        return false
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
