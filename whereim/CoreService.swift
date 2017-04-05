@@ -279,8 +279,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     var pendingPushToken: String?
     func setPushToken(_ token: String) {
-        pendingPushToken = token
-        sendPushToken()
+        let oldToken = UserDefaults.standard.string(forKey: "apns_token")
+        if oldToken != token {
+            pendingPushToken = token
+            sendPushToken()
+        }
     }
 
     func sendPushToken() {
@@ -297,6 +300,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         if token == pendingPushToken {
             pendingPushToken = nil
         }
+        UserDefaults.standard.set(token, forKey: "apns_token")
     }
 
     func mqttChannelMateHandler(_ channel_id: String, _ data: [String: Any]) {
