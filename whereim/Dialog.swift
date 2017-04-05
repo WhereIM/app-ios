@@ -10,87 +10,162 @@ import SDCAlertView
 import UIKit
 
 class DialogJoinChannel {
-    let alert = UIAlertController(title: "Join Channel".localized, message: nil, preferredStyle: .alert)
+    let alert = AlertController(title: "join_channel".localized, message: nil, preferredStyle: .alert)
+    let layout = UICompactStackView()
+    let display_name = UICompactStackView()
+    let display_name_label = UILabel()
+    let display_name_edit = UITextField()
 
     init(_ viewController: UIViewController, _ channel_id: String) {
-        var display_name: UITextField?
-
-        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
-        let action = UIAlertAction(title: "ok".localized, style: .default){ _ in
+        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let service = CoreService.bind()
-            let mate_name = (display_name?.text)!
+            let mate_name = (self.display_name_edit.text)!
             service.joinChannel(channel_id: channel_id, channel_alias: "", mate_name: mate_name)
         }
-        alert.addAction(action)
+        alert.add(action)
 
         func check(){
-            action.isEnabled = !display_name!.text!.isEmpty
+            action.isEnabled = !display_name_edit.text!.isEmpty
         }
 
-        alert.addTextField(configurationHandler: { (field) in
-            display_name = field
+        layout.translatesAutoresizingMaskIntoConstraints = false
+        layout.axis = .vertical
+        layout.alignment = .leading
+        layout.distribution = .fill
+        layout.spacing = 5
 
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 30))
-            label.text = "display_name".localized
-            field.leftView = label
-            field.leftViewMode = .always
+        display_name.translatesAutoresizingMaskIntoConstraints = false
+        display_name.axis = .horizontal
+        display_name.alignment = .center
+        display_name.distribution = .fill
+        display_name.spacing = 5
 
-            field.text = UserDefaults.standard.string(forKey: Key.NAME)
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: field, queue: OperationQueue.main) { (notification) in
-                check()
-            }
-        })
+        display_name_label.translatesAutoresizingMaskIntoConstraints = false
+        display_name_label.adjustsFontSizeToFitWidth = false
+        display_name_label.text = "display_name".localized
+        display_name.addArrangedSubview(display_name_label)
+
+        display_name_edit.text = UserDefaults.standard.string(forKey: Key.NAME)
+        display_name_edit.translatesAutoresizingMaskIntoConstraints = false
+        display_name_edit.backgroundColor = .white
+        display_name_edit.layer.borderColor = UIColor.gray.cgColor
+        display_name_edit.layer.borderWidth = 1
+        display_name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        display_name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: display_name_edit, queue: OperationQueue.main) { (notification) in
+            check()
+        }
+
+        display_name.addArrangedSubview(display_name_edit)
+
+        layout.addArrangedSubview(display_name)
+
+        layout.requestLayout()
+
         check()
+
+        alert.contentView.addSubview(layout)
+
+        layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
+        alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
+
         viewController.present(alert, animated: true, completion: nil)
     }
 }
 
 class DialogCreateChannel {
-    let alert = UIAlertController(title: "create_channel".localized, message: nil, preferredStyle: .alert)
+    let alert = AlertController(title: "create_channel".localized, message: nil, preferredStyle: .alert)
+    let layout = UICompactStackView()
+    let channel_name = UICompactStackView()
+    let channel_name_label = UILabel()
+    let channel_name_edit = UITextField()
+    let display_name = UICompactStackView()
+    let display_name_label = UILabel()
+    let display_name_edit = UITextField()
 
     init(_ viewController: UIViewController) {
-        var channel_name: UITextField?
-        var display_name: UITextField?
-
-        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
-        let action = UIAlertAction(title: "ok".localized, style: .default){ _ in
+        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let service = CoreService.bind()
-            let _channel_name = (channel_name?.text)!
-            let _mate_name = (display_name?.text)!
+            let _channel_name = (self.channel_name_edit.text)!
+            let _mate_name = (self.display_name_edit.text)!
             service.createChannel(channel_name: _channel_name, mate_name: _mate_name)
         }
-        alert.addAction(action)
+        alert.add(action)
 
-        func check(){
-            action.isEnabled = !channel_name!.text!.isEmpty && !display_name!.text!.isEmpty
+        func check() {
+            action.isEnabled = !channel_name_edit.text!.isEmpty && !display_name_edit.text!.isEmpty
         }
 
-        alert.addTextField(configurationHandler: { (field) in
-            channel_name = field
+        layout.translatesAutoresizingMaskIntoConstraints = false
+        layout.axis = .vertical
+        layout.alignment = .leading
+        layout.distribution = .fill
+        layout.spacing = 5
 
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 30))
-            label.text = "channel_name".localized
-            field.leftView = label
-            field.leftViewMode = .always
+        channel_name.translatesAutoresizingMaskIntoConstraints = false
+        channel_name.axis = .horizontal
+        channel_name.alignment = .center
+        channel_name.distribution = .fill
+        channel_name.spacing = 5
 
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: field, queue: OperationQueue.main) { (notification) in
-                check()
-            }
-        })
-        alert.addTextField(configurationHandler: { (field) in
-            display_name = field
+        channel_name_label.translatesAutoresizingMaskIntoConstraints = false
+        channel_name_label.adjustsFontSizeToFitWidth = false
+        channel_name_label.text = "channel_name".localized
+        channel_name.addArrangedSubview(channel_name_label)
 
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 30))
-            label.text = "display_name".localized
-            field.leftView = label
-            field.leftViewMode = .always
+        channel_name_edit.translatesAutoresizingMaskIntoConstraints = false
+        channel_name_edit.backgroundColor = .white
+        channel_name_edit.layer.borderColor = UIColor.gray.cgColor
+        channel_name_edit.layer.borderWidth = 1
+        channel_name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        channel_name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: channel_name_edit, queue: OperationQueue.main) { (notification) in
+            check()
+        }
 
-            field.text = UserDefaults.standard.string(forKey: Key.NAME)
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: field, queue: OperationQueue.main) { (notification) in
-                check()
-            }
-        })
+        channel_name.addArrangedSubview(channel_name_edit)
+
+        layout.addArrangedSubview(channel_name)
+
+        display_name.translatesAutoresizingMaskIntoConstraints = false
+        display_name.axis = .horizontal
+        display_name.alignment = .center
+        display_name.distribution = .fill
+        display_name.spacing = 5
+
+        display_name_label.translatesAutoresizingMaskIntoConstraints = false
+        display_name_label.adjustsFontSizeToFitWidth = false
+        display_name_label.text = "display_name".localized
+        display_name.addArrangedSubview(display_name_label)
+
+        display_name_edit.text = UserDefaults.standard.string(forKey: Key.NAME)
+        display_name_edit.translatesAutoresizingMaskIntoConstraints = false
+        display_name_edit.backgroundColor = .white
+        display_name_edit.layer.borderColor = UIColor.gray.cgColor
+        display_name_edit.layer.borderWidth = 1
+        display_name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        display_name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: display_name_edit, queue: OperationQueue.main) { (notification) in
+            check()
+        }
+
+        display_name.addArrangedSubview(display_name_edit)
+
+        layout.addArrangedSubview(display_name)
+
+        layout.requestLayout()
+
         check()
+
+        alert.contentView.addSubview(layout)
+
+        layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
+        alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
+
         viewController.present(alert, animated: true, completion: nil)
     }
 }
