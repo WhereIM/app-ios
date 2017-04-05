@@ -311,13 +311,13 @@ class DialogCreateMarker {
     let name = UICompactStackView()
     let name_edit = UITextField()
     let name_label = UILabel()
+    let ispublic = UICompactStackView()
+    let ispublic_label = UILabel()
+    let ispublic_switch = UISwitch()
     let icon = UICompactStackView()
     let icon_label = UILabel()
     let icon_picker = UIPickerView()
     let pickerDelegate = PickerDelegate()
-    let ispublic = UICompactStackView()
-    let ispublic_label = UILabel()
-    let ispublic_switch = UISwitch()
 
     init(_ mapController: MapController) {
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
@@ -364,6 +364,21 @@ class DialogCreateMarker {
 
         layout.addArrangedSubview(name)
 
+        ispublic.translatesAutoresizingMaskIntoConstraints = false
+        ispublic.axis = .horizontal
+        ispublic.alignment = .center
+        ispublic.distribution = .fill
+        ispublic.spacing = 5
+
+        ispublic_label.translatesAutoresizingMaskIntoConstraints = false
+        ispublic_label.adjustsFontSizeToFitWidth = false
+        ispublic_label.text = "is_public".localized
+        ispublic.addArrangedSubview(ispublic_label)
+
+        ispublic.addArrangedSubview(ispublic_switch)
+
+        layout.addArrangedSubview(ispublic)
+
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.axis = .horizontal
         icon.alignment = .center
@@ -384,21 +399,6 @@ class DialogCreateMarker {
         icon.addArrangedSubview(icon_picker)
 
         layout.addArrangedSubview(icon)
-
-        ispublic.translatesAutoresizingMaskIntoConstraints = false
-        ispublic.axis = .horizontal
-        ispublic.alignment = .center
-        ispublic.distribution = .fill
-        ispublic.spacing = 5
-
-        ispublic_label.translatesAutoresizingMaskIntoConstraints = false
-        ispublic_label.adjustsFontSizeToFitWidth = false
-        ispublic_label.text = "is_public".localized
-        ispublic.addArrangedSubview(ispublic_label)
-
-        ispublic.addArrangedSubview(ispublic_switch)
-
-        layout.addArrangedSubview(ispublic)
 
         layout.requestLayout()
 
