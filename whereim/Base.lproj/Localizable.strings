@@ -45,5 +45,7 @@
 "message_marker_create" = "Marker %1$@ is created.";
 "message_radius_report" = "In: %2$@\nOut: %3$@  (%1$@ m)";
 
+"message_limit_channel_enable" = "Limit of number of enabled channels (%1$@) is reached.";
+
 "mock_location_service_not_running" = "Location service is not running, mock data is not sending.";
 "mock_confirm_disable" = "Are you sure to finish mocking?";

@@ -9,6 +9,7 @@
 import Alamofire
 import CoreLocation
 import Moscapsule
+import Toast_Swift
 
 protocol RegisterClientCallback {
     func onCaptchaRequired()
@@ -245,6 +246,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     mqttChannelMarkerHandler(data)
                 case "profile":
                     mqttClientProfileHandler(data)
+                case "toast":
+                    mqttToastHandler(data)
                 default:
                     break
                 }
@@ -274,6 +277,26 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         } catch {
             print("error in mqttOnMessage")
+        }
+    }
+
+    func mqttToastHandler(_ data: [String: Any]) {
+        let key = data["key"] as! String
+        let args = data["args"] as! [String]
+        var message: String?
+        switch key {
+        case "limit_enable_channel":
+            let limit = args[0]
+            message = String(format: "message_limit_channel_enable".localized, limit)
+        default:
+            break
+        }
+        if let m = message {
+            if let vc = currentViewController {
+                DispatchQueue.main.async {
+                    vc.view!.makeToast(m)
+                }
+            }
         }
     }
 
