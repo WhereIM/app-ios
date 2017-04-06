@@ -22,6 +22,8 @@ target 'whereim' do
 
   pod 'SDCAlertView', '~> 7.1'
 
+  pod 'Toast-Swift', '~> 2.0.0'
+
   target 'whereimTests' do
     inherit! :search_paths
     # Pods for testing

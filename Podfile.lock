@@ -35,6 +35,7 @@ PODS:
   - Moscapsule (0.5.2)
   - OpenSSL-Universal (1.0.1.20)
   - SDCAlertView (7.1.1)
+  - Toast-Swift (2.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.3)
@@ -47,6 +48,7 @@ DEPENDENCIES:
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
   - OpenSSL-Universal (~> 1.0.1.18)
   - SDCAlertView (~> 7.1)
+  - Toast-Swift (~> 2.0.0)
 
 EXTERNAL SOURCES:
   Moscapsule:
@@ -72,7 +74,8 @@ SPEC CHECKSUMS:
   Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
   OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
   SDCAlertView: 4798cda4a480f90b24313d3cb07640243943d129
+  Toast-Swift: 5b2f8f720f7e78e48511f693df1f9c9a6e38a25a
 
-PODFILE CHECKSUM: 148adbea048cda5df7b1b629eaab8b139939664e
+PODFILE CHECKSUM: 2be9cb9a2c8dfd547f3dd9b92fe806043abc8d6d
 
 COCOAPODS: 1.2.0
