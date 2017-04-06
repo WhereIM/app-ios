@@ -88,6 +88,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+        if(application.applicationState == .active) {
+
+            //app is currently active, can update badges count here
+
+        } else if(application.applicationState == .background){
+
+            //app is in background, if content-available key of your notification is set to 1, poll to your backend to retrieve data and update your interface here
+
+        } else if(application.applicationState == .inactive){
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
+
+            if let channel_id = userInfo["channel"] as? String {
+                let vc = sb.instantiateViewController(withIdentifier: "channel") as! ChannelController
+                vc.channel = service!.getChannel(id: channel_id)
+                if let t = userInfo["type"] as? String {
+                    switch t {
+                    case "text":
+                        vc.defaultTab = 1
+                    default:
+                        vc.defaultTab = 0
+                    }
+                }
+                startupVC.topViewController?.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
+                startupVC.pushViewController(vc, animated: false)
+            }
+
+            window?.rootViewController = startupVC;
+        }
+    }
+
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
 

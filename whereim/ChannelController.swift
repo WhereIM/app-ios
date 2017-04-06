@@ -11,6 +11,7 @@ import UIKit
 class ChannelController: UITabBarController, ChannelListChangedListener, ConnectionStatusCallback {
     var service: CoreService?
     var channel: Channel?
+    var defaultTab = 0
     let loadingSwitch = UILoadingSwitch()
     var channelListChangedCbkey: Int?
     var connectionStatusChangedCbKey: Int?
@@ -97,6 +98,8 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         let attributes: [String: AnyObject] = [NSFontAttributeName:UIFont(name: "Apple Color Emoji", size: 18)!, NSForegroundColorAttributeName: UIColor.orange]
         appearance.setTitleTextAttributes(attributes, for: .normal)
         appearance.titlePositionAdjustment = UIOffsetMake(0, -10)
+
+        selectedIndex = defaultTab
     }
 
     func invite_join(sender: UIButton) {

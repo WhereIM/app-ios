@@ -7,3 +7,4 @@
 */
 
 "NSLocationAlwaysUsageDescription" = "It's all about where. Grant location permission please.";
+"NSLocationWhenInUseUsageDescription" = "It's all about where. Grant location permission please.";

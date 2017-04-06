@@ -7,3 +7,4 @@
 */
 
 "NSLocationAlwaysUsageDescription" = "本程式需要定位功能才能運作喔";
+"NSLocationWhenInUseUsageDescription" = "本程式需要定位功能才能運作喔";
