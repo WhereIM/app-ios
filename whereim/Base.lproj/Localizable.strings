@@ -12,6 +12,9 @@
 "action_invite" = "Invite";
 "action_quit" = "Quit";
 
+"active_client" = "Client not active";
+"active_client_message" = "This client is not active, take over from your other client?";
+
 "retry" = "Retry";
 
 "channel_name" = "Channel Name";

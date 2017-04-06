@@ -116,6 +116,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return service!
     }
 
+    private var isActiveDevice: Bool?
     private var otp: String?
     private var clientId: String?
 
@@ -276,6 +277,17 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
+    private var currentViewController: UIViewController?
+    func setViewController(_ viewController: UIViewController?) {
+        currentViewController = viewController
+        if currentViewController != nil {
+            requestActiveClient()
+        }
+    }
+
+    func setActive() {
+        publish("client/\(clientId!)/profile/put", [Key.ACTIVE:clientId!])
+    }
 
     var pendingPushToken: String?
     func setPushToken(_ token: String) {
@@ -295,12 +307,34 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
+    private var requestActiveDevice = false
     func mqttClientProfileHandler(_ data: [String: Any]) {
-        let token = data["apns_token"] as? String
-        if token == pendingPushToken {
-            pendingPushToken = nil
+        if let token = data["apns_token"] as? String {
+            if token == pendingPushToken {
+                pendingPushToken = nil
+            }
+            UserDefaults.standard.set(token, forKey: "apns_token")
         }
-        UserDefaults.standard.set(token, forKey: "apns_token")
+
+        if let activeDevice = data[Key.ACTIVE] {
+            let active = (activeDevice as? String) == clientId!
+            if (isActiveDevice == nil || active != isActiveDevice) && !active {
+                requestActiveDevice = true
+                requestActiveClient()
+            }
+            isActiveDevice = active
+            _checkLocationService()
+        }
+    }
+
+    private func requestActiveClient() {
+        if !requestActiveDevice {
+            return
+        }
+        requestActiveDevice = false
+        if let vc = currentViewController {
+            _ = DialogRequestActiveDevice(vc)
+        }
     }
 
     func mqttChannelMateHandler(_ channel_id: String, _ data: [String: Any]) {
@@ -1154,10 +1188,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         if !pending {
-            if enableCount > 0 {
+            if isActiveDevice == true && enableCount > 0 {
                 isForeground = true
                 startLocationService()
-            } else if enableCount == 0 {
+            } else if isActiveDevice != true || enableCount == 0 {
                 isForeground = false
                 stopLocationService()
             }

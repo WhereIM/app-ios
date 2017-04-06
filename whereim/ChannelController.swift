@@ -114,12 +114,14 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        service!.setViewController(self)
         channelListChangedCbkey = service?.addChannelListChangedListener(channelListChangedCbkey, self)
         connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
+            sv.setViewController(nil)
             if channelListChangedCbkey != nil {
                 sv.removeChannelListChangedListener(channelListChangedCbkey)
                 channelListChangedCbkey = nil
