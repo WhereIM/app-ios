@@ -27,11 +27,14 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         }
 
         loginButton = LoginButton(readPermissions: [ .publicProfile ])
-        loginButton!.center = view.center
         loginButton!.delegate = self
         loginButton!.isHidden = true
+        loginButton?.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(loginButton!)
+
+        loginButton!.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginButton!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
