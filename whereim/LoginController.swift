@@ -39,7 +39,8 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
 
         retryButton = UIButton()
         retryButton!.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8)
-        retryButton!.backgroundColor = .clear
+        retryButton!.backgroundColor = .gray
+        retryButton!.setTitleColor(.white, for: .normal)
         retryButton!.layer.cornerRadius = 5
         retryButton!.layer.borderWidth = 1
         retryButton!.layer.borderColor = UIColor.gray.cgColor
