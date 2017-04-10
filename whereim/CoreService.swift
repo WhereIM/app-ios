@@ -1210,14 +1210,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         }
 
-        if !pending {
-            if isActiveDevice == true && enableCount > 0 {
-                isForeground = true
-                startLocationService()
-            } else if isActiveDevice != true || enableCount == 0 {
-                isForeground = false
-                stopLocationService()
-            }
+        if !pending && isActiveDevice == true && enableCount > 0 {
+            isForeground = true
+            startLocationService()
+        }
+        if isActiveDevice != true || (!pending && enableCount == 0) {
+            isForeground = false
+            stopLocationService()
         }
     }
 
