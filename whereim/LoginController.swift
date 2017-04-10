@@ -14,6 +14,7 @@ import FBSDKLoginKit
 class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCallback {
     var service: CoreService?
     var loginButton: LoginButton?
+    var retryButton: UIButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,26 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
 
         loginButton!.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginButton!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
+
+        retryButton = UIButton()
+        retryButton!.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8)
+        retryButton!.backgroundColor = .clear
+        retryButton!.layer.cornerRadius = 5
+        retryButton!.layer.borderWidth = 1
+        retryButton!.layer.borderColor = UIColor.gray.cgColor
+        retryButton!.translatesAutoresizingMaskIntoConstraints = false
+        retryButton!.setTitle("retry".localized, for: .normal)
+        retryButton!.isHidden = true
+        retryButton!.addTarget(self, action: #selector(retry(sender:)), for: .touchUpInside)
+
+        view.addSubview(retryButton!)
+
+        retryButton!.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        retryButton!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
+    }
+
+    func retry(sender: Any) {
+        register_client()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -89,19 +110,24 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
     var auth_name: String?
 
     func register_client() {
+        self.view.makeToastActivity(.center)
         service?.register_client(authProvider: auth_provider!, authId: auth_id!, name: auth_name!, callback: self)
     }
 
     func onCaptchaRequired() {
+        self.view.hideToastActivity()
         let vc = storyboard?.instantiateViewController(withIdentifier: "captcha")
         self.present(vc!, animated: true)
     }
 
     func onExhausted() {
-        // show exhausted message
+        self.view.hideToastActivity()
+        self.view.makeToast("error_exhausted".localized)
+        checkLogin()
     }
 
     func onDone() {
+        self.view.hideToastActivity()
         checkLogin()
     }
 
@@ -114,6 +140,7 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
             auth_name = UserDefaults.standard.string(forKey: Key.NAME)
 
             if auth_id == nil {
+                retryButton!.isHidden = true
                 loginButton!.isHidden = false
             } else {
                 loginButton!.isHidden = true
@@ -121,7 +148,7 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
                     tried = true
                     register_client()
                 } else {
-                    // show retry button
+                    retryButton!.isHidden = false
                 }
             }
         } else {
