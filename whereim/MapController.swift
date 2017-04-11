@@ -17,7 +17,7 @@ protocol MapControllerInterface {
     func didReceiveMemoryWarning()
     func channelChanged()
     func moveTo(mate: Mate)
-    func moveTo(marker: Marker)
+    func moveTo(marker: Marker?)
     func refreshEditing()
 }
 

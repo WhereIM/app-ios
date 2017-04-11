@@ -154,12 +154,13 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
         if marker.deleted {
             self.markerMarker.removeValue(forKey: marker.id!)
-        } else if marker.enable == true {
+        } else if marker.enable == true || focusMarker === marker {
             let m = GMSMarker()
             m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
             m.title = marker.name
             m.icon = marker.getIcon()
+            m.opacity = marker.enable == true ? 1 : 0.5
             m.map = self.mapView
 
             self.markerMarker[marker.id!] = m
@@ -174,10 +175,19 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         updateSelfMate()
     }
 
-    func moveTo(marker: Marker) {
-        mapView!.animate(toLocation: CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!))
-        if let m = markerMarker[marker.id!] {
-            mapView!.selectedMarker = m
+    private var focusMarker: Marker?
+    func moveTo(marker: Marker?) {
+        let exFocusMarker = focusMarker
+        focusMarker = marker
+        if exFocusMarker != nil {
+            onMarkerData(exFocusMarker!)
+        }
+        if let m = marker {
+            onMarkerData(m)
+            mapView!.animate(toLocation: CLLocationCoordinate2DMake(m.latitude!, m.longitude!))
+            if let mm = markerMarker[m.id!] {
+                mapView!.selectedMarker = mm
+            }
         }
     }
 
