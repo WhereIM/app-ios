@@ -16,7 +16,8 @@ class Channel: Record {
     static let COL_CHANNEL_NAME = "channel_name"
     static let COL_USER_CHANNEL_NAME = "user_channel_name"
     static let COL_MATE = "mate"
-    static let COL_ENABLE = "enable"
+    static let COL_ARCHIVE = "archive"
+    static let COL_ENABLE = "enabled"
     static let COL_ENABLE_RADIUS = "enable_radius"
     static let COL_RADIUS = "radius"
 
@@ -24,6 +25,7 @@ class Channel: Record {
     var channel_name: String?
     var user_channel_name: String?
     var mate_id: String?
+    var archive: Bool?
     var enable: Bool?
     var enable_radius: Bool?
     var radius: Double?
@@ -39,6 +41,7 @@ class Channel: Record {
                 COL_CHANNEL_NAME + " TEXT, " +
                 COL_USER_CHANNEL_NAME + " TEXT, " +
                 COL_MATE + " TEXT, " +
+                COL_ARCHIVE + " BOOLEAN, " +
                 COL_ENABLE + " BOOLEAN, " +
                 COL_ENABLE_RADIUS + " BOOLEAN, " +
                 COL_RADIUS + " DOUBLE PRECISION" +
@@ -58,6 +61,7 @@ class Channel: Record {
         channel_name = row.value(named: Channel.COL_CHANNEL_NAME)
         user_channel_name = row.value(named: Channel.COL_USER_CHANNEL_NAME)
         mate_id = row.value(named: Channel.COL_MATE)
+        archive = row.value(named: Channel.COL_ARCHIVE)
         enable = row.value(named: Channel.COL_ENABLE)
         enable_radius = row.value(named: Channel.COL_ENABLE_RADIUS)
         radius = row.value(named: Channel.COL_RADIUS)
@@ -74,6 +78,7 @@ class Channel: Record {
             Channel.COL_CHANNEL_NAME: channel_name,
             Channel.COL_USER_CHANNEL_NAME: user_channel_name,
             Channel.COL_MATE: mate_id,
+            Channel.COL_ARCHIVE: archive,
             Channel.COL_ENABLE: enable,
             Channel.COL_ENABLE_RADIUS: enable_radius,
             Channel.COL_RADIUS: radius

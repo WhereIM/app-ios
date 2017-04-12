@@ -56,8 +56,8 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return enchantmentList.public_list.count
-        case 2: return enchantmentList.private_list.count
+        case 1: return enchantmentList.public_list.count > 0 ? enchantmentList.public_list.count : 1
+        case 2: return enchantmentList.private_list.count > 0 ? enchantmentList.private_list.count : 1
         default:
             return 0
         }
@@ -78,29 +78,38 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! EnchantmentCell
 
         if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! EnchantmentCell
             cell.title.text = String(format: "radius_m".localized, channel.radius!)
             cell.loadingSwitch.setEnabled(channel.enable_radius)
+            cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
+            cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
+
+            return cell
         } else {
-            let enchantment = getEnchantment(indexPath.section, indexPath.row)!
+            if let enchantment = getEnchantment(indexPath.section, indexPath.row) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! EnchantmentCell
+                cell.title.text = enchantment.name
+                cell.loadingSwitch.setEnabled(enchantment.enable)
+                cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
+                cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 
-            cell.title.text = enchantment.name
-            cell.loadingSwitch.setEnabled(enchantment.enable)
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "placeholder", for: indexPath) as! UIPlaceHolderCell
+                cell.label.text = "object_create_hint".localized
+                return cell
+            }
         }
-
-        cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
-        cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
-
-        return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section != 0 {
-            let enchantment = getEnchantment(indexPath.section, indexPath.row)!
-            channelController.moveTo(enchantment: enchantment)
+            if let enchantment = getEnchantment(indexPath.section, indexPath.row) {
+                channelController.moveTo(enchantment: enchantment)
+            }
         }
     }
 
@@ -117,11 +126,18 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
 
     func getEnchantment(_ section: Int, _ row: Int) -> Enchantment? {
         switch section {
-        case 1: return enchantmentList.public_list[row]
-        case 2: return enchantmentList.private_list[row]
+        case 1:
+            if row < enchantmentList.public_list.count {
+                return enchantmentList.public_list[row]
+            }
+        case 2:
+            if row < enchantmentList.private_list.count {
+                return enchantmentList.private_list[row]
+            }
         default:
             return nil
         }
+        return nil
     }
 
     func reload() {
@@ -147,6 +163,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
         service = CoreService.bind()
         adapter = ChannelEnchantmentAdapter((service)!, channel!, parent)
         enchantmentListView.register(EnchantmentCell.self, forCellReuseIdentifier: "enchantment")
+        enchantmentListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         enchantmentListView.dataSource = adapter
         enchantmentListView.delegate = adapter
     }

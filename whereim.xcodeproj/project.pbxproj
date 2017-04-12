@@ -40,6 +40,7 @@
 		58A6EB901E5858E700C29A49 /* aws.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58A6EB8F1E5858E700C29A49 /* aws.bundle */; };
 		58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB991E5897BA00C29A49 /* Channel.swift */; };
 		58D1C0401E6DA52B005A904F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D1C03F1E6DA52B005A904F /* Message.swift */; };
+		58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */; };
 		58E347A51E5A183D0025211B /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A41E5A183D0025211B /* MapController.swift */; };
 		58E347A71E5A18F00025211B /* Mate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A61E5A18F00025211B /* Mate.swift */; };
 		58E347A91E5A23F20025211B /* ChannelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A81E5A23F20025211B /* ChannelController.swift */; };
@@ -111,6 +112,7 @@
 		58A6EB8F1E5858E700C29A49 /* aws.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = aws.bundle; sourceTree = "<group>"; };
 		58A6EB991E5897BA00C29A49 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		58D1C03F1E6DA52B005A904F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIPlacerHolderCell.swift; sourceTree = "<group>"; };
 		58E347A41E5A183D0025211B /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		58E347A61E5A18F00025211B /* Mate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mate.swift; sourceTree = "<group>"; };
 		58E347A81E5A23F20025211B /* ChannelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelController.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				5895F8551E5F63B100E00F02 /* UICompactStackView.swift */,
 				5895F8571E5F671000E00F02 /* UIFrameView.swift */,
 				581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */,
+				58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -577,6 +580,7 @@
 				58A6EB8B1E56F5CF00C29A49 /* CoreService.swift in Sources */,
 				58E347A71E5A18F00025211B /* Mate.swift in Sources */,
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
+				58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,

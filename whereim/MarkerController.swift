@@ -104,8 +104,8 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return mateList.count
-        case 1: return markerList.public_list.count
-        case 2: return markerList.private_list.count
+        case 1: return markerList.public_list.count > 0 ? markerList.public_list.count : 1
+        case 2: return markerList.private_list.count > 0 ? markerList.private_list.count : 1
         default:
             return 0
         }
@@ -143,17 +143,22 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
+            if let marker = getMarker(indexPath.section, indexPath.row) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
+                cell.icon.image = marker.getIcon()
+                cell.title.text = marker.name
+                cell.loadingSwitch.setEnabled(marker.enable)
+                cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
+                cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 
-            let marker = getMarker(indexPath.section, indexPath.row)!
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "placeholder", for: indexPath) as! UIPlaceHolderCell
 
-            cell.icon.image = marker.getIcon()
-            cell.title.text = marker.name
-            cell.loadingSwitch.setEnabled(marker.enable)
-            cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
-            cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
+                cell.label.text = "object_create_hint".localized
 
-            return cell
+                return cell
+            }
         }
     }
 
@@ -163,8 +168,9 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
             let mate = getMate(indexPath.section, indexPath.row)!
             channelController.moveTo(mate: mate)
         } else {
-            let marker = getMarker(indexPath.section, indexPath.row)!
-            channelController.moveTo(marker: marker)
+            if let marker = getMarker(indexPath.section, indexPath.row) {
+                channelController.moveTo(marker: marker)
+            }
         }
     }
 
@@ -181,11 +187,18 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func getMarker(_ section: Int, _ row: Int) -> Marker? {
         switch section {
-        case 1: return markerList.public_list[row]
-        case 2: return markerList.private_list[row]
+        case 1:
+            if row < markerList.public_list.count {
+                return markerList.public_list[row]
+            }
+        case 2:
+            if row < markerList.private_list.count {
+                return markerList.private_list[row]
+            }
         default:
             return nil
         }
+        return nil
     }
 
     func reload() {
@@ -212,6 +225,7 @@ class MarkerController: UIViewController, Callback {
         adapter = ChannelMarkerAdapter((service)!, channel!, parent)
         markerListView.register(MateCell.self, forCellReuseIdentifier: "mate")
         markerListView.register(MarkerCell.self, forCellReuseIdentifier: "marker")
+        markerListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter
     }

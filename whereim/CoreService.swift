@@ -830,6 +830,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.deleted = data[Key.DELETED] as? Bool ?? channel!.deleted
         channel!.enable_radius = data[Key.ENABLE_RADIUS] as? Bool ?? channel!.enable_radius
         channel!.radius = data[Key.RADIUS] as? Double ?? channel!.radius
+        channel!.archive = data[Key.ARCHIVE] as? Bool ?? channel!.archive
         channel!.enable = data[Key.ENABLE] as? Bool ?? channel!.enable
 
         if let ts = data[Key.TS] {

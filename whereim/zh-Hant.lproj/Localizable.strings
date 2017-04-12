@@ -16,6 +16,8 @@
 
 "retry" = "再試一次";
 
+"object_create_hint" = "在地圖上長按即可建立";
+
 "channel_name" = "群組名稱";
 "display_name" = "個人暱稱";
 "create_channel" = "建立群組";

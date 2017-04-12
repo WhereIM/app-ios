@@ -10,6 +10,7 @@ class Key {
     static let ACCURACY = "acc"
     static let ACTIVE = "active"
     static let ALTITUDE = "alt"
+    static let ARCHIVE = "archive"
     static let ATTR = "attr"
 
     static let BEARING = "bear"

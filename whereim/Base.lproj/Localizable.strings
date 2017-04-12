@@ -17,6 +17,8 @@
 
 "retry" = "Retry";
 
+"object_create_hint" = "Long press on map to create";
+
 "channel_name" = "Channel Name";
 "display_name" = "Display Name";
 "create_channel" = "Create Channel";
