@@ -123,9 +123,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
 
-        print("APNs device token: \(deviceTokenString)")
+        var build = "release"
 
-        service?.setPushToken(deviceTokenString)
+        #if DEBUG
+            build = "debug"
+        #endif
+
+        let tk = "\(build)/\(deviceTokenString)"
+        print("APNs device token: \(tk)")
+
+        service?.setPushToken(tk)
     }
 
     // Respond to URI scheme links
