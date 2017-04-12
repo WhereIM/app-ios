@@ -37,6 +37,13 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         }
     }
 
+    func moveTo(enchantment: Enchantment) {
+        if let mc = mapController {
+            mc.moveTo(enchantment: enchantment)
+            self.selectedIndex = 0
+        }
+    }
+
     func moveTo(marker: Marker) {
         if let mc = mapController {
             mc.moveTo(marker: marker)

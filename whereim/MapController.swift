@@ -18,6 +18,7 @@ protocol MapControllerInterface {
     func channelChanged()
     func moveTo(mate: Mate)
     func moveTo(marker: Marker?)
+    func moveTo(enchantment: Enchantment?)
     func refreshEditing()
 }
 
@@ -153,6 +154,10 @@ class MapController: UIViewController, ChannelChangedListener {
 
     func moveTo(mate: Mate) {
         mapControllerImpl?.moveTo(mate: mate)
+    }
+
+    func moveTo(enchantment: Enchantment) {
+        mapControllerImpl?.moveTo(enchantment: enchantment)
     }
 
     func moveTo(marker: Marker) {

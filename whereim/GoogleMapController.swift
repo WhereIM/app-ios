@@ -131,12 +131,12 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let c = self.enchantmentCircle[enchantment.id!] {
             c.map = nil
         }
-        if enchantment.enable == true {
+        if enchantment.enable == true || enchantment === focusEnchantment {
             let c = GMSCircle()
             c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
             c.radius = enchantment.radius!
             c.strokeWidth = 3
-            c.strokeColor = enchantment.isPublic == true ? .red : .orange
+            c.strokeColor = enchantment.enable == true ? ( enchantment.isPublic == true ? .red : .orange ) : .gray
             c.map = self.mapView
 
             self.enchantmentCircle[enchantment.id!] = c
@@ -173,6 +173,19 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
     func channelChanged() {
         updateSelfMate()
+    }
+
+    private var focusEnchantment: Enchantment?
+    func moveTo(enchantment: Enchantment?) {
+        let exFocusEnchantment = focusEnchantment
+        focusEnchantment = enchantment
+        if exFocusEnchantment != nil {
+            onEnchantmentData(exFocusEnchantment!)
+        }
+        if let e = enchantment {
+            onEnchantmentData(e)
+            mapView!.animate(toLocation: CLLocationCoordinate2DMake(e.latitude!, e.longitude!))
+        }
     }
 
     private var focusMarker: Marker?

@@ -43,11 +43,13 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     var enchantmentList: EnchantmentList
     let service: CoreService
     let channel: Channel
+    let channelController: ChannelController
     let numberOfSections = 3
 
-    init(_ service: CoreService, _ channel: Channel) {
+    init(_ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.service = service
         self.channel = channel
+        self.channelController = channelController
         self.enchantmentList = service.getChannelEnchantment(channel.id!)
     }
 
@@ -94,6 +96,14 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
         return cell
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section != 0 {
+            let enchantment = getEnchantment(indexPath.section, indexPath.row)!
+            channelController.moveTo(enchantment: enchantment)
+        }
+    }
+
     func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
@@ -135,8 +145,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
         channel = parent.channel
         
         service = CoreService.bind()
-        adapter = ChannelEnchantmentAdapter((service)!, channel!)
-        enchantmentListView.allowsSelection = false
+        adapter = ChannelEnchantmentAdapter((service)!, channel!, parent)
         enchantmentListView.register(EnchantmentCell.self, forCellReuseIdentifier: "enchantment")
         enchantmentListView.dataSource = adapter
         enchantmentListView.delegate = adapter
