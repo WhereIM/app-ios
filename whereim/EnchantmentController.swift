@@ -70,8 +70,8 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "self".localized
-        case 1: return "is_public".localized
-        case 2: return "is_private".localized
+        case 1: return "public_enchantment".localized
+        case 2: return "private_enchantment".localized
         default:
             return nil
         }

@@ -33,6 +33,10 @@
 
 "self" = "Self";
 "mate" = "Mate";
+"public_enchantment" = "Shared Enchantment";
+"private_enchantment" = "Personal Enchantment";
+"public_marker" = "Shared Marker";
+"private_marker" = "Personal Marker";
 "is_public" = "Public";
 "is_private" = "Private";
 

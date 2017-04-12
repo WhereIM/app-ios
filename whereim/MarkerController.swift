@@ -118,8 +118,8 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "mate".localized
-        case 1: return "is_public".localized
-        case 2: return "is_private".localized
+        case 1: return "public_marker".localized
+        case 2: return "private_marker".localized
         default:
             return nil
         }

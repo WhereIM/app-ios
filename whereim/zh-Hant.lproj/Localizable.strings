@@ -32,8 +32,12 @@
 
 "self" = "自己";
 "mate" = "同伴";
+"public_enchantment" = "共用結界";
+"private_enchantment" = "個人結界";
+"public_marker" = "共用圖釘";
+"private_marker" = "個人圖釘";
 "is_public" = "公用";
-"is_private" = "自用";
+"is_private" = "個人";
 
 "error_exhausted" = "可註冊數量已滿，請稍後再試。";
 
