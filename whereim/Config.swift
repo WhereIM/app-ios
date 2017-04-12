@@ -8,7 +8,7 @@
 
 
 class Config {
-    static let LOGGING = true
+    static let LOGGING = false
 
     static let DB_VERSION = 1
 
