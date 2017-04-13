@@ -9,6 +9,7 @@
 "lang" = "zh-TW";
 
 "action_invite" = "邀請";
+"action_about" = "關於";
 "action_quit" = "關閉程式";
 
 "active_client" = "此裝置不是主要裝置";

@@ -59,6 +59,39 @@
             </objects>
             <point key="canvasLocation" x="972" y="830.73463268365822"/>
         </scene>
+        <!--About Controller-->
+        <scene sceneID="O92-f2-j1E">
+            <objects>
+                <viewController storyboardIdentifier="about" automaticallyAdjustsScrollViewInsets="NO" id="BnQ-ya-KXx" customClass="AboutController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oND-DG-XNZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="lFv-OU-iYe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="9Jw-1K-G6K">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D5u-F9-Vpb">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lFv-OU-iYe" firstAttribute="top" secondItem="D5u-F9-Vpb" secondAttribute="bottom" id="HDb-F1-8Ux"/>
+                            <constraint firstItem="D5u-F9-Vpb" firstAttribute="top" secondItem="oND-DG-XNZ" secondAttribute="bottom" id="TYU-v1-pzf"/>
+                            <constraint firstItem="D5u-F9-Vpb" firstAttribute="leading" secondItem="9Jw-1K-G6K" secondAttribute="leading" id="jLS-79-9uD"/>
+                            <constraint firstAttribute="trailing" secondItem="D5u-F9-Vpb" secondAttribute="trailing" id="oyA-QJ-V0g"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="D5u-F9-Vpb" id="QrC-Ga-B67"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yqa-pB-iv9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="33" y="1559"/>
+        </scene>
         <!--Log Controller-->
         <scene sceneID="IJk-mb-Vth">
             <objects>

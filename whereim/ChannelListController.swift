@@ -157,13 +157,32 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
             title.addGestureRecognizer(tapGesture)
         }
 
+        let menu = UIButton()
+        menu.setTitle("⋮", for: .normal)
+        menu.setTitleColor(.black, for: .normal)
+        menu.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)
+        menu.translatesAutoresizingMaskIntoConstraints = false
+        menu.addTarget(self, action: #selector(open_menu(sender:)), for: .touchUpInside)
+        navigator.addSubview(menu)
+
         connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
         connectionStatusIndicator.activityIndicatorViewStyle = .gray
         connectionStatusIndicator.startAnimating()
         navigator.addSubview(connectionStatusIndicator)
 
-        NSLayoutConstraint.activate([title.leftAnchor.constraint(equalTo: navigator.leftAnchor), title.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
-        NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: navigator.rightAnchor), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+        NSLayoutConstraint.activate([
+            title.leftAnchor.constraint(equalTo: navigator.leftAnchor),
+            title.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            menu.rightAnchor.constraint(equalTo: navigator.rightAnchor),
+            menu.centerYAnchor.constraint(equalTo: navigator.centerYAnchor),
+            menu.heightAnchor.constraint(equalTo: navigator.heightAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            connectionStatusIndicator.rightAnchor.constraint(equalTo: menu.leftAnchor),
+            connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)
+            ])
 
         navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
@@ -183,6 +202,10 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         print(openLogController)
         let vc = self.storyboard!.instantiateViewController(withIdentifier: "log")
         self.show(vc, sender: self)
+    }
+
+    func open_menu(sender: Any) {
+        _ = DialogMenu(self)
     }
 
     func create_channel(sender: UIButton) {
@@ -233,7 +256,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = channelListView.indexPathForSelectedRow {
             navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)

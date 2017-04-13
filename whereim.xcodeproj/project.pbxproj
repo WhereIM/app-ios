@@ -41,6 +41,8 @@
 		58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB991E5897BA00C29A49 /* Channel.swift */; };
 		58D1C0401E6DA52B005A904F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D1C03F1E6DA52B005A904F /* Message.swift */; };
 		58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */; };
+		58DBA2A11E9F2D8E000744F0 /* whereim.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58DBA2A01E9F2D8E000744F0 /* whereim.bundle */; };
+		58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA2A21E9F31D5000744F0 /* AboutController.swift */; };
 		58E347A51E5A183D0025211B /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A41E5A183D0025211B /* MapController.swift */; };
 		58E347A71E5A18F00025211B /* Mate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A61E5A18F00025211B /* Mate.swift */; };
 		58E347A91E5A23F20025211B /* ChannelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A81E5A23F20025211B /* ChannelController.swift */; };
@@ -113,6 +115,8 @@
 		58A6EB991E5897BA00C29A49 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		58D1C03F1E6DA52B005A904F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIPlacerHolderCell.swift; sourceTree = "<group>"; };
+		58DBA2A01E9F2D8E000744F0 /* whereim.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = whereim.bundle; sourceTree = "<group>"; };
+		58DBA2A21E9F31D5000744F0 /* AboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
 		58E347A41E5A183D0025211B /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		58E347A61E5A18F00025211B /* Mate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mate.swift; sourceTree = "<group>"; };
 		58E347A81E5A23F20025211B /* ChannelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelController.swift; sourceTree = "<group>"; };
@@ -213,6 +217,7 @@
 				581508B41E5DFA52003DDA80 /* views */,
 				58A6EB9C1E5897D900C29A49 /* models */,
 				58568FB41E51ADF2002FAD41 /* AppDelegate.swift */,
+				58DBA2A21E9F31D5000744F0 /* AboutController.swift */,
 				58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */,
 				58568FB61E51ADF2002FAD41 /* LoginController.swift */,
 				58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */,
@@ -230,6 +235,7 @@
 				58568FB81E51ADF2002FAD41 /* Main.storyboard */,
 				58568FBE1E51ADF2002FAD41 /* Assets.xcassets */,
 				58568FC01E51ADF2002FAD41 /* LaunchScreen.storyboard */,
+				58DBA2A01E9F2D8E000744F0 /* whereim.bundle */,
 				58A6EB8F1E5858E700C29A49 /* aws.bundle */,
 				58568FC31E51ADF2002FAD41 /* Info.plist */,
 				585A0E691E68344500C5E9CB /* whereim.entitlements */,
@@ -403,6 +409,7 @@
 				58568FC21E51ADF2002FAD41 /* LaunchScreen.storyboard in Resources */,
 				58A6EB901E5858E700C29A49 /* aws.bundle in Resources */,
 				58568FBF1E51ADF2002FAD41 /* Assets.xcassets in Resources */,
+				58DBA2A11E9F2D8E000744F0 /* whereim.bundle in Resources */,
 				58568FBA1E51ADF2002FAD41 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -585,6 +592,7 @@
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,
 				580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */,
+				58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */,
 				5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */,
 				5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */,
 				582046D41E69CA400027DE51 /* Dialog.swift in Sources */,
