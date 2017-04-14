@@ -86,6 +86,7 @@ class MarkerCell: UITableViewCell {
 }
 
 class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
+    var selfMate: Mate?
     var mateList: [Mate]
     var markerList: MarkerList
     let service: CoreService
@@ -97,15 +98,27 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
         self.service = service
         self.channel = channel
         self.channelController = channelController
-        self.mateList = service.getChannelMate(channel.id!)
+        self.mateList = [Mate]()
         self.markerList = service.getChannelMarker(channel.id!)
+        for mate in service.getChannelMate(channel.id!) {
+            if mate.id! == channel.mate_id! {
+                self.selfMate = mate
+            } else {
+                self.mateList.append(mate)
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return mateList.count
-        case 1: return markerList.public_list.count > 0 ? markerList.public_list.count : 1
-        case 2: return markerList.private_list.count > 0 ? markerList.private_list.count : 1
+        case 0:
+            if selfMate != nil {
+                return 1
+            }
+            return 0
+        case 1: return mateList.count
+        case 2: return markerList.public_list.count > 0 ? markerList.public_list.count : 1
+        case 3: return markerList.private_list.count > 0 ? markerList.private_list.count : 1
         default:
             return 0
         }
@@ -117,16 +130,17 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0: return "mate".localized
-        case 1: return "public_marker".localized
-        case 2: return "private_marker".localized
+        case 0: return "self".localized
+        case 1: return "mate".localized
+        case 2: return "public_marker".localized
+        case 3: return "private_marker".localized
         default:
             return nil
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        if indexPath.section == 0 || indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "mate", for: indexPath) as! MateCell
 
             let mate = getMate(indexPath.section, indexPath.row)!
@@ -164,7 +178,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 {
+        if indexPath.section == 0 || indexPath.section == 1 {
             let mate = getMate(indexPath.section, indexPath.row)!
             channelController.moveTo(mate: mate)
         } else {
@@ -182,16 +196,19 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     }
 
     func getMate(_ section: Int, _ row: Int) -> Mate? {
+        if section == 0 {
+            return selfMate
+        }
         return mateList[row]
     }
 
     func getMarker(_ section: Int, _ row: Int) -> Marker? {
         switch section {
-        case 1:
+        case 2:
             if row < markerList.public_list.count {
                 return markerList.public_list[row]
             }
-        case 2:
+        case 3:
             if row < markerList.private_list.count {
                 return markerList.private_list[row]
             }
@@ -203,6 +220,14 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func reload() {
         self.markerList = service.getChannelMarker(channel.id!)
+        self.mateList = [Mate]()
+        for mate in service.getChannelMate(channel.id!) {
+            if mate.id! == channel.mate_id! {
+                self.selfMate = mate
+            } else {
+                self.mateList.append(mate)
+            }
+        }
     }
 }
 
