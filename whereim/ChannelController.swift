@@ -152,7 +152,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
             channelSubtitle.isHidden = true
         }
-        loadingSwitch.setEnabled(channel!.enable)
+        loadingSwitch.setEnabled(channel!.active)
         layout.requestLayout()
     }
 
@@ -161,6 +161,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func switchClicked(sender: UISwitch) {
-        service!.toggleChannelEnabled(channel!)
+        service!.toggleChannelActive(channel!)
     }
 }

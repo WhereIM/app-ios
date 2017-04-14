@@ -830,8 +830,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.deleted = data[Key.DELETED] as? Bool ?? channel!.deleted
         channel!.enable_radius = data[Key.ENABLE_RADIUS] as? Bool ?? channel!.enable_radius
         channel!.radius = data[Key.RADIUS] as? Double ?? channel!.radius
-        channel!.archive = data[Key.ARCHIVE] as? Bool ?? channel!.archive
-        channel!.enable = data[Key.ENABLE] as? Bool ?? channel!.enable
+        channel!.active = data[Key.ACTIVE] as? Bool ?? channel!.active
+        channel!.enabled = data[Key.ENABLE] as? Bool ?? channel!.enabled
 
         if let ts = data[Key.TS] {
             setTS(ts as! UInt64)
@@ -1031,13 +1031,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return channelMap[id]
     }
 
-    func toggleChannelEnabled(_ channel: Channel) {
-        if channel.enable == nil {
+    func toggleChannelActive(_ channel: Channel) {
+        if channel.active == nil {
             return
         }
 
-        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ENABLE: !channel.enable!])
-        channel.enable = nil
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ACTIVE: !channel.active!])
+        channel.active = nil
 
         notifyChannelListChangedListeners()
     }
@@ -1200,22 +1200,22 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     var isForeground = false
     func _checkLocationService() {
         var pending = false
-        var enableCount = 0
+        var activeCount = 0
 
         for channel in channelList {
-            if channel.enable == nil {
+            if channel.active == nil {
                 pending = true
                 break
-            } else if channel.enable == true {
-                enableCount += 1
+            } else if channel.active == true {
+                activeCount += 1
             }
         }
 
-        if !pending && isActiveDevice == true && enableCount > 0 {
+        if !pending && isActiveDevice == true && activeCount > 0 {
             isForeground = true
             startLocationService()
         }
-        if isActiveDevice != true || (!pending && enableCount == 0) {
+        if isActiveDevice != true || (!pending && activeCount == 0) {
             isForeground = false
             stopLocationService()
         }

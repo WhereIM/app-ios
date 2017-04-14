@@ -272,7 +272,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             if selfMate!.latitude != nil && mapController.channel!.enable_radius==true {
                 c.position = CLLocationCoordinate2DMake(selfMate!.latitude!, selfMate!.longitude!)
                 c.radius = mapController.channel!.radius!
-                if mapController.channel!.enable == true {
+                if mapController.channel!.active == true {
                     c.strokeColor = .magenta
                 } else {
                     c.strokeColor = .gray
@@ -286,7 +286,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 c.position = CLLocationCoordinate2DMake(selfMate!.latitude!, selfMate!.longitude!)
                 c.radius = mapController.channel!.radius!
                 c.strokeWidth = 3
-                if mapController.channel!.enable == true {
+                if mapController.channel!.active == true {
                     c.strokeColor = .magenta
                 } else {
                     c.strokeColor = .gray
