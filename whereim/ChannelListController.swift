@@ -115,7 +115,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let archive = UITableViewRowAction(style: .normal, title: nil, handler: {(action, indexPath) -> Void in
             tableView.setEditing(false, animated: true)
 
-            self.service.setChannelEnabled(channel, !channel.enabled!)
+            self.service.toggleChannelEnabled(channel)
         })
         if channel.enabled == true {
             archive.title = "🔒"
