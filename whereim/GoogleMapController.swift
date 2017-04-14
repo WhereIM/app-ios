@@ -131,12 +131,12 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let c = self.enchantmentCircle[enchantment.id!] {
             c.map = nil
         }
-        if enchantment.enable == true || enchantment === focusEnchantment {
+        if enchantment.enabled == true || enchantment === focusEnchantment {
             let c = GMSCircle()
             c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
             c.radius = enchantment.radius!
             c.strokeWidth = 3
-            c.strokeColor = enchantment.enable == true ? ( enchantment.isPublic == true ? .red : .orange ) : .gray
+            c.strokeColor = enchantment.enabled == true ? ( enchantment.isPublic == true ? .red : .orange ) : .gray
             c.map = self.mapView
 
             self.enchantmentCircle[enchantment.id!] = c
@@ -154,13 +154,13 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
         if marker.deleted {
             self.markerMarker.removeValue(forKey: marker.id!)
-        } else if marker.enable == true || focusMarker === marker {
+        } else if marker.enabled == true || focusMarker === marker {
             let m = GMSMarker()
             m.position = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
             m.title = marker.name
             m.icon = marker.getIcon()
-            m.opacity = marker.enable == true ? 1 : 0.5
+            m.opacity = marker.enabled == true ? 1 : 0.5
             m.map = self.mapView
 
             self.markerMarker[marker.id!] = m

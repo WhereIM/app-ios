@@ -478,7 +478,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         enchantment.longitude = data[Key.LONGITUDE] as? Double ?? enchantment.longitude
         enchantment.radius = data[Key.RADIUS] as? Double ?? enchantment.radius
         enchantment.isPublic = data[Key.PUBLIC] as? Bool ?? enchantment.isPublic
-        enchantment.enable = data[Key.ENABLE] as? Bool ?? enchantment.enable
+        enchantment.enabled = data[Key.ENABLED] as? Bool ?? enchantment.enabled
         enchantment.deleted = data[Key.DELETED] as? Bool ?? enchantment.deleted
 
         if let ts = data[Key.TS] {
@@ -542,7 +542,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             Key.LATITUDE: latitude,
             Key.LONGITUDE: longitude,
             Key.RADIUS: radius,
-            Key.ENABLE: enable
+            Key.ENABLED: enable
         ] as [String : Any]
 
         if ispublic {
@@ -553,7 +553,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func toggleEnchantmentEnabled(_ enchantment: Enchantment) {
-        if enchantment.enable == nil {
+        if enchantment.enabled == nil {
             return
         }
         var topic: String?
@@ -563,8 +563,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             topic = "client/\(clientId!)/enchantment/put"
         }
         if topic != nil {
-            publish(topic!, [Key.ID: enchantment.id!, Key.ENABLE: !enchantment.enable!])
-            enchantment.enable = nil
+            publish(topic!, [Key.ID: enchantment.id!, Key.ENABLED: !enchantment.enabled!])
+            enchantment.enabled = nil
         }
 
         notifyChannelEnchantmentListChangedListeners(enchantment.channel_id!)
@@ -632,7 +632,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             marker.attr = data[Key.ATTR] as? [String: Any]
         }
         marker.isPublic = data[Key.PUBLIC] as? Bool ?? marker.isPublic
-        marker.enable = data[Key.ENABLE] as? Bool ?? marker.enable
+        marker.enabled = data[Key.ENABLED] as? Bool ?? marker.enabled
         marker.deleted = data[Key.DELETED] as? Bool ?? marker.deleted
 
         if let ts = data[Key.TS] {
@@ -696,7 +696,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             Key.LATITUDE: latitude,
             Key.LONGITUDE: longitude,
             Key.ATTR: attr,
-            Key.ENABLE: enable
+            Key.ENABLED: enable
         ] as [String: Any]
 
         if ispublic {
@@ -707,7 +707,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func toggleMarkerEnabled(_ marker: Marker) {
-        if marker.enable == nil {
+        if marker.enabled == nil {
             return
         }
         var topic: String?
@@ -717,8 +717,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             topic = "client/\(clientId!)/marker/put"
         }
         if topic != nil {
-            publish(topic!, [Key.ID: marker.id!, Key.ENABLE: !marker.enable!])
-            marker.enable = nil
+            publish(topic!, [Key.ID: marker.id!, Key.ENABLED: !marker.enabled!])
+            marker.enabled = nil
         }
 
         notifyChannelMarkerListChangedListeners(marker.channel_id!)

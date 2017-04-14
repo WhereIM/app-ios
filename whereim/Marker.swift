@@ -25,7 +25,7 @@ class Marker: Record {
     static let COL_LONGITUDE = "longitude"
     static let COL_ATTR = "attr"
     static let COL_PUBLIC = "public"
-    static let COL_ENABLE = "enable"
+    static let COL_ENABLED = "enabled"
 
     var id: String?
     var channel_id: String?
@@ -34,7 +34,7 @@ class Marker: Record {
     var longitude: Double?
     var attr: [String: Any]?
     var isPublic: Bool?
-    var enable: Bool?
+    var enabled: Bool?
     var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
@@ -50,7 +50,7 @@ class Marker: Record {
                 COL_LONGITUDE + " DOUBLE PRECISION, " +
                 COL_ATTR + " TEXT, " +
                 COL_PUBLIC + " BOOLEAN, " +
-                COL_ENABLE + " BOOLEAN)"
+                COL_ENABLED + " BOOLEAN)"
             try db.execute(sql)
 
             sql = "CREATE INDEX marker_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"
@@ -74,7 +74,7 @@ class Marker: Record {
             let attr_string = row.value(named: Marker.COL_ATTR) as! String
             attr = try JSONSerialization.jsonObject(with: attr_string.data(using: .utf8)!, options: []) as? [String: Any]
             isPublic = row.value(named: Marker.COL_PUBLIC)
-            enable = row.value(named: Marker.COL_ENABLE)
+            enabled = row.value(named: Marker.COL_ENABLED)
         } catch {
             print("Error in decoding marker.attr")
         }
@@ -96,7 +96,7 @@ class Marker: Record {
                 Marker.COL_LONGITUDE: longitude,
                 Marker.COL_ATTR: String(data: json, encoding: .utf8)!,
                 Marker.COL_PUBLIC: isPublic,
-                Marker.COL_ENABLE: enable
+                Marker.COL_ENABLED: enabled
             ]
         } catch {
             print("Error encoding marker.attr")

@@ -147,7 +147,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
                 let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
                 cell.icon.image = marker.getIcon()
                 cell.title.text = marker.name
-                cell.loadingSwitch.setEnabled(marker.enable)
+                cell.loadingSwitch.setEnabled(marker.enabled)
                 cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
                 cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 

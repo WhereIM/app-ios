@@ -24,7 +24,7 @@ class Enchantment: Record {
     static let COL_LONGITUDE = "longitude"
     static let COL_RADIUS = "radius"
     static let COL_PUBLIC = "public"
-    static let COL_ENABLE = "enable"
+    static let COL_ENABLED = "enabled"
 
     var id: String?
     var channel_id: String?
@@ -33,7 +33,7 @@ class Enchantment: Record {
     var longitude: Double?
     var radius: Double?
     var isPublic: Bool?
-    var enable: Bool?
+    var enabled: Bool?
     var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
@@ -49,7 +49,7 @@ class Enchantment: Record {
                 COL_LONGITUDE + " DOUBLE PRECISION, " +
                 COL_RADIUS + " DOUBLE PRECISION, " +
                 COL_PUBLIC + " BOOLEAN, " +
-                COL_ENABLE + " BOOLEAN)";
+                COL_ENABLED + " BOOLEAN)";
             try db.execute(sql)
 
             sql = "CREATE INDEX enchantment_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"
@@ -71,7 +71,7 @@ class Enchantment: Record {
         longitude = row.value(named: Enchantment.COL_LONGITUDE)
         radius = row.value(named: Enchantment.COL_RADIUS)
         isPublic = row.value(named: Enchantment.COL_PUBLIC)
-        enable = row.value(named: Enchantment.COL_ENABLE)
+        enabled = row.value(named: Enchantment.COL_ENABLED)
         super.init(row: row)
     }
 
@@ -88,7 +88,7 @@ class Enchantment: Record {
             Enchantment.COL_LONGITUDE: longitude,
             Enchantment.COL_RADIUS: radius,
             Enchantment.COL_PUBLIC: isPublic,
-            Enchantment.COL_ENABLE: enable
+            Enchantment.COL_ENABLED: enabled
         ]
     }
 

@@ -91,7 +91,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
             if let enchantment = getEnchantment(indexPath.section, indexPath.row) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "enchantment", for: indexPath) as! EnchantmentCell
                 cell.title.text = enchantment.name
-                cell.loadingSwitch.setEnabled(enchantment.enable)
+                cell.loadingSwitch.setEnabled(enchantment.enabled)
                 cell.loadingSwitch.uiswitch.tag = numberOfSections * indexPath.row + indexPath.section
                 cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
 
