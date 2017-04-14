@@ -876,7 +876,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
             if channel.enabled == false {
                 unsubscribe("channel/\(channel_id)/data/+/get")
-                channelMap.removeValue(forKey: channel.id!)
             }
         }
 
@@ -1063,12 +1062,12 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelListChangedListeners()
     }
 
-    func setChannelEnabled(_ channel: Channel, _ enabled: Bool) {
+    func toggleChannelEnabled(_ channel: Channel) {
         if channel.enabled == nil {
             return
         }
 
-        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ENABLED: enabled])
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ENABLED: !channel.enabled!])
         channel.enabled = nil
     }
 
