@@ -102,18 +102,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
 
             if let channel_id = userInfo["channel"] as? String {
-                let vc = sb.instantiateViewController(withIdentifier: "channel") as! ChannelController
-                vc.channel = service!.getChannel(id: channel_id)
-                if let t = userInfo["type"] as? String {
-                    switch t {
-                    case "text":
-                        vc.defaultTab = 1
-                    default:
-                        vc.defaultTab = 0
+                let channel = service!.getChannel(id: channel_id)
+                if channel?.enabled == true {
+                    let vc = sb.instantiateViewController(withIdentifier: "channel") as! ChannelController
+                    vc.channel = channel
+                    if let t = userInfo["type"] as? String {
+                        switch t {
+                        case "text":
+                            vc.defaultTab = 1
+                        default:
+                            vc.defaultTab = 0
+                        }
                     }
+                    startupVC.topViewController?.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
+                    startupVC.pushViewController(vc, animated: false)
                 }
-                startupVC.topViewController?.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
-                startupVC.pushViewController(vc, animated: false)
             }
 
             window?.rootViewController = startupVC;

@@ -285,9 +285,12 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         let args = data["args"] as! [String]
         var message: String?
         switch key {
-        case "limit_enable_channel":
+        case "limit_active_channel":
             let limit = args[0]
-            message = String(format: "message_limit_channel_enable".localized, limit)
+            message = String(format: "message_limit_active_channel".localized, limit)
+        case "limit_enabled_channel":
+            let limit = args[0]
+            message = String(format: "message_limit_enabled_channel".localized, limit)
         default:
             break
         }
@@ -831,7 +834,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.enable_radius = data[Key.ENABLE_RADIUS] as? Bool ?? channel!.enable_radius
         channel!.radius = data[Key.RADIUS] as? Double ?? channel!.radius
         channel!.active = data[Key.ACTIVE] as? Bool ?? channel!.active
-        channel!.enabled = data[Key.ENABLE] as? Bool ?? channel!.enabled
+        channel!.enabled = data[Key.ENABLED] as? Bool ?? channel!.enabled
 
         if let ts = data[Key.TS] {
             setTS(ts as! UInt64)
@@ -865,10 +868,16 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
             }
         } else {
-            subscribe("channel/\(channel_id)/data/+/get")
+            if channel.enabled == true {
+                subscribe("channel/\(channel_id)/data/+/get")
 
-            syncChannelData(channel_id)
-            syncChannelMessage(channel_id)
+                syncChannelData(channel_id)
+                syncChannelMessage(channel_id)
+            }
+            if channel.enabled == false {
+                unsubscribe("channel/\(channel_id)/data/+/get")
+                channelMap.removeValue(forKey: channel.id!)
+            }
         }
 
         notifyChannelChangedListeners(channel.id!)
@@ -1024,7 +1033,19 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func getChannelList() -> [Channel] {
-        return channelList
+        var list = [Channel]()
+        for c in channelList {
+            list.append(c)
+        }
+        list.sort(by: {
+            if $0.enabled == $1.enabled {
+                return $0.getName().localizedCompare($1.getName()) == .orderedAscending
+            }
+            let e0 = $0.enabled == true ? 0 : 1
+            let e1 = $1.enabled == true ? 0 : 1
+            return e0 < e1
+        })
+        return list
     }
 
     func getChannel(id: String) -> Channel? {
@@ -1040,6 +1061,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel.active = nil
 
         notifyChannelListChangedListeners()
+    }
+
+    func setChannelEnabled(_ channel: Channel, _ enabled: Bool) {
+        if channel.enabled == nil {
+            return
+        }
+
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ENABLED: enabled])
+        channel.enabled = nil
     }
 
     let acc_lock = DispatchQueue(label: "acc")

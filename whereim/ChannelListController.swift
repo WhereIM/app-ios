@@ -83,22 +83,53 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             cell.loadingSwitch.isHidden = false
         }
 
-        if channelList[indexPath.row].user_channel_name != nil && !channelList[indexPath.row].user_channel_name!.isEmpty {
-            cell.title.text = channelList[indexPath.row].user_channel_name
-            cell.subtitle.text = channelList[indexPath.row].channel_name
+        let channel = getChannel(indexPath.row)
+        if channel.user_channel_name != nil && !channel.user_channel_name!.isEmpty {
+            cell.title.text = channel.user_channel_name
+            cell.subtitle.text = channel.channel_name
             cell.subtitle.isHidden = false
         } else {
-            cell.title.text = channelList[indexPath.row].channel_name
+            cell.title.text = channel.channel_name
             cell.subtitle.text = nil
             cell.subtitle.isHidden = true
         }
 
         cell.loadingSwitch.uiswitch.tag = indexPath.row
         cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
-        cell.loadingSwitch.setEnabled(channelList[indexPath.row].enable)
+        cell.loadingSwitch.setEnabled(channel.active)
+
+        if channel.enabled == true {
+            cell.loadingSwitch.isHidden = false
+        } else {
+            cell.loadingSwitch.isHidden = true
+        }
+
         cell.titleLayout.requestLayout()
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let channel = getChannel(indexPath.row)
+
+        let archive = UITableViewRowAction(style: .normal, title: nil, handler: {(action, indexPath) -> Void in
+            tableView.setEditing(false, animated: true)
+
+            self.service.setChannelEnabled(channel, !channel.enabled!)
+        })
+        if channel.enabled == true {
+            archive.title = "🔒"
+        } else {
+            archive.title = "🔓"
+        }
+        return [archive]
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.row < channelList.count {
+            return true
+        }
+        return false
     }
 
     func switchClicked(sender: UISwitch) {
@@ -121,7 +152,12 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.vc.performSegue(withIdentifier: "enter_channel", sender: self)
+        let channel = getChannel(indexPath.row)
+        if channel.enabled == true {
+            self.vc.performSegue(withIdentifier: "enter_channel", sender: self)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
 
     func getChannel(_ index: Int) -> Channel {

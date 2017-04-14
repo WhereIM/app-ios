@@ -101,4 +101,14 @@ class Channel: Record {
         }
         return ret
     }
+
+    func getName() -> String {
+        if user_channel_name != nil && !user_channel_name!.isEmpty {
+            return user_channel_name!
+        }
+        if channel_name != nil && !channel_name!.isEmpty {
+            return channel_name!
+        }
+        return ""
+    }
 }
