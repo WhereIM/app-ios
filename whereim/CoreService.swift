@@ -253,7 +253,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
                 return
             }
-            let channelLocationPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/location/([^/]+)/get$", options: [])
+            let channelLocationPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/map/([^/]+)/get$", options: [])
             if let match = channelLocationPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
                 let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
                 mqttChannelLocationHandler(channel_id, data)
@@ -1183,7 +1183,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
         mapDataReceiver[channel.id!]![key!] = receiver
 
-        subscribeChannelLocation(channel_id: channel.id!)
+        subscribeChannelMap(channel_id: channel.id!)
 
         DispatchQueue.main.async {
             if let enchantments = self.channelEnchantment[channel.id!] {
@@ -1203,7 +1203,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func closeMap(channel: Channel, key: Int) {
-        unsubscribeChannelLocation(channel_id: channel.id!)
+        unsubscribeChannelMap(channel_id: channel.id!)
         if let index = openedChannel.index(of: channel.id!) {
             openedChannel.remove(at: index)
         }
@@ -1258,12 +1258,12 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
-    func subscribeChannelLocation(channel_id: String) {
-        subscribe("channel/\(channel_id)/location/private/get")
+    func subscribeChannelMap(channel_id: String) {
+        subscribe("channel/\(channel_id)/map/+/get")
     }
 
-    func unsubscribeChannelLocation(channel_id: String) {
-        unsubscribe("channel/\(channel_id)/location/private/get")
+    func unsubscribeChannelMap(channel_id: String) {
+        unsubscribe("channel/\(channel_id)/map/+/get")
     }
 
     func publish(_ topic: String, _ message: [String: Any]) {
