@@ -36,6 +36,8 @@
 	<string>1610705412571330</string>
 	<key>FacebookDisplayName</key>
 	<string>Where.IM</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
