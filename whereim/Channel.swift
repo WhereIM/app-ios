@@ -28,7 +28,7 @@ class Channel: Record {
     var enabled: Bool?
     var active: Bool?
     var enable_radius: Bool?
-    var radius: Double?
+    var radius: Int?
     var deleted = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
@@ -44,7 +44,7 @@ class Channel: Record {
                 COL_ACTIVE + " BOOLEAN, " +
                 COL_ENABLE + " BOOLEAN, " +
                 COL_ENABLE_RADIUS + " BOOLEAN, " +
-                COL_RADIUS + " DOUBLE PRECISION" +
+                COL_RADIUS + " INTEGER" +
             ")";
             try db.execute(sql)
 

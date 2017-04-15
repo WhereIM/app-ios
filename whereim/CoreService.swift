@@ -479,7 +479,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         enchantment.name = data[Key.NAME] as? String ?? enchantment.name
         enchantment.latitude = data[Key.LATITUDE] as? Double ?? enchantment.latitude
         enchantment.longitude = data[Key.LONGITUDE] as? Double ?? enchantment.longitude
-        enchantment.radius = data[Key.RADIUS] as? Double ?? enchantment.radius
+        enchantment.radius = data[Key.RADIUS] as? Int ?? enchantment.radius
         enchantment.isPublic = data[Key.PUBLIC] as? Bool ?? enchantment.isPublic
         enchantment.enabled = data[Key.ENABLED] as? Bool ?? enchantment.enabled
         enchantment.deleted = data[Key.DELETED] as? Bool ?? enchantment.deleted
@@ -832,7 +832,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
         channel!.deleted = data[Key.DELETED] as? Bool ?? channel!.deleted
         channel!.enable_radius = data[Key.ENABLE_RADIUS] as? Bool ?? channel!.enable_radius
-        channel!.radius = data[Key.RADIUS] as? Double ?? channel!.radius
+        channel!.radius = data[Key.RADIUS] as? Int ?? channel!.radius
         channel!.active = data[Key.ACTIVE] as? Bool ?? channel!.active
         channel!.enabled = data[Key.ENABLED] as? Bool ?? channel!.enabled
 

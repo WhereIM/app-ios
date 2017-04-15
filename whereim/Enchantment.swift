@@ -31,7 +31,7 @@ class Enchantment: Record {
     var name: String?
     var latitude: Double?
     var longitude: Double?
-    var radius: Double?
+    var radius: Int?
     var isPublic: Bool?
     var enabled: Bool?
     var deleted = false
@@ -47,7 +47,7 @@ class Enchantment: Record {
                 COL_NAME + " TEXT, " +
                 COL_LATITUDE + " DOUBLE PRECISION, " +
                 COL_LONGITUDE + " DOUBLE PRECISION, " +
-                COL_RADIUS + " DOUBLE PRECISION, " +
+                COL_RADIUS + " INTEGER, " +
                 COL_PUBLIC + " BOOLEAN, " +
                 COL_ENABLED + " BOOLEAN)";
             try db.execute(sql)

@@ -134,7 +134,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if enchantment.enabled == true || enchantment === focusEnchantment {
             let c = GMSCircle()
             c.position = CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!)
-            c.radius = enchantment.radius!
+            c.radius = CLLocationDistance(enchantment.radius!)
             c.strokeWidth = 3
             c.strokeColor = enchantment.enabled == true ? ( enchantment.isPublic == true ? .red : .orange ) : .gray
             c.map = self.mapView
@@ -271,7 +271,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let c = radiusCircle {
             if selfMate!.latitude != nil && mapController.channel!.enable_radius==true {
                 c.position = CLLocationCoordinate2DMake(selfMate!.latitude!, selfMate!.longitude!)
-                c.radius = mapController.channel!.radius!
+                c.radius = CLLocationDistance(mapController.channel!.radius!)
                 if mapController.channel!.active == true {
                     c.strokeColor = .magenta
                 } else {
@@ -284,7 +284,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             if selfMate!.latitude != nil && mapController.channel!.enable_radius==true {
                 let c = GMSCircle()
                 c.position = CLLocationCoordinate2DMake(selfMate!.latitude!, selfMate!.longitude!)
-                c.radius = mapController.channel!.radius!
+                c.radius = CLLocationDistance(mapController.channel!.radius!)
                 c.strokeWidth = 3
                 if mapController.channel!.active == true {
                     c.strokeColor = .magenta

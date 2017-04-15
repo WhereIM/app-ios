@@ -36,7 +36,7 @@
 "icon" = "Icon";
 "mock" = "Mock";
 
-"radius_m" = "%1$.0f m";
+"radius_m" = "%1$d m";
 
 "self" = "Self";
 "mate" = "Mate";
