@@ -585,6 +585,19 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelEnchantmentListChangedListeners(enchantment.channel_id!)
     }
 
+    func deleteEnchantment(_ enchantment: Enchantment) {
+        let data = [
+            Key.ID: enchantment.id!,
+            Key.DELETED: true
+            ] as [String: Any]
+
+        if enchantment.isPublic == true {
+            publish("channel/\(enchantment.channel_id!)/data/enchantment/put", data)
+        } else if enchantment.isPublic == false {
+            publish("client/\(clientId!)/enchantment/put", data)
+        }
+    }
+
     var enchantmentListener = [String:[Int:Callback]]()
     func addEnchantmentListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
         if enchantmentListener[channel.id!] == nil {

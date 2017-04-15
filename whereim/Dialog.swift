@@ -540,6 +540,21 @@ class DialogCreateEnchantment {
     }
 }
 
+class DialogDeleteEnchantment {
+    init(_ viewController: UIViewController, _ enchantment: Enchantment) {
+        let alert = UIAlertController(title: "delete".localized, message: enchantment.name, preferredStyle: .alert)
+
+        let action_leave = UIAlertAction(title: "delete".localized, style: .destructive) { (alert: UIAlertAction!) -> Void in
+            let service = CoreService.bind()
+            service.deleteEnchantment(enchantment)
+        }
+
+        alert.addAction(action_leave)
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        viewController.present(alert, animated: true, completion:nil)
+    }
+}
+
 class DialogCreateMarker {
     class PickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
         let icon_list = Marker.getIconList()
@@ -682,7 +697,6 @@ class DialogCreateMarker {
         mapController.present(alert, animated: true, completion:nil)
     }
 }
-
 
 class DialogDeleteMarker {
     init(_ viewController: UIViewController, _ marker: Marker) {

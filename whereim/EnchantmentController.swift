@@ -41,12 +41,14 @@ class EnchantmentCell: UITableViewCell {
 
 class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var enchantmentList: EnchantmentList
+    let vc: UIViewController
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
     let numberOfSections = 3
 
-    init(_ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+    init(_ viewController: UIViewController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+        self.vc = viewController
         self.service = service
         self.channel = channel
         self.channelController = channelController
@@ -113,6 +115,30 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
         }
     }
 
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        if indexPath.section == 0 {
+            let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+            })
+            return [edit]
+        } else {
+            let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+                if let enchantment = self.getEnchantment(indexPath.section, indexPath.row) {
+                    _ = DialogDeleteEnchantment(self.vc, enchantment)
+                }
+            })
+
+            return [delete]
+        }
+    }
+
     func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
@@ -161,7 +187,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
         channel = parent.channel
         
         service = CoreService.bind()
-        adapter = ChannelEnchantmentAdapter((service)!, channel!, parent)
+        adapter = ChannelEnchantmentAdapter(self, (service)!, channel!, parent)
         enchantmentListView.register(EnchantmentCell.self, forCellReuseIdentifier: "enchantment")
         enchantmentListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         enchantmentListView.dataSource = adapter
