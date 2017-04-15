@@ -155,21 +155,6 @@ class DialogEditMate {
     }
 }
 
-class DialogDeleteChannel {
-    init(_ viewController: UIViewController, _ channel: Channel) {
-        let alert = UIAlertController(title: "leave_channel".localized, message: channel.getName(), preferredStyle: .alert)
-
-        let action_leave = UIAlertAction(title: "leave".localized, style: .destructive) { (alert: UIAlertAction!) -> Void in
-            let service = CoreService.bind()
-            service.deleteChannel(channel)
-        }
-
-        alert.addAction(action_leave)
-        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
-        viewController.present(alert, animated: true, completion:nil)
-    }
-}
-
 class DialogRequestActiveDevice {
     init(_ viewController: UIViewController) {
         let alert = UIAlertController(title: "active_client".localized, message: "active_client_message".localized, preferredStyle: .alert)
@@ -438,6 +423,21 @@ class DialogEditChannel {
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 
         viewController.present(alert, animated: true, completion: nil)
+    }
+}
+
+class DialogDeleteChannel {
+    init(_ viewController: UIViewController, _ channel: Channel) {
+        let alert = UIAlertController(title: "leave_channel".localized, message: channel.getName(), preferredStyle: .alert)
+
+        let action_leave = UIAlertAction(title: "leave".localized, style: .destructive) { (alert: UIAlertAction!) -> Void in
+            let service = CoreService.bind()
+            service.deleteChannel(channel)
+        }
+
+        alert.addAction(action_leave)
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        viewController.present(alert, animated: true, completion:nil)
     }
 }
 
