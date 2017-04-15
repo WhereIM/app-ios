@@ -752,6 +752,20 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelMarkerListChangedListeners(marker.channel_id!)
     }
 
+    func updateMarker(_ marker: Marker, _ changes: [String:Any]) {
+        var data = [String:Any]()
+        for k in changes.keys {
+            data[k] = changes[k]
+        }
+        data[Key.ID] = marker.id!
+
+        if marker.isPublic == true {
+            publish("channel/\(marker.channel_id!)/data/marker/put", data)
+        } else if marker.isPublic == false {
+            publish("client/\(clientId!)/marker/put", data)
+        }
+    }
+
     func deleteMarker(_ marker: Marker) {
         let data = [
             Key.ID: marker.id!,

@@ -231,6 +231,13 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
             })
             return [edit]
         } else {
+            let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+                if let marker = self.getMarker(indexPath.section, indexPath.row) {
+                    _ = DialogEditMarker(self.vc, marker)
+                }
+            })
             let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
                 tableView.setEditing(false, animated: true)
 
@@ -239,7 +246,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
                 }
             })
 
-            return [delete]
+            return [delete,edit]
         }
     }
 
