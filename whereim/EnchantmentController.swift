@@ -135,6 +135,13 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
             })
             return [edit]
         } else {
+            let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+                if let enchantment = self.getEnchantment(indexPath.section, indexPath.row) {
+                    _ = DialogEditEnchantment(self.vc, enchantment)
+                }
+            })
             let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
                 tableView.setEditing(false, animated: true)
 
@@ -143,7 +150,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
                 }
             })
 
-            return [delete]
+            return [delete, edit]
         }
     }
 
