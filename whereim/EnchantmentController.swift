@@ -116,7 +116,15 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if indexPath.section == 0 {
+            return true
+        } else {
+            if let _ = getEnchantment(indexPath.section, indexPath.row) {
+                return true
+            } else {
+                return false
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {

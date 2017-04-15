@@ -199,7 +199,16 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if indexPath.section == 0 || indexPath.section == 1 {
+            if let _ = self.getMate(indexPath.section, indexPath.row) {
+                return true
+            }
+        } else {
+            if let _ = self.getMarker(indexPath.section, indexPath.row) {
+                return true
+            }
+        }
+        return false
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
