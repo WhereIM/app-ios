@@ -111,7 +111,13 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let channel = getChannel(indexPath.row)
-
+        let leave = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
+            tableView.setEditing(false, animated: true)
+            _ = DialogDeleteChannel(self.vc, channel)
+        })
+        let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
+            tableView.setEditing(false, animated: true)
+        })
         let archive = UITableViewRowAction(style: .normal, title: nil, handler: {(action, indexPath) -> Void in
             tableView.setEditing(false, animated: true)
 
@@ -122,7 +128,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         } else {
             archive.title = "🔓"
         }
-        return [archive]
+        return [leave, archive, edit]
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

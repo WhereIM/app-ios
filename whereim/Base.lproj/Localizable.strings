@@ -23,6 +23,8 @@
 "channel_name" = "Channel Name";
 "display_name" = "Display Name";
 "create_channel" = "Create Channel";
+"leave_channel" = "Leave Channel";
+"leave" = "Leave";
 "ok" = "OK";
 "cancel" = "Cancel";
 "join_channel" = "Join Channel";

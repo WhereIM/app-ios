@@ -22,6 +22,8 @@
 "channel_name" = "群組名稱";
 "display_name" = "個人暱稱";
 "create_channel" = "建立群組";
+"leave_channel" = "離開群組";
+"leave" = "離開";
 "ok" = "好";
 "cancel" = "取消";
 "join_channel" = "加入群組";
