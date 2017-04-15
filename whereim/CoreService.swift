@@ -239,7 +239,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 case "unicast":
                     mqttOnMessage(data["topic"] as! String, data["message"] as! [String: Any])
                 case "channel":
-                    self.mqttClientChannelHandler(data)
+                    mqttClientChannelHandler(data)
                 case "enchantment":
                     mqttChannelEnchantmentHandler(data)
                 case "marker":
@@ -737,6 +737,19 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         notifyChannelMarkerListChangedListeners(marker.channel_id!)
+    }
+
+    func deleteMarker(_ marker: Marker) {
+        let data = [
+            Key.ID: marker.id!,
+            Key.DELETED: true
+        ] as [String: Any]
+
+        if marker.isPublic == true {
+            publish("channel/\(marker.channel_id!)/data/marker/put", data)
+        } else if marker.isPublic == false {
+            publish("client/\(clientId!)/marker/put", data)
+        }
     }
 
     var markerListener = [String:[Int:Callback]]()

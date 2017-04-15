@@ -29,6 +29,7 @@
 "leave" = "Leave";
 "ok" = "OK";
 "cancel" = "Cancel";
+"delete" = "Delete";
 "join_channel" = "Join Channel";
 "create_enchantment" = "New Enchantment ⭕";
 "create_marker" = "New Marker 📍";

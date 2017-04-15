@@ -93,7 +93,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
-    let numberOfSections = 3
+    let numberOfSections = 4
 
     init(_ viewController: UIViewController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.vc = viewController
@@ -217,6 +217,9 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
             let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
                 tableView.setEditing(false, animated: true)
 
+                if let marker = self.getMarker(indexPath.section, indexPath.row) {
+                    _ = DialogDeleteMarker(self.vc, marker)
+                }
             })
 
             return [delete]
