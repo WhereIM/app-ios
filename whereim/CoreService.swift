@@ -1202,6 +1202,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.DELETED: true])
     }
 
+    func setSelfRadius(_ channel: Channel, _ radius: Int) {
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.RADIUS: radius])
+    }
+
     func editSelf(_ mate: Mate, _ mate_name: String) {
         publish("channel/\(mate.channel_id!)/data/mate/put", [Key.ID: mate.id!, Key.MATE_NAME: mate_name])
     }

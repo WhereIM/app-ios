@@ -123,7 +123,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
         if indexPath.section == 0 {
             let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
                 tableView.setEditing(false, animated: true)
-
+                _ = DialogEditRadius(self.vc, self.channel)
             })
             return [edit]
         } else {
