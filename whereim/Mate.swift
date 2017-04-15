@@ -93,6 +93,12 @@ class Mate: Record {
     }
 
     func getDisplayName() -> String {
-        return user_mate_name ?? mate_name ?? ""
+        if user_mate_name != nil && !user_mate_name!.isEmpty {
+            return user_mate_name!
+        }
+        if mate_name != nil && !mate_name!.isEmpty {
+            return mate_name!
+        }
+        return ""
     }
 }

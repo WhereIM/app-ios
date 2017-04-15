@@ -205,6 +205,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     var radiusCircle: GMSCircle?
+    var mateName = [String:String]()
     var mateCircle = [String:GMSCircle]()
     var mateMarker = [String:GMSMarker]()
     func onMateData(_ mate: Mate) {
@@ -230,6 +231,24 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let m = self.mateMarker[mate.id!] {
             if mate.latitude != nil {
                 m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+
+                if mateName[mate.id!] != mate.getDisplayName() {
+                    mateName[mate.id!] = mate.getDisplayName()
+
+                    self.markerTemplateText.text = mate.getDisplayName()
+
+                    self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
+
+                    UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
+                    if let currentContext = UIGraphicsGetCurrentContext()
+                    {
+                        self.markerTemplate.layer.render(in: currentContext)
+                        var imageMarker = UIImage()
+                        imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
+                        m.icon = imageMarker
+                    }
+                    UIGraphicsEndImageContext()
+                }
             } else {
                 m.map = nil
                 self.mateMarker.removeValue(forKey: mate.id!)
@@ -241,6 +260,9 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
                 m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
                 m.map = self.mapView
+
+                mateName[mate.id!] = mate.getDisplayName()
+
                 self.markerTemplateText.text = mate.getDisplayName()
 
                 self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)

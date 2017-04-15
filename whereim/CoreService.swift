@@ -405,6 +405,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
             }
         }
+
+        notifyMateListeners(mate.channel_id!)
     }
 
     var mateListener = [String:[Int:Callback]]()
@@ -432,6 +434,16 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         if let k = key {
             if var listeners = mateListener[channel.id!] {
                 listeners.removeValue(forKey: k)
+            }
+        }
+    }
+
+    func notifyMateListeners(_ channel_id: String) {
+        DispatchQueue.main.async {
+            if let listeners = self.mateListener[channel_id] {
+                for l in listeners.values {
+                    l.onCallback()
+                }
             }
         }
     }
@@ -1162,6 +1174,14 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     func deleteChannel(_ channel: Channel) {
         publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.DELETED: true])
+    }
+
+    func editSelf(_ mate: Mate, _ mate_name: String) {
+        publish("channel/\(mate.channel_id!)/data/mate/put", [Key.ID: mate.id!, Key.MATE_NAME: mate_name])
+    }
+
+    func editMate(_ mate: Mate, _ user_mate_name: String) {
+        publish("channel/\(mate.channel_id!)/data/mate/put", [Key.ID: mate.id!, Key.USER_MATE_NAME: user_mate_name])
     }
 
     var mapDataReceiver = [String:[Int:MapDataReceiver]]()

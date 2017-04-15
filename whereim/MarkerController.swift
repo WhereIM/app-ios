@@ -89,12 +89,14 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     var selfMate: Mate?
     var mateList: [Mate]
     var markerList: MarkerList
+    let vc: UIViewController
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
     let numberOfSections = 3
 
-    init(_ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+    init(_ viewController: UIViewController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+        self.vc = viewController
         self.service = service
         self.channel = channel
         self.channelController = channelController
@@ -188,6 +190,39 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
         }
     }
 
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        if indexPath.section == 0 {
+            let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+                if let mate = self.getMate(indexPath.section, indexPath.row) {
+                    _ = DialogEditSelf(self.vc, mate)
+                }
+            })
+            return [edit]
+        } else if indexPath.section == 1 {
+            let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+                if let mate = self.getMate(indexPath.section, indexPath.row) {
+                    _ = DialogEditMate(self.vc, mate)
+                }
+            })
+            return [edit]
+        } else {
+            let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
+                tableView.setEditing(false, animated: true)
+
+            })
+
+            return [delete]
+        }
+    }
+
     func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
@@ -247,7 +282,7 @@ class MarkerController: UIViewController, Callback {
         channel = parent.channel
 
         service = CoreService.bind()
-        adapter = ChannelMarkerAdapter((service)!, channel!, parent)
+        adapter = ChannelMarkerAdapter(self, (service)!, channel!, parent)
         markerListView.register(MateCell.self, forCellReuseIdentifier: "mate")
         markerListView.register(MarkerCell.self, forCellReuseIdentifier: "marker")
         markerListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
