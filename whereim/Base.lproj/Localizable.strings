@@ -19,6 +19,7 @@
 "retry" = "Retry";
 
 "object_create_hint" = "Long press on map to create";
+"mate_invite_hint" = "No one here, invite others to this channel";
 
 "channel_name" = "Channel Name";
 "channel_alias" = "Channel Alias";

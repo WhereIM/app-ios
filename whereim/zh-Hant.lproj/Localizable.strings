@@ -18,6 +18,7 @@
 "retry" = "再試一次";
 
 "object_create_hint" = "在地圖上長按即可建立";
+"mate_invite_hint" = "沒有人，邀請別人進來吧";
 
 "channel_name" = "群組名稱";
 "channel_alias" = "群組別稱";

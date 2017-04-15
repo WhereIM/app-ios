@@ -118,7 +118,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
                 return 1
             }
             return 0
-        case 1: return mateList.count
+        case 1: return mateList.count > 0 ? mateList.count : 1
         case 2: return markerList.public_list.count > 0 ? markerList.public_list.count : 1
         case 3: return markerList.private_list.count > 0 ? markerList.private_list.count : 1
         default:
@@ -143,21 +143,28 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 || indexPath.section == 1 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "mate", for: indexPath) as! MateCell
+            if let mate = getMate(indexPath.section, indexPath.row) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "mate", for: indexPath) as! MateCell
 
-            let mate = getMate(indexPath.section, indexPath.row)!
-            if mate.user_mate_name != nil && !mate.user_mate_name!.isEmpty {
-                cell.title.text = mate.user_mate_name
-                cell.subtitle.text = mate.mate_name
-                cell.subtitle.isHidden = false
+                if mate.user_mate_name != nil && !mate.user_mate_name!.isEmpty {
+                    cell.title.text = mate.user_mate_name
+                    cell.subtitle.text = mate.mate_name
+                    cell.subtitle.isHidden = false
+                } else {
+                    cell.title.text = mate.mate_name
+                    cell.subtitle.text = nil
+                    cell.subtitle.isHidden = true
+                }
+                cell.titleLayout.requestLayout()
+
+                return cell
             } else {
-                cell.title.text = mate.mate_name
-                cell.subtitle.text = nil
-                cell.subtitle.isHidden = true
-            }
-            cell.titleLayout.requestLayout()
+                let cell = tableView.dequeueReusableCell(withIdentifier: "placeholder", for: indexPath) as! UIPlaceHolderCell
 
-            return cell
+                cell.label.text = "mate_invite_hint".localized
+
+                return cell
+            }
         } else {
             if let marker = getMarker(indexPath.section, indexPath.row) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "marker", for: indexPath) as! MarkerCell
@@ -181,8 +188,9 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 || indexPath.section == 1 {
-            let mate = getMate(indexPath.section, indexPath.row)!
-            channelController.moveTo(mate: mate)
+            if let mate = getMate(indexPath.section, indexPath.row) {
+                channelController.moveTo(mate: mate)
+            }
         } else {
             if let marker = getMarker(indexPath.section, indexPath.row) {
                 channelController.moveTo(marker: marker)
@@ -229,15 +237,19 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
-        let marker = getMarker(section, row)!
-        service.toggleMarkerEnabled(marker)
+        if let marker = getMarker(section, row) {
+            service.toggleMarkerEnabled(marker)
+        }
     }
 
     func getMate(_ section: Int, _ row: Int) -> Mate? {
         if section == 0 {
             return selfMate
         }
-        return mateList[row]
+        if row < mateList.count {
+            return mateList[row]
+        }
+        return nil
     }
 
     func getMarker(_ section: Int, _ row: Int) -> Marker? {
