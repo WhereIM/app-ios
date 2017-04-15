@@ -21,8 +21,10 @@
 "object_create_hint" = "Long press on map to create";
 
 "channel_name" = "Channel Name";
+"channel_alias" = "Channel Alias";
 "display_name" = "Display Name";
 "create_channel" = "Create Channel";
+"edit_channel" = "Edit Channel";
 "leave_channel" = "Leave Channel";
 "leave" = "Leave";
 "ok" = "OK";

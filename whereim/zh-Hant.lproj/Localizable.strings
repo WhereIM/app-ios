@@ -20,8 +20,10 @@
 "object_create_hint" = "在地圖上長按即可建立";
 
 "channel_name" = "群組名稱";
+"channel_alias" = "群組別稱";
 "display_name" = "個人暱稱";
 "create_channel" = "建立群組";
+"edit_channel" = "編輯群組";
 "leave_channel" = "離開群組";
 "leave" = "離開";
 "ok" = "好";

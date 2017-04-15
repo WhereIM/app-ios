@@ -1156,6 +1156,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         publish("channel/\(channel_id)/join", [Key.CHANNEL_NAME: channel_alias, Key.MATE_NAME: mate_name])
     }
 
+    func editChannel(_ channel: Channel, _ channel_name: String, _ user_channel_name: String) {
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.CHANNEL_NAME: channel_name, Key.USER_CHANNEL_NAME: user_channel_name])
+    }
+
     func deleteChannel(_ channel: Channel) {
         publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.DELETED: true])
     }

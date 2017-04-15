@@ -52,5 +52,6 @@ class Key {
     static let TIME = "time"
     static let TS = "ts"
 
+    static let USER_CHANNEL_NAME = "user_channel_name"
     static let USER_MATE_NAME = "user_mate_name"
 }

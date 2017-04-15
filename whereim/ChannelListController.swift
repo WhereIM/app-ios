@@ -117,6 +117,8 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         })
         let edit = UITableViewRowAction(style: .normal, title: "✏️", handler: {(action, indexPath) -> Void in
             tableView.setEditing(false, animated: true)
+
+            _ = DialogEditChannel(self.vc, channel)
         })
         let archive = UITableViewRowAction(style: .normal, title: nil, handler: {(action, indexPath) -> Void in
             tableView.setEditing(false, animated: true)
