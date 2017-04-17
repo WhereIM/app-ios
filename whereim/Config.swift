@@ -19,7 +19,7 @@ class Config {
 
     static let FACEBOOK_SLUG = "facebook"
 
-    static let CAPTCHA_URL = "https://where.im/captcha.html"
+    static let CAPTCHA_URL = "https://dev.where.im/captcha.html"
     static let CAPTCHA_PREFIX = "whereim://"
 
     static let AWS_IOT_MQTT_ENDPOINT = "a3ftvwpcurxils.iot.ap-northeast-1.amazonaws.com"
