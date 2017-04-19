@@ -21,12 +21,6 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
 
         service = CoreService.bind()
 
-        FBSDKProfile.enableUpdates(onAccessTokenChange: true)
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.FBSDKProfileDidChange, object: nil, queue: nil) { (Notification) in
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.FBSDKProfileDidChange, object: nil)
-            self.checkProfile()
-        }
-
         loginButton = LoginButton(readPermissions: [ .publicProfile ])
         loginButton!.delegate = self
         loginButton!.isHidden = true
@@ -53,6 +47,14 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
 
         retryButton!.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         retryButton!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
+
+        FBSDKProfile.enableUpdates(onAccessTokenChange: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(onProfileUpdated(notification:)), name:NSNotification.Name.FBSDKProfileDidChange, object: nil)
+    }
+
+    func onProfileUpdated(notification: NSNotification) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.FBSDKProfileDidChange, object: nil)
+        self.checkProfile()
     }
 
     func retry(sender: Any) {

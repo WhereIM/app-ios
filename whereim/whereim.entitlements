@@ -9,5 +9,9 @@
 		<string>applinks:whereim.app.link</string>
 		<string>applinks:whereim-alternate.app.link</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)im.where.whereim</string>
+	</array>
 </dict>
 </plist>
