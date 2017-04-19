@@ -22,6 +22,8 @@ class Config {
     static let CAPTCHA_URL = "https://dev.where.im/captcha.html"
     static let CAPTCHA_PREFIX = "whereim://"
 
+    static let CHANNEL_JOIN_URL = "https://dev.where.im/channel/%@"
+
     static let AWS_IOT_MQTT_ENDPOINT = "a3ftvwpcurxils.iot.ap-northeast-1.amazonaws.com"
     static let AWS_IOT_MQTT_PORT = 8883
     static let AWS_API_GATEWAY_REGISTER_CLIENT = "https://gznzura26h.execute-api.ap-northeast-1.amazonaws.com/production"

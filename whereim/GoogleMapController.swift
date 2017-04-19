@@ -39,7 +39,6 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     func viewDidLoad(_ viewContrller: UIViewController) {
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        mapView!.isMyLocationEnabled = true
         mapView!.settings.compassButton = true
 
         mapView!.translatesAutoresizingMaskIntoConstraints = false
@@ -57,12 +56,14 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func viewWillAppear(_ viewContrller: UIViewController) {
+        mapView!.isMyLocationEnabled = true
         mapView!.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         mapView!.delegate = self
     }
 
     func viewWillDisappear(_ viewContrller: UIViewController) {
         mapView!.removeObserver(self, forKeyPath: "myLocation")
+        mapView!.isMyLocationEnabled = false
     }
 
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
