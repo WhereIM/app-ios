@@ -66,7 +66,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         if let match = pattern.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
                             let channel_id = (link as NSString).substring(with: match.rangeAt(1))
                             DispatchQueue.main.async {
-                                _ = DialogJoinChannel((self.window?.rootViewController!)!, channel_id)
+                                let sb = UIStoryboard(name: "Main", bundle: nil)
+                                let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
+                                self.window?.rootViewController = startupVC;
+                                _ = DialogJoinChannel(startupVC, channel_id)
                             }
                         }
                     } catch {
