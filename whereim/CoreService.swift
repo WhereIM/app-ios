@@ -895,7 +895,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
         channel!.channel_name = data["channel_name"] as? String ?? channel!.channel_name
         channel!.user_channel_name = data["user_channel_name"] as? String ?? channel!.user_channel_name
-        channel!.mate_id = data[Key.MATE] as! String? ?? channel!.mate_id
+        channel!.mate_id = data[Key.MATE] as? String ?? channel!.mate_id
         channel!.deleted = data[Key.DELETED] as? Bool ?? channel!.deleted
         channel!.enable_radius = data[Key.ENABLE_RADIUS] as? Bool ?? channel!.enable_radius
         channel!.radius = data[Key.RADIUS] as? Int ?? channel!.radius
