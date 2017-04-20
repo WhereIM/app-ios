@@ -21,8 +21,6 @@ class MessengerController: JSQMessagesViewController, Callback {
     let formatter = DateFormatter()
 
     override func viewDidLoad() {
-        super.viewDidLoad()
-
         self.edgesForExtendedLayout = []
 
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
@@ -50,6 +48,8 @@ class MessengerController: JSQMessagesViewController, Callback {
 
         self.collectionView?.reloadData()
         self.collectionView?.layoutIfNeeded()
+
+        super.viewDidLoad()
     }
 
     func onCallback() {

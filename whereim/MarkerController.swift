@@ -307,8 +307,6 @@ class MarkerController: UIViewController, Callback {
     @IBOutlet weak var markerListView: UITableView!
 
     override func viewDidLoad() {
-        super.viewDidLoad()
-
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
 
@@ -319,6 +317,8 @@ class MarkerController: UIViewController, Callback {
         markerListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter
+
+        super.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {

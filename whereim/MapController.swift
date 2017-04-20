@@ -46,8 +46,6 @@ class MapController: UIViewController, ChannelChangedListener {
     let enchantmentPanel = UICompactStackView()
     let markerPanel = UICompactStackView()
     override func viewDidLoad() {
-        super.viewDidLoad()
-
         service = CoreService.bind()
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
@@ -130,6 +128,8 @@ class MapController: UIViewController, ChannelChangedListener {
         self.view.addSubview(markerPanel)
         NSLayoutConstraint.activate([markerPanel.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -15), markerPanel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)])
         markerPanel.isHidden = true
+
+        super.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {

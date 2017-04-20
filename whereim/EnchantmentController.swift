@@ -196,8 +196,6 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
     @IBOutlet weak var enchantmentListView: UITableView!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
         
@@ -207,6 +205,8 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
         enchantmentListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         enchantmentListView.dataSource = adapter
         enchantmentListView.delegate = adapter
+
+        super.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
