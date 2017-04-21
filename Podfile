@@ -11,6 +11,9 @@ target 'whereim' do
   pod 'FacebookCore'
   pod 'FacebookLogin'
 
+  pod 'Firebase/Core'
+  pod 'Firebase/Crash'
+
   pod 'GRDB.swift'
 
   pod 'JSQMessagesViewController'

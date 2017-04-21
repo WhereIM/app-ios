@@ -7,6 +7,7 @@
 //
 
 import Branch
+import Firebase
 import GRDB
 import UIKit
 import FBSDKCoreKit
@@ -31,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GMSServices.provideAPIKey(Config.GOOGLE_MAP_KEY)
+
+        FIRApp.configure()
 
         do {
             let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

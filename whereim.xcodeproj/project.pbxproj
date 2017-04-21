@@ -19,6 +19,7 @@
 		5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */; };
 		5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E3401E5D632900A7EB0E /* MarkerController.swift */; };
 		58483BC3F34B2978F0A0DED9 /* Pods_whereimUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */; };
+		5849B1441EAA82AC0058B560 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */; };
 		58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB41E51ADF2002FAD41 /* AppDelegate.swift */; };
 		58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB61E51ADF2002FAD41 /* LoginController.swift */; };
 		58568FBA1E51ADF2002FAD41 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58568FB81E51ADF2002FAD41 /* Main.storyboard */; };
@@ -87,6 +88,7 @@
 		5831E33C1E5CC96500A7EB0E /* Enchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enchantment.swift; sourceTree = "<group>"; };
 		5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnchantmentController.swift; sourceTree = "<group>"; };
 		5831E3401E5D632900A7EB0E /* MarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerController.swift; sourceTree = "<group>"; };
+		5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		58568FB11E51ADF2002FAD41 /* whereim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = whereim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FB41E51ADF2002FAD41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		58568FB61E51ADF2002FAD41 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				58DBA2A01E9F2D8E000744F0 /* whereim.bundle */,
 				58A6EB8F1E5858E700C29A49 /* aws.bundle */,
 				58568FC31E51ADF2002FAD41 /* Info.plist */,
+				5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */,
 				585A0E691E68344500C5E9CB /* whereim.entitlements */,
 				58568FBB1E51ADF2002FAD41 /* whereim.xcdatamodeld */,
 			);
@@ -408,6 +411,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58202AB61E743B6A00BC7FCD /* Localizable.strings in Resources */,
+				5849B1441EAA82AC0058B560 /* GoogleService-Info.plist in Resources */,
 				58202AC11E74434400BC7FCD /* InfoPlist.strings in Resources */,
 				58568FC21E51ADF2002FAD41 /* LaunchScreen.storyboard in Resources */,
 				58A6EB901E5858E700C29A49 /* aws.bundle in Resources */,
