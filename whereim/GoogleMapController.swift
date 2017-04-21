@@ -211,7 +211,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     var mateMarker = [String:GMSMarker]()
     func onMateData(_ mate: Mate) {
         if let c = self.mateCircle[mate.id!] {
-            if mate.latitude != nil {
+            if mate.latitude != nil && !mate.deleted {
                 c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
                 c.radius = mate.accuracy!
             } else {
@@ -219,7 +219,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 self.mateCircle.removeValue(forKey: mate.id!)
             }
         } else {
-            if mate.latitude != nil {
+            if mate.latitude != nil && !mate.deleted {
                 let c = GMSCircle()
                 c.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
                 c.radius = mate.accuracy!
@@ -230,7 +230,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             }
         }
         if let m = self.mateMarker[mate.id!] {
-            if mate.latitude != nil {
+            if mate.latitude != nil && !mate.deleted {
                 m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
 
                 if mateName[mate.id!] != mate.getDisplayName() {
@@ -255,7 +255,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 self.mateMarker.removeValue(forKey: mate.id!)
             }
         } else {
-            if mate.latitude != nil {
+            if mate.latitude != nil && !mate.deleted {
                 let m = GMSMarker()
                 m.zIndex = 10
                 m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
