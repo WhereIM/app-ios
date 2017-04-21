@@ -111,7 +111,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
     func invite_join(sender: UIButton) {
         if let url = NSURL(string: String(format: Config.CHANNEL_JOIN_URL, channel!.id!)) {
-            let objectsToShare = ["action_invite".localized, url] as [Any]
+            let objectsToShare = [String(format: "invitation".localized, channel!.channel_name!), url] as [Any]
             let vc = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
             vc.popoverPresentationController?.sourceView = sender
             self.present(vc, animated: true, completion: nil)

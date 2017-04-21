@@ -12,6 +12,8 @@
 "action_about" = "關於";
 "action_quit" = "關閉程式";
 
+"invitation" = "邀請：%@";
+
 "active_client" = "此裝置不是主要裝置";
 "active_client_message" = "取代您的其他裝置成為主要裝置？";
 
