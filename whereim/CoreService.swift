@@ -395,17 +395,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         }
 
-        if mate.deleted {
-            channelMate[mate.channel_id!]!.removeValue(forKey: mate.id!)
-            appDelegate.dbConn!.inDatabase { db in
-                do {
-                    try mate.delete(db)
-                } catch {
-                    print("Error deleting mate \(error)")
-                }
-            }
-        }
-
         notifyMateListeners(mate.channel_id!)
     }
 
@@ -988,7 +977,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         var list = [Mate]()
         if channelMate[channel_id] != nil {
             for mate in channelMate[channel_id]!.values {
-                list.append(mate)
+                if !mate.deleted {
+                    list.append(mate)
+                }
             }
         }
         list.sort(by: {$0.getDisplayName().localizedCompare($1.getDisplayName()) == .orderedAscending})

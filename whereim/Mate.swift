@@ -16,6 +16,7 @@ class Mate: Record {
     static let COL_CHANNEL_ID = "channel_id"
     static let COL_MATE_NAME = "mate_name"
     static let COL_USER_MATE_NAME = "user_mate_name"
+    static let COL_DELETED = "deleted"
 
     var id: String?
     var channel_id: String?
@@ -48,6 +49,13 @@ class Mate: Record {
 
             version = 1
         }
+        if version < 2 {
+            var sql: String
+            sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COL_DELETED + " BOOLEAN NOT NULL DEFAULT 0"
+            try db.execute(sql)
+
+            version = 2
+        }
     }
 
     override class var databaseTableName: String {
@@ -59,6 +67,7 @@ class Mate: Record {
         channel_id = row.value(named: Mate.COL_CHANNEL_ID)
         mate_name = row.value(named: Mate.COL_MATE_NAME)
         user_mate_name = row.value(named: Mate.COL_USER_MATE_NAME)
+        deleted = row.value(named: Mate.COL_DELETED)
         super.init(row: row)
     }
 
@@ -71,7 +80,8 @@ class Mate: Record {
             Mate.COL_ID: id,
             Mate.COL_CHANNEL_ID: channel_id,
             Mate.COL_MATE_NAME: mate_name,
-            Mate.COL_USER_MATE_NAME: user_mate_name
+            Mate.COL_USER_MATE_NAME: user_mate_name,
+            Mate.COL_DELETED: deleted
         ]
     }
 
