@@ -291,6 +291,7 @@
 				58568FAF1E51ADF2002FAD41 /* Resources */,
 				04CA559B7837A039854768A6 /* [CP] Embed Pods Frameworks */,
 				4E20F854A2DCED040C514235 /* [CP] Copy Pods Resources */,
+				5840689E1EAB6B9E00E4964D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -482,6 +483,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-whereim/Pods-whereim-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		5840689E1EAB6B9E00E4964D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "GOOGLE_APP_ID=1:737200913386:ios:227b288786fe93e1\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym \"${PODS_ROOT}\"/../where-im-154418-firebase-crashreporting-r0fbj-d866bd6cce.json";
 		};
 		6FB0676166BE6928ED2EE583 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
