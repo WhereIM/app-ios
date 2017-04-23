@@ -1336,14 +1336,16 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func publish(_ topic: String, _ message: [String: Any]) {
-        do {
-            let json = try JSONSerialization.data(withJSONObject: message, options: [])
-            print("publish \(topic) \(String(data: json, encoding: .utf8)!)")
-            if let client = mqttSession?.mqttClient {
-                client.publish(json, topic: topic, qos: 1, retain: false)
+        DispatchQueue.main.async {
+            do {
+                let json = try JSONSerialization.data(withJSONObject: message, options: [])
+                print("publish \(topic) \(String(data: json, encoding: .utf8)!)")
+                if let client = self.mqttSession?.mqttClient {
+                    client.publish(json, topic: topic, qos: 1, retain: false)
+                }
+            } catch {
+                print("error in publish()")
             }
-        } catch {
-            print("error in publish()")
         }
     }
 
