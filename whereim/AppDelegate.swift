@@ -35,6 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         FIRApp.configure()
 
+        UserDefaults.standard.register(defaults: [Key.POWER_SAVING: true])
+
         do {
             let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let db_file = folder.appendingPathComponent(DB_FILE).path

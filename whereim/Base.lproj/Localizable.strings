@@ -10,6 +10,7 @@
 
 "app_name" = "Where.IM";
 "action_invite" = "Invite";
+"action_settings" = "Settings";
 "action_about" = "About";
 "action_quit" = "Quit";
 
@@ -65,3 +66,5 @@
 
 "mock_location_service_not_running" = "Location service is not running, mock data is not sending.";
 "mock_confirm_disable" = "Are you sure to finish mocking?";
+
+"power_saving" = "Power Saving";

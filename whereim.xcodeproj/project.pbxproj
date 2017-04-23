@@ -18,6 +18,7 @@
 		5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33C1E5CC96500A7EB0E /* Enchantment.swift */; };
 		5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */; };
 		5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E3401E5D632900A7EB0E /* MarkerController.swift */; };
+		584068A01EABE0E600E4964D /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840689F1EABE0E600E4964D /* SettingsController.swift */; };
 		58483BC3F34B2978F0A0DED9 /* Pods_whereimUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */; };
 		5849B1441EAA82AC0058B560 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */; };
 		58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB41E51ADF2002FAD41 /* AppDelegate.swift */; };
@@ -88,6 +89,7 @@
 		5831E33C1E5CC96500A7EB0E /* Enchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enchantment.swift; sourceTree = "<group>"; };
 		5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnchantmentController.swift; sourceTree = "<group>"; };
 		5831E3401E5D632900A7EB0E /* MarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerController.swift; sourceTree = "<group>"; };
+		5840689F1EABE0E600E4964D /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		58568FB11E51ADF2002FAD41 /* whereim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = whereim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FB41E51ADF2002FAD41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				581508B41E5DFA52003DDA80 /* views */,
 				58A6EB9C1E5897D900C29A49 /* models */,
 				58568FB41E51ADF2002FAD41 /* AppDelegate.swift */,
+				5840689F1EABE0E600E4964D /* SettingsController.swift */,
 				58DBA2A21E9F31D5000744F0 /* AboutController.swift */,
 				58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */,
 				58568FB61E51ADF2002FAD41 /* LoginController.swift */,
@@ -608,6 +611,7 @@
 				58A6EB8B1E56F5CF00C29A49 /* CoreService.swift in Sources */,
 				58E347A71E5A18F00025211B /* Mate.swift in Sources */,
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
+				584068A01EABE0E600E4964D /* SettingsController.swift in Sources */,
 				58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,

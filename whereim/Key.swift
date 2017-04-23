@@ -41,6 +41,7 @@ class Key {
     static let NAME = "name"
 
     static let PROVIDER = "pvdr"
+    static let POWER_SAVING = "power_saving"
     static let PUBLIC = "public"
 
     static let RADIUS = "r"

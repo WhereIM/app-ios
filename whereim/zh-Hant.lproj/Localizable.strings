@@ -9,6 +9,7 @@
 "lang" = "zh-TW";
 
 "action_invite" = "邀請";
+"action_settings" = "設定";
 "action_about" = "關於";
 "action_quit" = "關閉程式";
 
@@ -64,3 +65,5 @@
 
 "mock_location_service_not_running" = "定位傳送功能未啟用，無法傳送假資料";
 "mock_confirm_disable" = "確定不再傳送假資料？";
+
+"power_saving" = "省電模式";

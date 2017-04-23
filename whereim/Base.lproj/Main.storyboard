@@ -167,6 +167,39 @@
             </objects>
             <point key="canvasLocation" x="2788" y="830.73463268365822"/>
         </scene>
+        <!--Settings Controller-->
+        <scene sceneID="l3Q-37-Eyb">
+            <objects>
+                <viewController storyboardIdentifier="settings" automaticallyAdjustsScrollViewInsets="NO" id="Y8i-ie-LC7" customClass="SettingsController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="efg-bM-sfe"/>
+                        <viewControllerLayoutGuide type="bottom" id="uG8-Ve-qfz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="CUb-6O-74d">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="rdx-Sw-lT6">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="rdx-Sw-lT6" firstAttribute="leading" secondItem="CUb-6O-74d" secondAttribute="leading" id="POQ-BT-bHq"/>
+                            <constraint firstAttribute="trailing" secondItem="rdx-Sw-lT6" secondAttribute="trailing" id="aN4-KH-AWY"/>
+                            <constraint firstItem="uG8-Ve-qfz" firstAttribute="top" secondItem="rdx-Sw-lT6" secondAttribute="bottom" id="eEY-TP-ANt"/>
+                            <constraint firstItem="rdx-Sw-lT6" firstAttribute="top" secondItem="efg-bM-sfe" secondAttribute="bottom" id="fpU-dU-vSd"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="settings" destination="rdx-Sw-lT6" id="PK2-Er-923"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pvp-hU-d4y" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1845.5999999999999" y="1557.5712143928038"/>
+        </scene>
         <!--🚩-->
         <scene sceneID="LJX-E6-oY0">
             <objects>
@@ -302,7 +335,7 @@
             <objects>
                 <navigationController storyboardIdentifier="startup" automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

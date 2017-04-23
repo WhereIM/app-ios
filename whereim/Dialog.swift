@@ -14,12 +14,19 @@ class DialogMenu {
     init(_ viewController: UIViewController) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
+        let action_settings = UIAlertAction(title: "action_settings".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "settings")
+            viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "action_settings".localized, style: .plain, target: nil, action: nil)
+            viewController.navigationController?.pushViewController(vc!, animated: true)
+        }
+
         let action_about = UIAlertAction(title: "action_about".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "about")
             viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "action_about".localized, style: .plain, target: nil, action: nil)
             viewController.navigationController?.pushViewController(vc!, animated: true)
         }
 
+        alert.addAction(action_settings)
         alert.addAction(action_about)
         alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
         viewController.present(alert, animated: true, completion:nil)
