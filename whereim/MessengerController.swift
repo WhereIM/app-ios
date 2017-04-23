@@ -116,6 +116,9 @@ class MessengerController: JSQMessagesViewController, Callback {
     }
 
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
-        return NSAttributedString(string: formatter.string(from: messageList!.message[indexPath.item].getJSQMessage().date!))
+        if (indexPath.item % 3 == 0) {
+            return NSAttributedString(string: formatter.string(from: messageList!.message[indexPath.item].getJSQMessage().date!))
+        }
+        return nil
     }
 }
