@@ -6,5 +6,5 @@
   Copyright © 2017 Where.IM. All rights reserved.
 */
 
-"NSLocationAlwaysUsageDescription" = "It's all about where. Grant location permission please.";
-"NSLocationWhenInUseUsageDescription" = "It's all about where. Grant location permission please.";
+"NSLocationAlwaysUsageDescription" = "Your location is essential for this app to work.";
+"NSLocationWhenInUseUsageDescription" = "Your location is essential for this app to work.";
