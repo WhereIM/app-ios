@@ -258,7 +258,7 @@ class Message: Record {
         }
         var avail = message
         if count > 0 {
-            avail = Array(message![0...count-1])
+            avail = Array(message![message!.count-count...message!.count-1])
         }
         return BundledMessages(message: avail!, loadMoreBefore: loadMoreBefore, loadMoreAfter: loadMoreAfter, firstId: firstId, lastId: lastId, loadMoreChannelMessage: loadMoreChannelMessage, loadMoreUserMessage: loadMoreUserMessage)
     }
