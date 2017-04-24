@@ -83,6 +83,7 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
             loginButton.isHidden = true
             auth_provider = Key.FACEBOOK
             auth_id = token.userId
+            auth_token = token.authenticationToken
         }
     }
 
@@ -99,22 +100,23 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         let profile = FBSDKProfile.current()
         if profile != nil {
             auth_name = profile!.name
-
-            UserDefaults.standard.set(auth_provider, forKey: Key.PROVIDER)
-            UserDefaults.standard.set(auth_id, forKey: Key.ID)
-            UserDefaults.standard.set(auth_name, forKey: Key.NAME)
-
             register_client()
         }
     }
 
     var auth_id: String?
+    var auth_token: String?
     var auth_provider: String?
     var auth_name: String?
 
     func register_client() {
+        UserDefaults.standard.set(auth_provider, forKey: Key.PROVIDER)
+        UserDefaults.standard.set(auth_token, forKey: Key.TOKEN)
+        UserDefaults.standard.set(auth_id, forKey: Key.ID)
+        UserDefaults.standard.set(auth_name, forKey: Key.NAME)
+
         self.view.makeToastActivity(.center)
-        service?.register_client(authProvider: auth_provider!, authId: auth_id!, name: auth_name!, callback: self)
+        service?.register_client(authProvider: auth_provider!, authToken: auth_token!, authId: auth_id!, name: auth_name!, callback: self)
     }
 
     func onCaptchaRequired() {
@@ -140,7 +142,13 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         if service!.getClientId() == nil {
             auth_id = UserDefaults.standard.string(forKey: Key.ID)
             auth_provider = UserDefaults.standard.string(forKey: Key.PROVIDER)
+            auth_token = UserDefaults.standard.string(forKey: Key.TOKEN)
             auth_name = UserDefaults.standard.string(forKey: Key.NAME)
+
+            UserDefaults.standard.removeObject(forKey: Key.ID)
+            UserDefaults.standard.removeObject(forKey: Key.PROVIDER)
+            UserDefaults.standard.removeObject(forKey: Key.TOKEN)
+            UserDefaults.standard.removeObject(forKey: Key.NAME)
 
             if auth_id == nil {
                 retryButton!.isHidden = true

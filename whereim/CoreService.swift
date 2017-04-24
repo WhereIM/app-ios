@@ -1012,15 +1012,16 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         self.otp = otp
     }
 
-    func register_client(authProvider: String, authId: String, name: String, callback: RegisterClientCallback) {
+    func register_client(authProvider: String, authToken: String, authId: String, name: String, callback: RegisterClientCallback) {
         if otp == nil || otp!.isEmpty {
             callback.onCaptchaRequired()
             return
         }
         print(authProvider)
         print(authId)
+        print(authToken)
         print(name)
-        let data = ["auth_provider":authProvider, "auth_id":authId, "otp": otp]
+        let data = ["auth_provider":authProvider, "auth_token": authToken, "auth_id":authId, "otp": otp]
         Alamofire.request(Config.AWS_API_GATEWAY_REGISTER_CLIENT, method: .post, parameters: data, encoding: JSONEncoding.default).responseJSON{ response in
             if let result = response.result.value {
                 print(result)
@@ -1054,6 +1055,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
                                 self.clientId = id
                                 UserDefaults.standard.set(id, forKey: Key.CLIENT_ID)
+                                UserDefaults.standard.set(name, forKey: Key.NAME)
 
                                 self.onAuthed()
 

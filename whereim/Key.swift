@@ -51,6 +51,7 @@ class Key {
 
     static let TILE = "tile"
     static let TIME = "time"
+    static let TOKEN = "token"
     static let TS = "ts"
 
     static let USER_CHANNEL_NAME = "user_channel_name"
