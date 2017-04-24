@@ -63,6 +63,7 @@ class MQTTSession {
                 return
             }
             self.mqttCallback.mqttOnConnected()
+            Log.insert("onConnected")
         }
         mqttConfig.onMessageCallback = { mqttMessage in
             do {
@@ -123,6 +124,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     func initialize(){
         clientId = UserDefaults.standard.string(forKey: Key.CLIENT_ID)
+
+        lm.requestAlwaysAuthorization()
+        lm.delegate = self
+        lm.allowsBackgroundLocationUpdates = true
 
         moscapsule_init()
         
@@ -1369,59 +1374,160 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
+    func getPowerSaving() -> Bool {
+        return UserDefaults.standard.bool(forKey: Key.POWER_SAVING)
+    }
 
-    let UPDATE_MIN_TIME = 10.0 // 10s
-    let UPDATE_MIN_DISTANCE = 5.0 // 5m
+    func setPowerSaving(enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: Key.POWER_SAVING)
+    }
+
+    func enterBackground() {
+        inBackground = true
+        if locationServiceRunning {
+            Log.insert("enterBackground")
+        }
+    }
+
+    func enterForeground() {
+        inBackground = false
+        if locationServiceRunning {
+            Log.insert("enterForeground")
+            if getPowerSaving() {
+                lm.stopUpdatingLocation()
+                lm.distanceFilter = kCLDistanceFilterNone
+                lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationServiceIdled = false
+                movingState = MovingState.generic
+                lm.startUpdatingLocation()
+            }
+        }
+    }
+
+    var inBackground = true
+    var locationServiceIdled = false
     var locationServiceRunning = false
     let lm = CLLocationManager()
+    var rawLastLocation: CLLocation?
+    var lastLocation: CLLocation?
+    var idledLocation: CLLocation?
     func startLocationService() {
         if locationServiceRunning {
             return
         }
         locationServiceRunning = true
-        lm.requestAlwaysAuthorization()
-        lm.delegate = self
-        lm.allowsBackgroundLocationUpdates = true
         lm.pausesLocationUpdatesAutomatically = false
         lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(UPDATE_MIN_DISTANCE), timeout: TimeInterval(UPDATE_MIN_TIME))
         lm.startUpdatingLocation()
     }
 
     func stopLocationService() {
         lm.stopUpdatingLocation()
         locationServiceRunning = false
-    }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            processLocation(location: location)
+        if locationServiceRunning {
+            Log.insert("stopLocationService")
         }
     }
 
-    var lastLocationTime = 0.0
-    var lastLocation: CLLocation?
+    enum MovingState {
+        case generic
+        case stop
+        case walkingOrBiking
+        case inVehicle
+    }
+    var movingState = MovingState.generic
+    var stopLocation: CLLocation?
+    var stopTime = 0.0
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            if rawLastLocation != nil && location.timestamp.timeIntervalSince(rawLastLocation!.timestamp) <= 0 {
+                return
+            }
+            rawLastLocation = location
+            let coarse = locationServiceIdled
+            if inBackground && getPowerSaving() {
+                let time = NSDate().timeIntervalSince1970
+                if locationServiceIdled {
+                    if idledLocation!.distance(from: location) >= Config.LOCATION_CHANGE_IDLE_DISTANCE_THRESHOLD {
+                        locationServiceIdled = false
+                        lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                        stopTime = time
+                        Log.insert("location change resume")
+                    }
+                } else {
+                    if location.speed < 0.6 { //  2.16 kph
+                        if movingState != .stop {
+                            movingState = .stop
+                            stopLocation = location
+                            stopTime = time
+                            lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                            Log.insert("movingState: stop \(location.speed)")
+                        } else {
+                            if !locationServiceIdled {
+                                if time - stopTime >= Config.LOCATION_CHANGE_IDLE_TIME_THRESHOLD && stopLocation!.distance(from: location) < Config.LOCATION_CHANGE_IDLE_DISTANCE_THRESHOLD {
+                                    idledLocation = location
+                                    lm.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+                                    locationServiceIdled = true
+                                    Log.insert("location change idled")
+                                }
+                            }
+                        }
+                        lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(15), timeout: TimeInterval(Config.LOCATION_UPDATE_MIN_INTERVAL))
+                    } else if location.speed < 10 { // 36 kph
+                        if movingState != .walkingOrBiking {
+                            movingState = .walkingOrBiking
+                            locationServiceIdled = false
+                            lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                            Log.insert("movingState: walkingOrBiking \(location.speed)")
+                        }
+                        lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(location.speed * 5), timeout: TimeInterval(Config.LOCATION_UPDATE_MIN_INTERVAL))
+                    } else {
+                        if movingState != .inVehicle {
+                            movingState = .inVehicle
+                            locationServiceIdled = false
+                            lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                            Log.insert("movingState: inVehicle")
+                        }
+                        lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(location.speed * 15), timeout: TimeInterval(Config.LOCATION_UPDATE_MIN_INTERVAL))
+                    }
+                }
+            } else {
+                if movingState != .generic {
+                    movingState = .generic
+                    locationServiceIdled = false
+                    lm.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                    Log.insert("movingState: generic")
+                }
+                lm.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance(Config.GENERIC_LOCATION_UPDATE_MIN_DISTANCE), timeout: TimeInterval(Config.GENERIC_LOCATION_UPDATE_MIN_TIME))
+            }
+
+            if !coarse {
+                processLocation(location: location)
+            }
+        }
+    }
+
     func processLocation(location: CLLocation) {
         var time_criteria = true
         var distance_criteria = true
-        let time = NSDate().timeIntervalSince1970
-        if time - lastLocationTime < UPDATE_MIN_TIME {
+        if lastLocation != nil && location.timestamp.timeIntervalSince(lastLocation!.timestamp) < Config.LOCATION_UPDATE_MIN_INTERVAL {
             time_criteria  = false
         }
-        if lastLocation != nil && lastLocation!.distance(from: location) < UPDATE_MIN_DISTANCE {
+        if lastLocation != nil && lastLocation!.distance(from: location) < Config.LOCATION_UPDATE_MIN_DISTANCE {
             distance_criteria = false
         }
         if !time_criteria && !distance_criteria {
             return
         }
-        lastLocationTime = time
+
         lastLocation = location
+
         var data = [
             Key.LATITUDE: location.coordinate.latitude,
             Key.LONGITUDE: location.coordinate.longitude,
             Key.ACCURACY: location.horizontalAccuracy,
             Key.ALTITUDE: location.altitude,
-            Key.TIME: UInt64(time*1000),
+            Key.TIME: UInt64(location.timestamp.timeIntervalSince1970*1000),
             Key.PROVIDER: "iOS"
         ] as [String: Any]
         if location.course >= 0 {

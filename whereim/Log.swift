@@ -73,6 +73,8 @@ class Log: Record {
             print("Error checking out logs")
         }
 
+        print("log: \(message)")
+
         let notification = UILocalNotification()
         notification.fireDate = Date(timeIntervalSinceNow: 0)
         notification.alertBody = "log: \(message)"
