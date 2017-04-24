@@ -72,6 +72,13 @@ class Log: Record {
         } catch {
             print("Error checking out logs")
         }
+
+        let notification = UILocalNotification()
+        notification.fireDate = Date(timeIntervalSinceNow: 0)
+        notification.alertBody = "log: \(message)"
+        notification.timeZone = NSTimeZone.default
+
+        UIApplication.shared.scheduleLocalNotification(notification)
     }
 
     static func getAll() -> [Log] {
