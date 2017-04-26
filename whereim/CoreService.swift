@@ -214,6 +214,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             syncChannelData(channel.id!)
             syncChannelMessage(channel.id!)
         }
+
+        if let link = pending_link {
+            pending_link = nil
+            processLink(link)
+        }
     }
 
     func mqttOnDisconnected() {
@@ -313,6 +318,28 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         currentViewController = viewController
         if currentViewController != nil {
             requestActiveClient()
+        }
+    }
+
+    private var pending_link: String?
+    func processLink(_ link: String) {
+        if !mqttConnected {
+            pending_link = link
+            return
+        }
+        do {
+            let pattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
+            if let match = pattern.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
+                let channel_id = (link as NSString).substring(with: match.rangeAt(1))
+                DispatchQueue.main.async {
+                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                    let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
+                    self.appDelegate.window?.rootViewController = startupVC;
+                    _ = DialogJoinChannel(startupVC, channel_id)
+                }
+            }
+        } catch {
+            print("Error in join_channel dialog")
         }
     }
 

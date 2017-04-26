@@ -66,20 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         branch!.initSession(launchOptions: launchOptions, automaticallyDisplayDeepLinkController: true, deepLinkHandler: { params, error in
             if error == nil {
                 if let link = params?["$deeplink_path"] as? String {
-                    do {
-                        let pattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
-                        if let match = pattern.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
-                            let channel_id = (link as NSString).substring(with: match.rangeAt(1))
-                            DispatchQueue.main.async {
-                                let sb = UIStoryboard(name: "Main", bundle: nil)
-                                let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
-                                self.window?.rootViewController = startupVC;
-                                _ = DialogJoinChannel(startupVC, channel_id)
-                            }
-                        }
-                    } catch {
-                        print("Error in join_channel dialog")
-                    }
+                    self.service!.processLink(link)
                 }
             }
         })
