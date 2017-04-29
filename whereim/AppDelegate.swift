@@ -22,7 +22,7 @@ extension String {
 
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
@@ -36,6 +36,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FIRApp.configure()
 
         UserDefaults.standard.register(defaults: [Key.POWER_SAVING: true])
+
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+        }
 
         do {
             let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -116,6 +120,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
 
             window?.rootViewController = startupVC;
+        }
+    }
+
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+
+
+        let userInfo = notification.request.content.userInfo
+
+        let type = userInfo["type"] as? String
+        let channel_id = userInfo["channel"] as? String
+        let mate_id = userInfo["mate"] as? String
+
+        service = CoreService.bind()
+        var from_self = true
+        var listened = false
+        if channel_id != nil {
+            if let channel = service!.getChannel(id: channel_id!) {
+                if channel.mate_id != nil && channel.mate_id != mate_id {
+                    from_self = false
+                }
+            }
+            listened = service!.hasMessageListener(channel_id: channel_id!)
+        }
+
+        let show = channel_id == nil || type != "text" || (!from_self && !listened)
+
+        if show {
+            completionHandler([.alert, .badge, .sound])
+        } else {
+            completionHandler([])
         }
     }
 

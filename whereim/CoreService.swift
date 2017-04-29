@@ -892,6 +892,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
+    func hasMessageListener(channel_id: String) -> Bool {
+        if messageListener[channel_id] != nil {
+            if messageListener[channel_id]!.count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+
     func notifyChannelMessageListeners(_ channel_id: String) {
         DispatchQueue.main.async {
             if let listeners = self.messageListener[channel_id] {
