@@ -1010,7 +1010,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     func updateBadge() {
         var unread = 0
         for channel in channelList {
-            if channel.unread {
+            if channel.enabled==true && channel.unread {
                 unread += 1
             }
         }

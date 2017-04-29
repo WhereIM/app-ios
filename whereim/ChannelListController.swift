@@ -85,7 +85,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
         let channel = getChannel(indexPath.row)
 
-        if channel.unread {
+        if channel.enabled==true && channel.unread {
             cell.backgroundColor = UIColor(red:0.93, green:0.95, blue:0.98, alpha:1.0)
         } else {
             cell.backgroundColor = UIColor.clear
