@@ -140,62 +140,64 @@ class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
             "location": String(format: "%f,%f", center.latitude, center.longitude),
             "rankby": "distance"
         ]
-        Alamofire.request("https://maps.googleapis.com/maps/api/place/textsearch/json", method: .get, parameters: params, encoding: URLEncoding.queryString, headers: ["Referer":"where.im"]).responseJSON{ response in
-            guard let result = response.result.value else {
-                return
-            }
-            guard let data = result as? [String:Any] else {
-                return
-            }
-            guard let status = data["status"] as? String else {
-                return
-            }
-            switch status {
-            case "REQUEST_DENIED":
-                self.service.invalidateKey(forApi: Key.GOOGLE_SEARCH)
-                self.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
-            case "OVER_QUERY_LIMIT":
-                DispatchQueue.main.async {
-                    self.searchController.view.makeToast("error".localized)
-                }
-            case "ZERO_RESULTS":
-                self.searchController.setSearchResults([])
-            case "OK":
-                guard let results = data["results"] as? [[String:Any]] else {
+        DispatchQueue.global(qos: .background).async {
+            Alamofire.request("https://maps.googleapis.com/maps/api/place/textsearch/json", method: .get, parameters: params, encoding: URLEncoding.queryString, headers: ["Referer":"where.im"]).responseJSON{ response in
+                guard let result = response.result.value else {
                     return
                 }
-                var res = [GoogleSearchResult]()
-                for result in results {
-                    print(result)
-                    guard let name = result["name"] as? String else {
-                        continue
-                    }
-                    guard let geometry = result["geometry"] as? [String:Any] else {
-                        continue
-                    }
-                    guard let location = geometry["location"] as? [String:Any] else {
-                        continue
-                    }
-                    guard let lat = location["lat"] as? Double else {
-                        continue
-                    }
-                    guard let lng = location["lng"] as? Double else {
-                        continue
-                    }
-                    let r = GoogleSearchResult()
-                    r.name = name
-                    r.location = CLLocationCoordinate2D(latitude: lat, longitude: lng)
-                    if let address = result["formatted_address"] as? String {
-                        r.address = address
-                    }
-                    if let attribution = result["attribution"] as? String {
-                        r.attribution = attribution.htmlAttributedString()
-                    }
-                    res.append(r)
+                guard let data = result as? [String:Any] else {
+                    return
                 }
-                self.searchController.setSearchResults(res)
-            default:
-                return
+                guard let status = data["status"] as? String else {
+                    return
+                }
+                switch status {
+                case "REQUEST_DENIED":
+                    self.service.invalidateKey(forApi: Key.GOOGLE_SEARCH)
+                    self.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
+                case "OVER_QUERY_LIMIT":
+                    DispatchQueue.main.async {
+                        self.searchController.view.makeToast("error".localized)
+                    }
+                case "ZERO_RESULTS":
+                    self.searchController.setSearchResults([])
+                case "OK":
+                    guard let results = data["results"] as? [[String:Any]] else {
+                        return
+                    }
+                    var res = [GoogleSearchResult]()
+                    for result in results {
+                        print(result)
+                        guard let name = result["name"] as? String else {
+                            continue
+                        }
+                        guard let geometry = result["geometry"] as? [String:Any] else {
+                            continue
+                        }
+                        guard let location = geometry["location"] as? [String:Any] else {
+                            continue
+                        }
+                        guard let lat = location["lat"] as? Double else {
+                            continue
+                        }
+                        guard let lng = location["lng"] as? Double else {
+                            continue
+                        }
+                        let r = GoogleSearchResult()
+                        r.name = name
+                        r.location = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                        if let address = result["formatted_address"] as? String {
+                            r.address = address
+                        }
+                        if let attribution = result["attribution"] as? String {
+                            r.attribution = attribution.htmlAttributedString()
+                        }
+                        res.append(r)
+                    }
+                    self.searchController.setSearchResults(res)
+                default:
+                    return
+                }
             }
         }
     }
