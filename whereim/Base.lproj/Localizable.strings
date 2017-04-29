@@ -1,5 +1,6 @@
 "lang" = "en";
 "app_name" = "Where.IM";
+"google_lang" = "en";
 "action_invite" = "Invite";
 "action_settings" = "Settings";
 "action_about" = "About";

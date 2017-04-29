@@ -137,6 +137,7 @@ class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
         let params = [
             "key": key,
             "query": query!,
+            "language": "google_lang".localized,
             "location": String(format: "%f,%f", center.latitude, center.longitude),
             "rankby": "distance"
         ]
