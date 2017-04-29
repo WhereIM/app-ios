@@ -1,69 +1,51 @@
-/* 
-  Localizable.strings
-  whereim
-
-  Created by Buganini Q on 11/03/2017.
-  Copyright © 2017 Where.IM. All rights reserved.
-*/
-
 "lang" = "zh-TW";
-
 "action_invite" = "邀請";
 "action_settings" = "設定";
 "action_about" = "關於";
 "action_quit" = "關閉程式";
-
-"invitation" = "邀請：%@";
-
 "active_client" = "此裝置不是主要裝置";
 "active_client_message" = "取代您的其他裝置成為主要裝置？";
-
+"power_saving" = "省電模式";
 "retry" = "再試一次";
-
+"invitation" = "邀請：%1$@";
 "object_create_hint" = "在地圖上長按即可建立";
 "mate_invite_hint" = "沒有人，邀請別人進來吧";
-
+"name" = "名稱";
+"icon" = "圖示";
 "channel_name" = "群組名稱";
 "channel_alias" = "群組別稱";
 "display_name" = "個人暱稱";
 "create_channel" = "建立群組";
-"edit_channel" = "編輯群組";
+"join_channel" = "加入全組";
+"edit_channel" = "編輯全組";
 "leave_channel" = "離開群組";
 "leave" = "離開";
 "ok" = "好";
 "cancel" = "取消";
 "delete" = "刪除";
-"join_channel" = "加入群組";
 "create_enchantment" = "設立結界 ⭕";
 "create_marker" = "放置圖釘 📍";
-"name" = "名稱";
-"icon" = "圖示";
-"mock" = "假資料";
-
 "radius_m" = "%1$d m";
-
 "self" = "自己";
-"mate" = "同伴";
+"mate" = "夥伴";
+"is_public" = "共用";
 "public_enchantment" = "共用結界";
 "private_enchantment" = "個人結界";
 "public_marker" = "共用圖釘";
 "private_marker" = "個人圖釘";
-"is_public" = "公用";
-"is_private" = "個人";
-
 "error_exhausted" = "可註冊數量已滿，請稍後再試。";
-
-"message_enchantment_create" = "%1$@ 結界已設立.";
+"message_enchantment_create" = "%1$@ 結界已設立";
 "message_enchantment_emerge" = "出現在 %1$@ 結界";
 "message_enchantment_in" = "進入 %1$@ 結界";
 "message_enchantment_out" = "離開 %1$@ 結界";
 "message_marker_create" = "放了 %1$@ 圖釘";
-"message_radius_report" = "圈內: %2$@\n圈外: %3$@  (%1$@ m)";
-
+"message_radius_report" = "圈內：%1$@\n圈外：%2$@  (%3$@ m)";
+"apn_text" = "%1$@\n%2$@：%3$@";
+"apn_enchantment_create" = "%1$@\n%2$@：%3$@ 結界已設立";
+"apn_enchantment_emerge" = "%1$@\n%2$@：出現在 %3$@ 結界";
+"apn_enchantment_in" = "%1$@\n%2$@：進入 %3$@ 結界";
+"apn_enchantment_out" = "%1$@\n%2$@：離開 %3$@ 結界";
+"apn_marker_create" = "%1$@\n%2$@：放了 %3$@ 圖釘";
+"apn_radius_report" = "%1$@\n圈內：%2$@\n圈外：%3$@  (%4$@ m)";
 "message_limit_active_channel" = "同時傳送中的群組數量已達上限（%1$@）";
-"message_limit_enabled_channel" = "同時啟用的群組數量已達上限 (%1$@)，在群組列表中滑動並鎖上不需要啟用的群組";
-
-"mock_location_service_not_running" = "定位傳送功能未啟用，無法傳送假資料";
-"mock_confirm_disable" = "確定不再傳送假資料？";
-
-"power_saving" = "省電模式";
+"message_limit_enabled_channel" = "同時啟用的群組數量已達上限 (%1$@)，在群組列表中向左滑動並鎖上不需要啟用的群組。";

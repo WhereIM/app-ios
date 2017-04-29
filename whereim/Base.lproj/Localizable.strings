@@ -1,70 +1,52 @@
-/* 
-  Localizable.strings
-  whereim
-
-  Created by Buganini Q on 11/03/2017.
-  Copyright © 2017 Where.IM. All rights reserved.
-*/
-
 "lang" = "en";
-
 "app_name" = "Where.IM";
 "action_invite" = "Invite";
 "action_settings" = "Settings";
 "action_about" = "About";
 "action_quit" = "Quit";
-
-"invitation" = "Invitation: %@";
-
 "active_client" = "Client not active";
 "active_client_message" = "This client is not active, take over from your other client?";
-
+"power_saving" = "Power Saving";
 "retry" = "Retry";
-
+"invitation" = "Invitation: %1$@";
 "object_create_hint" = "Long press on map to create";
 "mate_invite_hint" = "No one here, invite others to this channel";
-
+"name" = "Name";
+"icon" = "Icon";
 "channel_name" = "Channel Name";
 "channel_alias" = "Channel Alias";
 "display_name" = "Display Name";
 "create_channel" = "Create Channel";
+"join_channel" = "Join Channel";
 "edit_channel" = "Edit Channel";
 "leave_channel" = "Leave Channel";
 "leave" = "Leave";
 "ok" = "OK";
 "cancel" = "Cancel";
 "delete" = "Delete";
-"join_channel" = "Join Channel";
 "create_enchantment" = "New Enchantment ⭕";
 "create_marker" = "New Marker 📍";
-"name" = "Name";
-"icon" = "Icon";
-"mock" = "Mock";
-
 "radius_m" = "%1$d m";
-
 "self" = "Self";
 "mate" = "Mate";
+"is_public" = "Shared";
 "public_enchantment" = "Shared Enchantment";
 "private_enchantment" = "Personal Enchantment";
 "public_marker" = "Shared Marker";
 "private_marker" = "Personal Marker";
-"is_public" = "Public";
-"is_private" = "Private";
-
 "error_exhausted" = "Client capacity is exhausted, please try later.";
-
 "message_enchantment_create" = "Enchantment %1$@ is created.";
 "message_enchantment_emerge" = "Emerged in enchantment %1$@.";
 "message_enchantment_in" = "Entered enchantment %1$@.";
 "message_enchantment_out" = "Left enchantment %1$@.";
 "message_marker_create" = "Marker %1$@ is created.";
-"message_radius_report" = "In: %2$@\nOut: %3$@  (%1$@ m)";
-
-"message_limit_active_channel" = "Limit of number of active channels (%1$@) is reached.";
+"message_radius_report" = "In: %1$@\nOut: %2$@  (%3$@ m)";
+"apn_text" = "%1$@\n%2$@: %3$@";
+"apn_enchantment_create" = "%1$@\n%2$@: Enchantment %3$@ is created.";
+"apn_enchantment_emerge" = "%1$@\n%2$@: Emerged in enchantment %3$@.";
+"apn_enchantment_in" = "%1$@\n%2$@: Entered enchantment %3$@.";
+"apn_enchantment_out" = "%1$@\n%2$@: Left enchantment %3$@.";
+"apn_marker_create" = "%1$@\n%2$@: Marker %3$@ is created.";
+"apn_radius_report" = "%1$@\nIn: %2$@\nOut: %3$@  (%4$@ m)";
+"message_limit_active_channel" = "Limit of number of active channels (%1$@) is reached";
 "message_limit_enabled_channel" = "Limit of number of enabled channels (%1$@) is reached, swipe on channel list and click the lock icon to disable some channels.";
-
-"mock_location_service_not_running" = "Location service is not running, mock data is not sending.";
-"mock_confirm_disable" = "Are you sure to finish mocking?";
-
-"power_saving" = "Power Saving";
