@@ -448,13 +448,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         mateListener[channel.id!]![key!] = callback
 
-        return acc
+        return key!
     }
 
     func removeMateListener(_ channel: Channel, _ key: Int?) {
         if let k = key {
-            if var listeners = mateListener[channel.id!] {
-                listeners.removeValue(forKey: k)
+            if mateListener[channel.id!] != nil {
+                mateListener[channel.id!]!.removeValue(forKey: k)
             }
         }
     }
@@ -651,13 +651,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         enchantmentListener[channel.id!]![key!] = callback
 
-        return acc
+        return key!
     }
 
     func removeEnchantmentListener(_ channel: Channel, _ key: Int?) {
         if let k = key {
-            if var listeners = enchantmentListener[channel.id!] {
-                listeners.removeValue(forKey: k)
+            if enchantmentListener[channel.id!] != nil {
+                enchantmentListener[channel.id!]!.removeValue(forKey: k)
             }
         }
     }
@@ -832,13 +832,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         markerListener[channel.id!]![key!] = callback
 
-        return acc
+        return key!
     }
 
     func removeMarkerListener(_ channel: Channel, _ key: Int?) {
         if let k = key {
-            if var listeners = markerListener[channel.id!] {
-                listeners.removeValue(forKey: k)
+            if markerListener[channel.id!] != nil {
+                markerListener[channel.id!]!.removeValue(forKey: k)
             }
         }
     }
@@ -877,15 +877,16 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         }
 
+        print("lalala add listener \(messageListener[channel.id!]!)")
         messageListener[channel.id!]![key!] = callback
 
-        return acc
+        return key!
     }
 
     func removeMessageListener(_ channel: Channel, _ key: Int?) {
         if let k = key {
-            if var listeners = messageListener[channel.id!] {
-                listeners.removeValue(forKey: k)
+            if messageListener[channel.id!] != nil {
+                messageListener[channel.id!]!.removeValue(forKey: k)
             }
         }
     }
@@ -1218,13 +1219,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         channelChangedListener[channel.id!]![key!] = callback
 
-        return acc
+        return key!
     }
 
     func removeChannelChangedListener(_ channel: Channel, _ key: Int?) {
         if let k = key {
-            if var listeners = channelChangedListener[channel.id!] {
-                listeners.removeValue(forKey: k)
+            if channelChangedListener[channel.id!] != nil {
+                channelChangedListener[channel.id!]!.removeValue(forKey: k)
             }
         }
     }
