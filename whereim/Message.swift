@@ -138,7 +138,7 @@ class Message: Record {
                     let s = String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")
                     return s
                 case "radius_report":
-                    let s = String(format: "message_radius_report".localized, attr![Key.RADIUS] as? String ?? "", attr!["in"] as? String ?? "", attr!["out"] as? String ?? "")
+                    let s = String(format: "message_radius_report".localized, attr!["in"] as? String ?? "", attr!["out"] as? String ?? "", attr![Key.RADIUS] as? String ?? "")
                     return s
                 default:
                     return type!+": "+message!

@@ -41,13 +41,13 @@
 "message_enchantment_in" = "Entered enchantment %1$@.";
 "message_enchantment_out" = "Left enchantment %1$@.";
 "message_marker_create" = "Marker %1$@ is created.";
-"message_radius_report" = "In: %1$@\nOut: %2$@  (%3$@ m)";
+"message_radius_report" = "In/Out: %1$@ / %2$@ (%3$@ m)";
 "apn_text" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Enchantment %3$@ is created.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Emerged in enchantment %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Entered enchantment %3$@.";
 "apn_enchantment_out" = "%1$@\n%2$@: Left enchantment %3$@.";
 "apn_marker_create" = "%1$@\n%2$@: Marker %3$@ is created.";
-"apn_radius_report" = "%1$@\nIn: %2$@\nOut: %3$@  (%4$@ m)";
+"apn_radius_report" = "%1$@\nIn/Out: %2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "Limit of number of active channels (%1$@) is reached";
 "message_limit_enabled_channel" = "Limit of number of enabled channels (%1$@) is reached, swipe on channel list and click the lock icon to disable some channels.";
