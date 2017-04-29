@@ -990,6 +990,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         notifyChannelChangedListeners(channel.id!)
         notifyChannelListChangedListeners()
+        updateBadge()
     }
 
     func set(channel_id: String, unread: Bool) {
