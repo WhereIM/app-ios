@@ -7,6 +7,7 @@
 "active_client" = "Client not active";
 "active_client_message" = "This client is not active, take over from your other client?";
 "power_saving" = "Power Saving";
+"error" = "Error";
 "retry" = "Retry";
 "invitation" = "Invitation: %1$@";
 "object_create_hint" = "Long press on map to create";

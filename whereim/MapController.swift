@@ -16,6 +16,9 @@ protocol MapControllerInterface {
     func viewWillDisappear(_ viewContrller: UIViewController)
     func didReceiveMemoryWarning()
     func channelChanged()
+    func getMapCenter() -> CLLocationCoordinate2D
+    func updateSearchResults()
+    func moveToSearchResult(at: Int)
     func moveTo(mate: Mate)
     func moveTo(marker: Marker?)
     func moveTo(enchantment: Enchantment?)
@@ -150,6 +153,20 @@ class MapController: UIViewController, ChannelChangedListener {
 
     func channelChanged() {
         mapControllerImpl?.channelChanged()
+    }
+
+    func getMapCenter() -> CLLocationCoordinate2D {
+        return mapControllerImpl!.getMapCenter()
+    }
+
+    var searchResults = [SearchResult]()
+    func setSearchResults(_ results: [SearchResult]) {
+        searchResults = results
+        mapControllerImpl?.updateSearchResults()
+    }
+
+    func moveToSearchResult(at: Int) {
+        mapControllerImpl?.moveToSearchResult(at: at)
     }
 
     func moveTo(mate: Mate) {

@@ -6,6 +6,7 @@
 "active_client" = "此裝置不是主要裝置";
 "active_client_message" = "取代您的其他裝置成為主要裝置？";
 "power_saving" = "省電模式";
+"error" = "錯誤";
 "retry" = "再試一次";
 "invitation" = "邀請：%1$@";
 "object_create_hint" = "在地圖上長按即可建立";

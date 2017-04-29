@@ -39,6 +39,10 @@ protocol Callback {
     func onCallback()
 }
 
+protocol ApiKeyCallback {
+    func apiKey(_ key: String)
+}
+
 protocol MQTTCallback {
     func mqttOnConnected()
     func mqttOnDisconnected()
@@ -267,6 +271,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             if let match = channelLocationPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
                 let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
                 mqttChannelLocationHandler(channel_id, data)
+                return
             }
             let channelDataPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/data/([^/]+)/get$", options: [])
             if let match = channelDataPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
@@ -284,6 +289,12 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 default:
                     break
                 }
+                return
+            }
+            let systemKeyPattern = try NSRegularExpression(pattern: "^system/key/get$", options: [])
+            if let _ = systemKeyPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
+                mqttSystemKeyHandler(data)
+                return
             }
         } catch {
             print("error in mqttOnMessage")
@@ -1027,9 +1038,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         let mate_id = data[Key.MATE] as! String
         let mate = getChannelMate(channel_id, mate_id)
         mate.channel_id = channel_id
-        mate.latitude = data[Key.LATITUDE] as! Double? ?? mate.latitude
-        mate.longitude = data[Key.LONGITUDE] as! Double? ?? mate.longitude
-        mate.accuracy = data[Key.ACCURACY] as! Double? ?? mate.accuracy
+        if let lat = data[Key.LATITUDE] {
+            mate.latitude = lat as? Double
+        }
+        if let lng = data[Key.LONGITUDE] {
+            mate.longitude = lng as? Double
+        }
+        mate.accuracy = data[Key.ACCURACY] as? Double ?? mate.accuracy
 
         DispatchQueue.main.async {
             if let receivers = self.mapDataReceiver[channel_id] {
@@ -1371,6 +1386,42 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     func getTS(_ channel_id: String) -> UInt64 {
         return UInt64(UserDefaults.standard.object(forKey: "\(Key.TS)/\(channel_id)") as? NSNumber ?? 0)
+    }
+
+    var apiKeyCallback = [String:[ApiKeyCallback]]()
+
+    func mqttSystemKeyHandler(_ data: [String:Any]) {
+        guard let api = data[Key.API] as? String else {
+            return
+        }
+        guard let key = data[Key.KEY] as? String else {
+            return
+        }
+        UserDefaults.standard.set(key, forKey: Key.API_PREFIX+api)
+        DispatchQueue.main.async {
+            if self.apiKeyCallback[api] != nil {
+                while self.apiKeyCallback[api]!.count > 0 {
+                    let callback = self.apiKeyCallback[api]!.remove(at: 0)
+                    callback.apiKey(key)
+                }
+            }
+        }
+    }
+
+    func getKey(forApi: String, callback: ApiKeyCallback) {
+        if let key = UserDefaults.standard.string(forKey: Key.API_PREFIX+forApi) {
+            callback.apiKey(key)
+            return
+        }
+        if apiKeyCallback[forApi] == nil {
+            apiKeyCallback[forApi] = [ApiKeyCallback]()
+        }
+        apiKeyCallback[forApi]!.append(callback)
+        publish("system/key/get", [Key.API:forApi])
+    }
+
+    func invalidateKey(forApi: String) {
+        UserDefaults.standard.removeObject(forKey: Key.API_PREFIX+forApi)
     }
 
     var isForeground = false

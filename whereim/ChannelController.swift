@@ -6,6 +6,7 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+import CoreLocation
 import UIKit
 
 class ChannelController: UITabBarController, ChannelListChangedListener, ConnectionStatusCallback {
@@ -25,6 +26,26 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
     func setMapCtrl(_ mc: MapController) {
         mapController = mc
+    }
+
+    func getMapCenter() -> CLLocationCoordinate2D {
+        if let mc = mapController {
+            return mc.getMapCenter()
+        }
+        return CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    }
+
+    func setSearchResults(_ results: [SearchResult]) {
+        if let mc = mapController {
+            mc.setSearchResults(results)
+        }
+    }
+
+    func moveToSearchResult(at: Int) {
+        if let mc = mapController {
+            mc.moveToSearchResult(at: at)
+            self.selectedIndex = 0
+        }
     }
 
     func moveTo(mate: Mate) {

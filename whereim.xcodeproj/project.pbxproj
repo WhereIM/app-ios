@@ -19,6 +19,8 @@
 		5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */; };
 		5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E3401E5D632900A7EB0E /* MarkerController.swift */; };
 		584068A01EABE0E600E4964D /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840689F1EABE0E600E4964D /* SettingsController.swift */; };
+		584068A21EB4672300E4964D /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584068A11EB4672300E4964D /* SearchController.swift */; };
+		584068A41EB4D04900E4964D /* GoogleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584068A31EB4D04900E4964D /* GoogleSearchController.swift */; };
 		58483BC3F34B2978F0A0DED9 /* Pods_whereimUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */; };
 		5849B1441EAA82AC0058B560 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */; };
 		58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB41E51ADF2002FAD41 /* AppDelegate.swift */; };
@@ -90,6 +92,8 @@
 		5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnchantmentController.swift; sourceTree = "<group>"; };
 		5831E3401E5D632900A7EB0E /* MarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerController.swift; sourceTree = "<group>"; };
 		5840689F1EABE0E600E4964D /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		584068A11EB4672300E4964D /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		584068A31EB4D04900E4964D /* GoogleSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSearchController.swift; sourceTree = "<group>"; };
 		5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		58568FB11E51ADF2002FAD41 /* whereim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = whereim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FB41E51ADF2002FAD41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -229,6 +233,8 @@
 				58E347A81E5A23F20025211B /* ChannelController.swift */,
 				58E347A41E5A183D0025211B /* MapController.swift */,
 				580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */,
+				584068A11EB4672300E4964D /* SearchController.swift */,
+				584068A31EB4D04900E4964D /* GoogleSearchController.swift */,
 				58230E101E6EEB7400AF4087 /* MessengerController.swift */,
 				5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */,
 				5831E3401E5D632900A7EB0E /* MarkerController.swift */,
@@ -598,6 +604,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */,
+				584068A21EB4672300E4964D /* SearchController.swift in Sources */,
 				58568FBD1E51ADF2002FAD41 /* whereim.xcdatamodeld in Sources */,
 				58202AC41E74854A00BC7FCD /* Log.swift in Sources */,
 				58230E111E6EEB7400AF4087 /* MessengerController.swift in Sources */,
@@ -613,6 +620,7 @@
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
 				584068A01EABE0E600E4964D /* SettingsController.swift in Sources */,
 				58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */,
+				584068A41EB4D04900E4964D /* GoogleSearchController.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,

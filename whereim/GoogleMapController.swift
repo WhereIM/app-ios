@@ -10,11 +10,12 @@ import UIKit
 import GoogleMaps
 
 class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate, CLLocationManagerDelegate, MapDataReceiver {
-    unowned var mapController: MapController
+    unowned let mapController: MapController
     var locationManager = CLLocationManager()
     var didFindMyLocation = false
     var selfMate: Mate?
     var mapView: GMSMapView?
+    var mapCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 
     required init(_ mapController: MapController) {
         self.mapController = mapController
@@ -37,7 +38,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func viewDidLoad(_ viewContrller: UIViewController) {
-        let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 15)
+        let camera = GMSCameraPosition.camera(withLatitude: mapCenter.latitude, longitude: mapCenter.longitude, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.settings.compassButton = true
 
@@ -70,9 +71,14 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         mapController.startEditing(coordinate)
     }
 
+    func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
+        mapCenter = position.target
+    }
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if !didFindMyLocation {
             let myLocation = change?[NSKeyValueChangeKey.newKey] as! CLLocation
+            mapCenter = myLocation.coordinate
             mapView!.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 15.0)
             mapView!.settings.myLocationButton = true
 
@@ -174,6 +180,38 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
     func channelChanged() {
         updateSelfMate()
+    }
+
+    func getMapCenter() -> CLLocationCoordinate2D {
+        return mapCenter
+    }
+
+    var searchResultMarker = [GMSMarker]()
+    func updateSearchResults() {
+        while searchResultMarker.count > 0 {
+            let m = searchResultMarker.remove(at: 0)
+            m.map = nil
+        }
+        for r in mapController.searchResults {
+            let m = GMSMarker()
+            m.position = r.location!
+            m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+            m.title = r.name!
+            m.icon = UIImage(named: "search_marker")
+            m.map = self.mapView
+
+            searchResultMarker.append(m)
+        }
+    }
+
+    func moveToSearchResult(at: Int) {
+        if at < mapController.searchResults.count {
+            let r = mapController.searchResults[at]
+            mapView!.animate(toLocation: r.location!)
+        }
+        if at < searchResultMarker.count {
+            mapView!.selectedMarker = searchResultMarker[at]
+        }
     }
 
     private var focusEnchantment: Enchantment?

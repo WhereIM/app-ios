@@ -146,7 +146,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3h2-Ct-Kkj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2788" y="127"/>
+            <point key="canvasLocation" x="2788" y="-573"/>
         </scene>
         <!--💬-->
         <scene sceneID="G8x-S5-Ccu">
@@ -330,12 +330,31 @@
             </objects>
             <point key="canvasLocation" x="1848.5" y="127.5"/>
         </scene>
+        <!--🔍-->
+        <scene sceneID="Sld-yy-wKw">
+            <objects>
+                <viewController id="ILE-kn-yyl" customClass="SearchController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="knM-CX-mwd"/>
+                        <viewControllerLayoutGuide type="bottom" id="wX6-yj-cCD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YPF-p6-jSg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="🔍" id="ru9-jW-k3s"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p5p-c3-tRN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2788" y="127"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="cu2-2X-xmp">
             <objects>
                 <navigationController storyboardIdentifier="startup" automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -360,9 +379,10 @@
                     </tabBar>
                     <connections>
                         <segue destination="5NF-Ic-YUF" kind="relationship" relationship="viewControllers" id="M9A-qP-BaT"/>
-                        <segue destination="ESz-J6-Lwb" kind="relationship" relationship="viewControllers" id="VYL-pX-V0g"/>
-                        <segue destination="Q1c-bl-8rd" kind="relationship" relationship="viewControllers" id="F4E-We-h2F"/>
-                        <segue destination="VMu-aa-jJO" kind="relationship" relationship="viewControllers" id="JQR-tu-YUl"/>
+                        <segue destination="ILE-kn-yyl" kind="relationship" relationship="viewControllers" id="Tgs-If-ZkR"/>
+                        <segue destination="ESz-J6-Lwb" kind="relationship" relationship="viewControllers" id="RMZ-PI-iw6"/>
+                        <segue destination="Q1c-bl-8rd" kind="relationship" relationship="viewControllers" id="bsf-FG-G4y"/>
+                        <segue destination="VMu-aa-jJO" kind="relationship" relationship="viewControllers" id="5MZ-el-pCP"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WMW-sf-DCS" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -10,6 +10,8 @@ class Key {
     static let ACCURACY = "acc"
     static let ACTIVE = "active"
     static let ALTITUDE = "alt"
+    static let API = "api"
+    static let API_PREFIX = "api_"
     static let ATTR = "attr"
 
     static let BEARING = "bear"
@@ -27,7 +29,11 @@ class Key {
 
     static let FACEBOOK = "facebook"
 
+    static let GOOGLE_SEARCH = "google_search"
+
     static let ID = "id"
+
+    static let KEY = "key"
 
     static let LANG = "lang"
     static let LATITUDE = "lat"
