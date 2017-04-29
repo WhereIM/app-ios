@@ -45,6 +45,7 @@ class MessengerController: JSQMessagesViewController, Callback {
         senderDisplayName = service!.getChannelMate(channel!.id!, senderId).getDisplayName()
 
         messageList = service!.getMessages(channel!.id!)
+        service!.set(channel_id: channel!.id!, unread: false)
 
         self.collectionView?.reloadData()
         self.collectionView?.layoutIfNeeded()
@@ -55,6 +56,7 @@ class MessengerController: JSQMessagesViewController, Callback {
     func onCallback() {
         messageList = service!.getMessages(channel!.id!)
         self.finishReceivingMessage(animated: true)
+        service!.set(channel_id: channel!.id!, unread: false)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -72,6 +74,7 @@ class MessengerController: JSQMessagesViewController, Callback {
     override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
             sv.removeMessageListener(channel!, cbkey)
+            cbkey = nil
         }
 
         super.viewWillDisappear(animated)

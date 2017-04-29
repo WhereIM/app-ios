@@ -480,6 +480,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         }
 
+        set(channel_id: channel_id, unread: true)
+
         notifyChannelMessageListeners(channel_id)
     }
 
@@ -877,7 +879,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         }
 
-        print("lalala add listener \(messageListener[channel.id!]!)")
         messageListener[channel.id!]![key!] = callback
 
         return key!
@@ -969,6 +970,31 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         notifyChannelChangedListeners(channel.id!)
         notifyChannelListChangedListeners()
+    }
+
+    func set(channel_id: String, unread: Bool) {
+        if let channel = channelMap[channel_id] {
+            channel.unread = unread
+            appDelegate.dbConn!.inDatabase { db in
+                do {
+                    try channel.save(db)
+                } catch {
+                    print("Error saving channel \(error)")
+                }
+            }
+            notifyChannelListChangedListeners()
+            updateBadge()
+        }
+    }
+
+    func updateBadge() {
+        var unread = 0
+        for channel in channelList {
+            if channel.unread {
+                unread += 1
+            }
+        }
+        UIApplication.shared.applicationIconBadgeNumber = unread
     }
 
     func syncChannelData(_ channel_id: String) {

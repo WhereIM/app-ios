@@ -85,14 +85,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
         if(application.applicationState == .active) {
-
             //app is currently active, can update badges count here
 
         } else if(application.applicationState == .background){
-
             //app is in background, if content-available key of your notification is set to 1, poll to your backend to retrieve data and update your interface here
-
+            if let channel_id = userInfo["channel"] as? String {
+                service!.set(channel_id: channel_id, unread: true)
+            }
         } else if(application.applicationState == .inactive){
+            //app is transitioning from background to foreground (user taps notification), do what you need when user taps here
             let sb = UIStoryboard(name: "Main", bundle: nil)
             let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
 

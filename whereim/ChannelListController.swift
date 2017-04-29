@@ -84,6 +84,13 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         }
 
         let channel = getChannel(indexPath.row)
+
+        if channel.unread {
+            cell.backgroundColor = UIColor(red:0.93, green:0.95, blue:0.98, alpha:1.0)
+        } else {
+            cell.backgroundColor = UIColor.clear
+        }
+
         if channel.user_channel_name != nil && !channel.user_channel_name!.isEmpty {
             cell.title.text = channel.user_channel_name
             cell.subtitle.text = channel.channel_name

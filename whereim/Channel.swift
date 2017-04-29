@@ -20,6 +20,7 @@ class Channel: Record {
     static let COL_ENABLE = "enabled"
     static let COL_ENABLE_RADIUS = "enable_radius"
     static let COL_RADIUS = "radius"
+    static let COL_UNREAD = "unread"
 
     var id: String?
     var channel_name: String?
@@ -30,6 +31,7 @@ class Channel: Record {
     var enable_radius: Bool?
     var radius: Int?
     var deleted = false
+    var unread = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
@@ -50,6 +52,13 @@ class Channel: Record {
 
             version = 1
         }
+        if version < 3 {
+            var sql: String
+            sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COL_UNREAD + " BOOLEAN NOT NULL DEFAULT 0"
+            try db.execute(sql)
+
+            version = 3
+        }
     }
 
     override class var databaseTableName: String {
@@ -65,6 +74,7 @@ class Channel: Record {
         active = row.value(named: Channel.COL_ACTIVE)
         enable_radius = row.value(named: Channel.COL_ENABLE_RADIUS)
         radius = row.value(named: Channel.COL_RADIUS)
+        unread = row.value(named: Channel.COL_UNREAD)
         super.init(row: row)
     }
 
@@ -81,7 +91,8 @@ class Channel: Record {
             Channel.COL_ACTIVE: active,
             Channel.COL_ENABLE: enabled,
             Channel.COL_ENABLE_RADIUS: enable_radius,
-            Channel.COL_RADIUS: radius
+            Channel.COL_RADIUS: radius,
+            Channel.COL_UNREAD: unread
         ]
     }
 
