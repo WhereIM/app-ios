@@ -402,7 +402,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
         requestActiveDevice = false
         if let vc = currentViewController {
-            _ = DialogRequestActiveDevice(vc)
+            DispatchQueue.main.async {
+                _ = DialogRequestActiveDevice(vc)
+            }
         }
     }
 
