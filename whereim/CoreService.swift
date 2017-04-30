@@ -1045,7 +1045,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         if let lng = data[Key.LONGITUDE] {
             mate.longitude = lng as? Double
         }
-        mate.accuracy = data[Key.ACCURACY] as? Double ?? mate.accuracy
+        if let acc = data[Key.ACCURACY] {
+            mate.accuracy = data[Key.ACCURACY] as? Double
+        }
 
         DispatchQueue.main.async {
             if let receivers = self.mapDataReceiver[channel_id] {
@@ -1365,6 +1367,14 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         if mapDataReceiver[channel.id!] != nil {
             mapDataReceiver[channel.id!]!.removeValue(forKey: key)
         }
+    }
+
+    func forgeLocation(channel: Channel, location: CLLocationCoordinate2D) {
+        var payload = [Key.CHANNEL:channel.id!, Key.LATITUDE: location.latitude, Key.LONGITUDE: location.longitude] as [String:Any]
+        if channel.active != false {
+            payload[Key.ACTIVE] = false
+        }
+        publish("client/\(clientId!)/channel/put", payload)
     }
 
     func setTS(_ ts: UInt64) {

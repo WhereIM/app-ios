@@ -519,8 +519,14 @@ class DialogStartEditing {
             _ = DialogCreateMarker(mapController)
         }
 
+        let action_forge = UIAlertAction(title: "forge_location".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            let service = CoreService.bind()
+            service.forgeLocation(channel: mapController.channel!, location: mapController.editingCoordinate)
+        }
+
         alert.addAction(action_enchantment)
         alert.addAction(action_marker)
+        alert.addAction(action_forge)
         alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
         mapController.present(alert, animated: true, completion:nil)
     }
