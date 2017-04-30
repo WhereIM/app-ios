@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import GoogleMobileAds
 import UIKit
 
 protocol SearchControllerInterface {
@@ -33,6 +34,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
     let listView = UITableView()
     let contentArea = UIView()
     let loading = UIActivityIndicatorView()
+    let adView = GADNativeExpressAdView()
+    let adViewRequest = GADRequest()
 
     var searchControllerImpl: SearchControllerInterface?
 
@@ -72,8 +75,10 @@ class SearchController: UIViewController, UITextFieldDelegate {
     func search(_ keyword: String) {
         if keyword.isEmpty {
             setSearchResults([])
+            adView.isHidden = false
             return
         }
+        adView.isHidden = true
         listView.isHidden = true
         loading.isHidden = false
         searchControllerImpl!.search(keyword)
@@ -166,12 +171,65 @@ class SearchController: UIViewController, UITextFieldDelegate {
         loading.centerYAnchor.constraint(equalTo: contentArea.centerYAnchor).isActive = true
         loading.isHidden = true
 
+        adView.translatesAutoresizingMaskIntoConstraints = false
+        adView.rootViewController = self
+        self.view.addSubview(adView)
+        adView.centerXAnchor.constraint(equalTo: contentArea.centerXAnchor).isActive = true
+        adView.centerYAnchor.constraint(equalTo: contentArea.centerYAnchor).isActive = true
+        adWidth = adView.widthAnchor.constraint(equalTo: contentArea.widthAnchor, multiplier: 1)
+        adHeight = adView.heightAnchor.constraint(equalTo: contentArea.heightAnchor, multiplier: 1)
+        adMaxWidth = adView.widthAnchor.constraint(equalToConstant: 1200)
+        adMaxHeight = adView.heightAnchor.constraint(equalToConstant: 1200)
+
         self.view.sendSubview(toBack: contentArea)
 
         listView.dataSource = searchControllerImpl!.getSearchResultListDataSource()
         listView.delegate = searchControllerImpl!.getSearchResultListDelegate()
 
         searchControllerImpl!.viewDidLoad()
+    }
+
+    var adWidth: NSLayoutConstraint?
+    var adHeight: NSLayoutConstraint?
+    var adMaxWidth: NSLayoutConstraint?
+    var adMaxHeight: NSLayoutConstraint?
+    var requestedSize = CGSize(width: -1, height: -1)
+    override func viewDidLayoutSubviews() {
+        let size = contentArea.bounds.size
+        if size.width == requestedSize.width && size.height == requestedSize.height {
+            return
+        }
+        requestedSize = size
+        if size.width > 1200 {
+            adWidth?.isActive = false
+            adMaxWidth?.isActive = true
+        } else {
+            adMaxWidth?.isActive = false
+            adWidth?.isActive = true
+        }
+        if size.height > 1200 {
+            adHeight?.isActive = false
+            adMaxHeight?.isActive = true
+        } else {
+            adMaxHeight?.isActive = false
+            adHeight?.isActive = true
+        }
+        if size.width >= 280 && size.height >= 250 {
+            adView.adUnitID = "ca-app-pub-5449795846702141/8341425315"
+            adView.load(adViewRequest)
+            return
+        }
+        if size.width >= 280 && size.height >= 132 {
+            adView.adUnitID = "ca-app-pub-5449795846702141/5174306118"
+            adView.load(adViewRequest)
+            return
+        }
+        if size.width >= 280 && size.height >= 80 {
+            adView.adUnitID = "ca-app-pub-5449795846702141/3557972113"
+            adView.load(adViewRequest)
+            return
+        }
+        adView.isHidden = true
     }
 
     func search_clicked(sender: Any) {
