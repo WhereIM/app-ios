@@ -360,11 +360,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     var pendingPushToken: String?
     func setPushToken(_ token: String) {
-        let oldToken = UserDefaults.standard.string(forKey: "apns_token")
-        if oldToken != token {
+//        let oldToken = UserDefaults.standard.string(forKey: "apns_token")
+//        if oldToken != token {
             pendingPushToken = token
             sendPushToken()
-        }
+//        }
     }
 
     func sendPushToken() {
