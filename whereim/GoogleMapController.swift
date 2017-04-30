@@ -68,7 +68,8 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-        mapController.startEditing(coordinate)
+        let p = mapView.projection.point(for: coordinate)
+        mapController.startEditing(coordinate, mapView, p)
     }
 
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {

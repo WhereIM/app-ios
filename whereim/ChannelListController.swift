@@ -184,6 +184,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     var service: CoreService?
     var channelListChangedCbkey: Int?
     var connectionStatusChangedCbKey: Int?
+    let menu = UIButton()
 
     @IBOutlet weak var channelListView: UITableView!
     @IBOutlet weak var fab: UIButton!
@@ -208,7 +209,6 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
             title.addGestureRecognizer(tapGesture)
         }
 
-        let menu = UIButton()
         menu.setTitle("⋮", for: .normal)
         menu.setTitleColor(.black, for: .normal)
         menu.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)
@@ -256,7 +256,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     func open_menu(sender: Any) {
-        _ = DialogMenu(self)
+        _ = DialogMenu(self, menu)
     }
 
     func create_channel(sender: UIButton) {

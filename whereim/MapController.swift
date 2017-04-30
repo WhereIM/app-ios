@@ -224,14 +224,14 @@ class MapController: UIViewController, ChannelChangedListener {
     var editingEnchantmentRadiusIndex = Config.DEFAULT_ENCHANTMENT_RADIUS_INDEX
     var editingEnchantment = Enchantment()
     var editingMarker = Marker()
-    func startEditing(_ coordinate: CLLocationCoordinate2D) {
+    func startEditing(_ coordinate: CLLocationCoordinate2D, _ mapView: UIView, _ touchPosition: CGPoint) {
         editingCoordinate = coordinate
         if editingType != nil {
             mapControllerImpl!.refreshEditing()
             return
         }
 
-        _ = DialogStartEditing(self)
+        _ = DialogStartEditing(self, mapView, touchPosition)
     }
 
     func refreshEditing(_ type: EditingType?) {

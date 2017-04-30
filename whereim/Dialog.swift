@@ -11,7 +11,7 @@ import UIKit
 
 
 class DialogMenu {
-    init(_ viewController: UIViewController) {
+    init(_ viewController: UIViewController, _ sourceView: UIView) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let action_settings = UIAlertAction(title: "action_settings".localized, style: .default) { (alert: UIAlertAction!) -> Void in
@@ -29,6 +29,7 @@ class DialogMenu {
         alert.addAction(action_settings)
         alert.addAction(action_about)
         alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        alert.popoverPresentationController?.sourceView = sourceView
         viewController.present(alert, animated: true, completion:nil)
     }
 }
@@ -509,7 +510,7 @@ class DialogEditRadius {
 }
 
 class DialogStartEditing {
-    init(_ mapController: MapController) {
+    init(_ mapController: MapController, _ mapView: UIView, _ touchPosition: CGPoint) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let action_enchantment = UIAlertAction(title: "create_enchantment".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             _ = DialogCreateEnchantment(mapController)
@@ -528,6 +529,8 @@ class DialogStartEditing {
         alert.addAction(action_marker)
         alert.addAction(action_forge)
         alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        alert.popoverPresentationController?.sourceView = mapView
+        alert.popoverPresentationController?.sourceRect = CGRect(x: touchPosition.x, y: touchPosition.y, width: 0, height: 0)
         mapController.present(alert, animated: true, completion:nil)
     }
 }
