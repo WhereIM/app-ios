@@ -1,5 +1,5 @@
-"lang" = "en";
 "app_name" = "Where.IM";
+"lang" = "en";
 "google_lang" = "en";
 "action_invite" = "Invite";
 "action_settings" = "Settings";
@@ -28,6 +28,7 @@
 "delete" = "Delete";
 "create_enchantment" = "New Enchantment ⭕";
 "create_marker" = "New Marker 📍";
+"forge_location" = "Forge Location 😈";
 "radius_m" = "%1$d m";
 "self" = "Self";
 "mate" = "Mate";
@@ -50,5 +51,5 @@
 "apn_enchantment_out" = "%1$@\n%2$@: Left enchantment %3$@.";
 "apn_marker_create" = "%1$@\n%2$@: Marker %3$@ is created.";
 "apn_radius_report" = "%1$@\nIn/Out: %2$@ / %3$@ (%4$@ m)";
-"message_limit_active_channel" = "Limit of number of active channels (%1$@) is reached";
+"message_limit_active_channel" = "Limit of number of active channels (%1$@) is reached.";
 "message_limit_enabled_channel" = "Limit of number of enabled channels (%1$@) is reached, swipe on channel list and click the lock icon to disable some channels.";
