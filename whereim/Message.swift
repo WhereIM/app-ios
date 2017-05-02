@@ -14,7 +14,6 @@ class BundledMessages {
     let message: [Message]
     let loadMoreBefore: Int64
     let loadMoreAfter: Int64
-    let firstId: Int64
     let lastId: Int64
     let loadMoreChannelMessage: Bool
     let loadMoreUserMessage: Bool
@@ -23,7 +22,6 @@ class BundledMessages {
         message: [Message],
         loadMoreBefore: Int64,
         loadMoreAfter: Int64,
-        firstId: Int64,
         lastId: Int64,
         loadMoreChannelMessage: Bool,
         loadMoreUserMessage: Bool) {
@@ -31,7 +29,6 @@ class BundledMessages {
         self.message = message
         self.loadMoreBefore = loadMoreBefore
         self.loadMoreAfter = loadMoreAfter
-        self.firstId = firstId
         self.lastId = lastId
         self.loadMoreChannelMessage = loadMoreChannelMessage
         self.loadMoreUserMessage = loadMoreUserMessage
@@ -39,7 +36,6 @@ class BundledMessages {
         print("count", message.count)
         print("loadMoreBefore", loadMoreBefore)
         print("loadMoreAfter", loadMoreAfter)
-        print("firstId", firstId)
         print("lastId", lastId)
         print("loadMoreChannelMessage", loadMoreChannelMessage)
         print("loadMoreUserMessage", loadMoreUserMessage)
@@ -193,7 +189,6 @@ class Message: Record {
     }
 
     static func getMessages(_ channel_id: String) -> BundledMessages {
-        var message: [Message]?
         var count = 0
         var loadMoreBefore: Int64 = 0
         var loadMoreAfter: Int64 = 0
@@ -205,15 +200,16 @@ class Message: Record {
         var channelDataId: Int64 = 0
         var userDataSn: Int64 = 0
         var userDataId: Int64 = 0
-        var firstId: Int64 = 0
         var lastId: Int64 = 0
 
+        var messages = [Message]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                message = try Message.fetchAll(db, "SELECT "+COL_ID+","+COL_SN+","+COL_PUBLIC+","+COL_CHANNEL+","+COL_MATE+","+COL_TYPE+","+COL_MESSAGE+","+COL_TIME+" FROM "+TABLE_NAME+" WHERE "+COL_CHANNEL+"=? OR "+COL_CHANNEL+" IS NULL ORDER BY "+COL_TIME+" ASC,"+COL_ID+" ASC", arguments: [channel_id])
+                let cursor = try Message.fetchCursor(db, "SELECT "+COL_ID+","+COL_SN+","+COL_PUBLIC+","+COL_CHANNEL+","+COL_MATE+","+COL_TYPE+","+COL_MESSAGE+","+COL_TIME+" FROM "+TABLE_NAME+" WHERE "+COL_CHANNEL+"=? OR "+COL_CHANNEL+" IS NULL ORDER BY "+COL_ID+" DESC", arguments: [channel_id])
 
-                for m in message!.reversed() {
+                while let m = try cursor.next() {
+                    messages.insert(m, at: 0)
                     count += 1;
                     if m.channel_id == nil {
                         continue;
@@ -250,16 +246,11 @@ class Message: Record {
                         }
                     }
                 }
-                firstId = message?.first?.id! ?? 0
-                lastId = message?.last?.id! ?? 0
+                lastId = messages.last?.id! ?? 0
             }
         } catch {
             print("Error reading message \(error)")
         }
-        var avail = message
-        if count > 0 {
-            avail = Array(message![message!.count-count...message!.count-1])
-        }
-        return BundledMessages(message: avail!, loadMoreBefore: loadMoreBefore, loadMoreAfter: loadMoreAfter, firstId: firstId, lastId: lastId, loadMoreChannelMessage: loadMoreChannelMessage, loadMoreUserMessage: loadMoreUserMessage)
+        return BundledMessages(message: messages, loadMoreBefore: loadMoreBefore, loadMoreAfter: loadMoreAfter, lastId: lastId, loadMoreChannelMessage: loadMoreChannelMessage, loadMoreUserMessage: loadMoreUserMessage)
     }
 }
