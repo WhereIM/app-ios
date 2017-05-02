@@ -109,9 +109,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     if let t = userInfo["type"] as? String {
                         switch t {
                         case "text":
-                            vc.defaultTab = 1
+                            vc.defaultTab = ChannelController.TAB_MESSAGE
                         default:
-                            vc.defaultTab = 0
+                            vc.defaultTab = ChannelController.TAB_MAP
                         }
                     }
                     startupVC.topViewController?.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)

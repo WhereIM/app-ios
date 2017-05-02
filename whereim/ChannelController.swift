@@ -10,6 +10,12 @@ import CoreLocation
 import UIKit
 
 class ChannelController: UITabBarController, ChannelListChangedListener, ConnectionStatusCallback {
+    static let TAB_MAP = 0
+    static let TAB_SEARCH = 1
+    static let TAB_MESSAGE = 2
+    static let TAB_MARKER = 3
+    static let TAB_ENCHANTMENT = 4
+
     var service: CoreService?
     var channel: Channel?
     var defaultTab = 0
