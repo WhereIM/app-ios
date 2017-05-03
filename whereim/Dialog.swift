@@ -6,6 +6,7 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+import CoreLocation
 import SDCAlertView
 import UIKit
 
@@ -512,6 +513,12 @@ class DialogEditRadius {
 class DialogStartEditing {
     init(_ mapController: MapController, _ mapView: UIView, _ touchPosition: CGPoint) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let action_share = UIAlertAction(title: "share_location".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            let location = mapController.editingCoordinate
+            _ = DialogShareLocation(mapController, location, mapView, touchPosition)
+        }
+
         let action_enchantment = UIAlertAction(title: "create_enchantment".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             _ = DialogCreateEnchantment(mapController)
         }
@@ -525,6 +532,7 @@ class DialogStartEditing {
             service.forgeLocation(channel: mapController.channel!, location: mapController.editingCoordinate)
         }
 
+        alert.addAction(action_share)
         alert.addAction(action_enchantment)
         alert.addAction(action_marker)
         alert.addAction(action_forge)
@@ -532,6 +540,67 @@ class DialogStartEditing {
         alert.popoverPresentationController?.sourceView = mapView
         alert.popoverPresentationController?.sourceRect = CGRect(x: touchPosition.x, y: touchPosition.y, width: 0, height: 0)
         mapController.present(alert, animated: true, completion:nil)
+    }
+}
+
+class DialogShareLocation {
+    let layout = UICompactStackView()
+    let name = UICompactStackView()
+    let name_label = UILabel()
+    let name_edit = UITextField()
+
+    init(_ viewController: UIViewController, _ location: CLLocationCoordinate2D, _ view: UIView, _ touchPosition: CGPoint) {
+        let alert = AlertController(title: "share_location".localized, message: nil, preferredStyle: .alert)
+        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
+            var surl = "here/\(location.latitude)/\(location.longitude)"
+            var name = self.name_edit.text
+            if name != nil && !name!.trim().isEmpty {
+                name = name!.trim()
+                surl = surl + "/" + name!.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+            }
+            if let url = NSURL(string: String(format: Config.WHERE_IM_URL, surl)) {
+                var objectsToShare = [url] as [Any]
+                if name != nil {
+                    objectsToShare.insert(name!, at: 0)
+                }
+                let vc = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                vc.popoverPresentationController?.sourceView = view
+                vc.popoverPresentationController?.sourceRect = CGRect(x: touchPosition.x, y: touchPosition.y, width: 0, height: 0)
+                viewController.present(vc, animated: true, completion: nil)
+            }
+
+        }
+        alert.add(action)
+
+        name.translatesAutoresizingMaskIntoConstraints = false
+        name.axis = .horizontal
+        name.alignment = .center
+        name.distribution = .fill
+        name.spacing = 5
+
+        name_label.translatesAutoresizingMaskIntoConstraints = false
+        name_label.adjustsFontSizeToFitWidth = false
+        name_label.text = "name".localized
+        name.addArrangedSubview(name_label)
+
+        name_edit.translatesAutoresizingMaskIntoConstraints = false
+        name_edit.backgroundColor = .white
+        name_edit.layer.borderColor = UIColor.gray.cgColor
+        name_edit.layer.borderWidth = 1
+        name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        name.addArrangedSubview(name_edit)
+
+        name.requestLayout()
+
+        alert.contentView.addSubview(name)
+
+        name.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        name.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
+        alert.contentView.bottomAnchor.constraint(equalTo: name.bottomAnchor).isActive = true
+
+        viewController.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -612,7 +681,7 @@ class DialogCreateEnchantment {
         layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 
-        mapController.present(alert, animated: true, completion:nil)
+        mapController.present(alert, animated: true, completion: nil)
     }
 }
 
