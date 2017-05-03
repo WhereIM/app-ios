@@ -54,6 +54,7 @@ class Key {
 
     static let SN = "sn"
     static let SPEED = "spd"
+    static let STALE = "stale"
 
     static let TILE = "tile"
     static let TIME = "time"

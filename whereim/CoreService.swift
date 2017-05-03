@@ -1048,9 +1048,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             mate.longitude = lng as? Double
         }
         if let acc = data[Key.ACCURACY] {
-            mate.accuracy = data[Key.ACCURACY] as? Double
+            mate.accuracy = acc as? Double
         }
-
+        if let _ = data[Key.STALE] {
+            mate.stale = true
+        } else {
+            mate.stale = false
+        }
         DispatchQueue.main.async {
             if let receivers = self.mapDataReceiver[channel_id] {
                 for receiver in receivers {
@@ -1656,7 +1660,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             Key.LONGITUDE: location.coordinate.longitude,
             Key.ACCURACY: location.horizontalAccuracy,
             Key.ALTITUDE: location.altitude,
-            Key.TIME: UInt64(location.timestamp.timeIntervalSince1970*1000),
+//            Key.TIME: location.timestamp.timeIntervalSince1970,
             Key.PROVIDER: "iOS"
         ] as [String: Any]
         if location.course >= 0 {

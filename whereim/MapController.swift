@@ -19,7 +19,7 @@ protocol MapControllerInterface {
     func getMapCenter() -> CLLocationCoordinate2D
     func updateSearchResults()
     func moveToSearchResult(at: Int)
-    func moveTo(mate: Mate)
+    func moveTo(mate: Mate?)
     func moveTo(marker: Marker?)
     func moveTo(enchantment: Enchantment?)
     func refreshEditing()
@@ -169,7 +169,7 @@ class MapController: UIViewController, ChannelChangedListener {
         mapControllerImpl?.moveToSearchResult(at: at)
     }
 
-    func moveTo(mate: Mate) {
+    func moveTo(mate: Mate?) {
         mapControllerImpl?.moveTo(mate: mate)
     }
 

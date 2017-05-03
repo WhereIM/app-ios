@@ -55,12 +55,11 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func moveTo(mate: Mate) {
-        if mate.latitude == nil {
-            return
-        }
         if let mc = mapController {
             mc.moveTo(mate: mate)
-            self.selectedIndex = 0
+            if mate.latitude != nil {
+                self.selectedIndex = 0
+            }
         }
     }
 
