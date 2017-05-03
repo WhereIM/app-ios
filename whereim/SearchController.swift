@@ -80,7 +80,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
         }
         adView.isHidden = true
         listView.isHidden = true
-        loading.isHidden = false
+        loading.startAnimating()
         searchControllerImpl!.search(keyword)
     }
 
@@ -92,7 +92,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
         listView.reloadData()
         btn_search.isHidden = true
         btn_clear.isHidden = false
-        loading.isHidden = true
+        loading.stopAnimating()
         listView.isHidden = false
     }
 
@@ -166,10 +166,11 @@ class SearchController: UIViewController, UITextFieldDelegate {
         loading.translatesAutoresizingMaskIntoConstraints = false
         loading.activityIndicatorViewStyle = .whiteLarge
         loading.color = UIColor.gray
+        loading.hidesWhenStopped = true
         self.view.addSubview(loading)
         loading.centerXAnchor.constraint(equalTo: contentArea.centerXAnchor).isActive = true
         loading.centerYAnchor.constraint(equalTo: contentArea.centerYAnchor).isActive = true
-        loading.isHidden = true
+        loading.stopAnimating()
 
         adView.translatesAutoresizingMaskIntoConstraints = false
         adView.rootViewController = self

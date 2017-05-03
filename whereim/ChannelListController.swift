@@ -218,7 +218,8 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
 
         connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
         connectionStatusIndicator.activityIndicatorViewStyle = .gray
-        connectionStatusIndicator.startAnimating()
+        connectionStatusIndicator.hidesWhenStopped = true
+        connectionStatusIndicator.stopAnimating()
         navigator.addSubview(connectionStatusIndicator)
 
         NSLayoutConstraint.activate([
@@ -300,7 +301,11 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     func onConnectionStatusChanged(_ connected: Bool) {
-        connectionStatusIndicator.isHidden = connected
+        if connected {
+            connectionStatusIndicator.stopAnimating()
+        } else {
+            connectionStatusIndicator.startAnimating()
+        }
     }
 
     override func didReceiveMemoryWarning() {

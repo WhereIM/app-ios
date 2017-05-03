@@ -25,6 +25,7 @@ class UILoadingSwitch: UIFrameView {
     func setView() {
         loading.translatesAutoresizingMaskIntoConstraints = false
         loading.activityIndicatorViewStyle = .gray
+        loading.hidesWhenStopped = true
         addSubview(uiswitch)
         addSubview(loading)
         NSLayoutConstraint.activate([
@@ -40,17 +41,14 @@ class UILoadingSwitch: UIFrameView {
     func setEnabled(_ enable: Bool?) {
         if enable == nil {
             uiswitch.isHidden = true
-            loading.isHidden = false
             loading.startAnimating()
         } else if enable == true {
             loading.stopAnimating()
             uiswitch.isHidden = false
-            loading.isHidden = true
             uiswitch.setOn(true, animated: false)
         } else if enable == false {
             loading.stopAnimating()
             uiswitch.isHidden = false
-            loading.isHidden = true
             uiswitch.setOn(false, animated: false)
         }
     }

@@ -110,7 +110,8 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         navigator.addSubview(layout)
 
         connectionStatusIndicator.activityIndicatorViewStyle = .gray
-        connectionStatusIndicator.startAnimating()
+        connectionStatusIndicator.hidesWhenStopped = true
+        connectionStatusIndicator.stopAnimating()
         navigator.addSubview(connectionStatusIndicator)
 
         shareButton.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +185,11 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func onConnectionStatusChanged(_ connected: Bool) {
-        connectionStatusIndicator.isHidden = connected
+        if connected {
+            connectionStatusIndicator.stopAnimating()
+        } else {
+            connectionStatusIndicator.startAnimating()
+        }
     }
 
     func switchClicked(sender: UISwitch) {
