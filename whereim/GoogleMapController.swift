@@ -67,7 +67,17 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         mapView!.isMyLocationEnabled = false
     }
 
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        mapController.showMarkerActionsPanel(marker.position, marker.title)
+        return false
+    }
+
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        mapController.clearActionsPanel()
+    }
+
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+        mapController.clearActionsPanel()
         let p = mapView.projection.point(for: coordinate)
         mapController.startEditing(coordinate, mapView, p)
     }

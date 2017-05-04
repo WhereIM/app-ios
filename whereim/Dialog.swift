@@ -514,9 +514,14 @@ class DialogStartEditing {
     init(_ mapController: MapController, _ mapView: UIView, _ touchPosition: CGPoint) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
+        let action_openin = UIAlertAction(title: "open_in".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            let location = mapController.editingCoordinate
+            _ = DialogOpenIn(mapController, location, nil, mapView, touchPosition)
+        }
+
         let action_share = UIAlertAction(title: "share_location".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             let location = mapController.editingCoordinate
-            _ = DialogShareLocation(mapController, location, mapView, touchPosition)
+            _ = DialogShareLocation(mapController, location, nil, mapView, touchPosition)
         }
 
         let action_enchantment = UIAlertAction(title: "create_enchantment".localized, style: .default) { (alert: UIAlertAction!) -> Void in
@@ -532,6 +537,7 @@ class DialogStartEditing {
             service.forgeLocation(channel: mapController.channel!, location: mapController.editingCoordinate)
         }
 
+        alert.addAction(action_openin)
         alert.addAction(action_share)
         alert.addAction(action_enchantment)
         alert.addAction(action_marker)
@@ -549,7 +555,7 @@ class DialogShareLocation {
     let name_label = UILabel()
     let name_edit = UITextField()
 
-    init(_ viewController: UIViewController, _ location: CLLocationCoordinate2D, _ view: UIView, _ touchPosition: CGPoint) {
+    init(_ viewController: UIViewController, _ location: CLLocationCoordinate2D, _ title: String?, _ view: UIView, _ touchPosition: CGPoint?) {
         let alert = AlertController(title: "share_location".localized, message: nil, preferredStyle: .alert)
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
@@ -566,7 +572,9 @@ class DialogShareLocation {
                 }
                 let vc = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
                 vc.popoverPresentationController?.sourceView = view
-                vc.popoverPresentationController?.sourceRect = CGRect(x: touchPosition.x, y: touchPosition.y, width: 0, height: 0)
+                if let tp = touchPosition {
+                    vc.popoverPresentationController?.sourceRect = CGRect(x: tp.x, y: tp.y, width: 0, height: 0)
+                }
                 viewController.present(vc, animated: true, completion: nil)
             }
 
@@ -585,6 +593,7 @@ class DialogShareLocation {
         name.addArrangedSubview(name_label)
 
         name_edit.translatesAutoresizingMaskIntoConstraints = false
+        name_edit.text = title
         name_edit.backgroundColor = .white
         name_edit.layer.borderColor = UIColor.gray.cgColor
         name_edit.layer.borderWidth = 1
@@ -601,6 +610,43 @@ class DialogShareLocation {
         alert.contentView.bottomAnchor.constraint(equalTo: name.bottomAnchor).isActive = true
 
         viewController.present(alert, animated: true, completion: nil)
+    }
+}
+
+
+class DialogOpenIn {
+    init(_ viewController: UIViewController, _ location: CLLocationCoordinate2D, _ title: String?, _ view: UIView, _ touchPosition: CGPoint?) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let apple_maps = UIAlertAction(title: "apple_maps", style: .default) { (alert: UIAlertAction!) -> Void in
+            UIApplication.shared.openURL(URL(string: "http://maps.apple.com/?ll=\(location.latitude),\(location.longitude)")!)
+        }
+        alert.addAction(apple_maps)
+
+
+        let t = (title == nil ? "" : "\(title!)@").addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        let google_maps_url = URL(string: "https://www.google.com/maps?q=\(t)\(location.latitude),\(location.longitude)")!
+        if (UIApplication.shared.canOpenURL(google_maps_url)) {
+            let google_maps = UIAlertAction(title: "google_maps", style: .default) { (alert: UIAlertAction!) -> Void in
+                UIApplication.shared.openURL(google_maps_url)
+            }
+            alert.addAction(google_maps)
+        }
+
+        let google_navigation_url = URL(string: "https://www.google.com/maps/dir/Current+Location/\(location.latitude),\(location.longitude)")!
+        if (UIApplication.shared.canOpenURL(google_navigation_url)) {
+            let google_navigation = UIAlertAction(title: "google_maps_navigation", style: .default) { (alert: UIAlertAction!) -> Void in
+                UIApplication.shared.openURL(google_navigation_url)
+            }
+            alert.addAction(google_navigation)
+        }
+
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        alert.popoverPresentationController?.sourceView = view
+        if let tp = touchPosition {
+            alert.popoverPresentationController?.sourceRect = CGRect(x: tp.x, y: tp.y, width: 0, height: 0)
+        }
+        viewController.present(alert, animated: true, completion:nil)
     }
 }
 
@@ -669,6 +715,7 @@ class DialogCreateEnchantment {
         ispublic_label.text = "is_public".localized
         ispublic.addArrangedSubview(ispublic_label)
 
+        ispublic_switch.setOn(true, animated: false)
         ispublic.addArrangedSubview(ispublic_switch)
 
         layout.addArrangedSubview(ispublic)
@@ -872,6 +919,7 @@ class DialogCreateMarker {
         ispublic_label.text = "is_public".localized
         ispublic.addArrangedSubview(ispublic_label)
 
+        ispublic_switch.setOn(true, animated: false)
         ispublic.addArrangedSubview(ispublic_switch)
 
         layout.addArrangedSubview(ispublic)

@@ -48,6 +48,7 @@ class MapController: UIViewController, ChannelChangedListener {
 
     let enchantmentPanel = UICompactStackView()
     let markerPanel = UICompactStackView()
+    let markerActionsPanel = UICompactStackView()
     override func viewDidLoad() {
         service = CoreService.bind()
         let parent = self.tabBarController as! ChannelController
@@ -60,8 +61,21 @@ class MapController: UIViewController, ChannelChangedListener {
         enchantmentPanel.alignment = .center
         enchantmentPanel.distribution = .fill
         enchantmentPanel.spacing = 15
+        enchantmentPanel.layoutMargins = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        enchantmentPanel.isLayoutMarginsRelativeArrangement = true
 
         do {
+            let background = UIView()
+            background.translatesAutoresizingMaskIntoConstraints = false
+            background.backgroundColor = UIColor.lightGray.withAlphaComponent(0.75)
+            background.layer.cornerRadius = 15
+            enchantmentPanel.insertSubview(background, at: 0)
+
+            background.topAnchor.constraint(equalTo: enchantmentPanel.topAnchor).isActive = true
+            background.leadingAnchor.constraint(equalTo: enchantmentPanel.leadingAnchor).isActive = true
+            background.trailingAnchor.constraint(equalTo: enchantmentPanel.trailingAnchor).isActive = true
+            background.bottomAnchor.constraint(equalTo: enchantmentPanel.bottomAnchor).isActive = true
+
             let reduce = UIButton()
             reduce.translatesAutoresizingMaskIntoConstraints = false
             reduce.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
@@ -106,8 +120,21 @@ class MapController: UIViewController, ChannelChangedListener {
         markerPanel.alignment = .center
         markerPanel.distribution = .fill
         markerPanel.spacing = 15
+        markerPanel.layoutMargins = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        markerPanel.isLayoutMarginsRelativeArrangement = true
 
         do {
+            let background = UIView()
+            background.translatesAutoresizingMaskIntoConstraints = false
+            background.backgroundColor = UIColor.lightGray.withAlphaComponent(0.75)
+            background.layer.cornerRadius = 15
+            markerPanel.insertSubview(background, at: 0)
+
+            background.topAnchor.constraint(equalTo: markerPanel.topAnchor).isActive = true
+            background.leadingAnchor.constraint(equalTo: markerPanel.leadingAnchor).isActive = true
+            background.trailingAnchor.constraint(equalTo: markerPanel.trailingAnchor).isActive = true
+            background.bottomAnchor.constraint(equalTo: markerPanel.bottomAnchor).isActive = true
+
             let cancel = UIButton()
             cancel.translatesAutoresizingMaskIntoConstraints = false
             cancel.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
@@ -132,6 +159,48 @@ class MapController: UIViewController, ChannelChangedListener {
         NSLayoutConstraint.activate([markerPanel.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -15), markerPanel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)])
         markerPanel.isHidden = true
 
+        markerActionsPanel.axis = .horizontal
+        markerActionsPanel.alignment = .center
+        markerActionsPanel.distribution = .fill
+        markerActionsPanel.spacing = 15
+        markerActionsPanel.layoutMargins = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        markerActionsPanel.isLayoutMarginsRelativeArrangement = true
+
+        do {
+            let background = UIView()
+            background.translatesAutoresizingMaskIntoConstraints = false
+            background.backgroundColor = UIColor.lightGray.withAlphaComponent(0.75)
+            background.layer.cornerRadius = 15
+            markerActionsPanel.insertSubview(background, at: 0)
+
+            background.topAnchor.constraint(equalTo: markerActionsPanel.topAnchor).isActive = true
+            background.leadingAnchor.constraint(equalTo: markerActionsPanel.leadingAnchor).isActive = true
+            background.trailingAnchor.constraint(equalTo: markerActionsPanel.trailingAnchor).isActive = true
+            background.bottomAnchor.constraint(equalTo: markerActionsPanel.bottomAnchor).isActive = true
+
+            let share = UIButton()
+            share.frame = CGRect(x: 0, y: 0, width: 60, height: 50)
+            share.setTitle("✉️", for: .normal)
+            share.titleLabel?.font = share.titleLabel?.font.withSize(28)
+            markerActionsPanel.addArrangedSubview(share)
+            share.addTarget(self, action: #selector(marker_share(sender:)), for: .touchUpInside)
+
+            let openin = UIButton()
+            openin.frame = CGRect(x: 0, y: 0, width: 60, height: 50)
+            openin.setTitle("⤴️", for: .normal)
+            openin.titleLabel?.font = openin.titleLabel?.font.withSize(28)
+            markerActionsPanel.addArrangedSubview(openin)
+            openin.addTarget(self, action: #selector(marker_openin(sender:)), for: .touchUpInside)
+        }
+
+        markerActionsPanel.requestLayout()
+        markerActionsPanel.translatesAutoresizingMaskIntoConstraints = false
+
+        self.view.addSubview(markerActionsPanel)
+        NSLayoutConstraint.activate([markerActionsPanel.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -15), markerActionsPanel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)])
+        markerActionsPanel.isHidden = true
+
+
         super.viewDidLoad()
     }
 
@@ -153,6 +222,18 @@ class MapController: UIViewController, ChannelChangedListener {
 
     func channelChanged() {
         mapControllerImpl?.channelChanged()
+    }
+
+    var focusMarkerLocation: CLLocationCoordinate2D?
+    var focusMarkerTitle: String?
+    func showMarkerActionsPanel(_ location: CLLocationCoordinate2D, _ title: String?) {
+        focusMarkerLocation = location
+        focusMarkerTitle = title
+        markerActionsPanel.isHidden = false
+    }
+
+    func clearActionsPanel() {
+        markerActionsPanel.isHidden = true
     }
 
     func getMapCenter() -> CLLocationCoordinate2D {
@@ -198,6 +279,14 @@ class MapController: UIViewController, ChannelChangedListener {
     func enchantment_ok(sender: UIButton) {
         service!.createEnchantment(name: editingEnchantment.name!, channel_id: channel!.id!, ispublic: editingEnchantment.isPublic!, latitude: editingCoordinate.latitude, longitude: editingCoordinate.longitude, radius: Config.ENCHANTMENT_RADIUS[editingEnchantmentRadiusIndex], enable: true)
         refreshEditing(nil)
+    }
+
+    func marker_share(sender: UIButton) {
+        _ = DialogShareLocation(self, focusMarkerLocation!, focusMarkerTitle, sender, nil)
+    }
+
+    func marker_openin(sender: UIButton) {
+        _ = DialogOpenIn(self, focusMarkerLocation!, focusMarkerTitle, sender, nil)
     }
 
     func marker_cancel(sender: UIButton) {
