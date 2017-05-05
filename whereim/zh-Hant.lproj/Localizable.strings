@@ -25,9 +25,11 @@
 "ok" = "好";
 "cancel" = "取消";
 "delete" = "刪除";
-"create_enchantment" = "設立結界 ⭕";
-"create_marker" = "放置圖釘 📍";
-"forge_location" = "假造位置 😈";
+"open_in" = "在其他應用程式中開啟";
+"share" = "分享";
+"create_enchantment" = "設立結界";
+"create_marker" = "放置圖釘";
+"forge_location" = "假造位置";
 "radius_m" = "%1$d m";
 "self" = "自己";
 "mate" = "夥伴";
@@ -52,3 +54,5 @@
 "apn_radius_report" = "%1$@\n圈內/外：%2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "同時傳送中的群組數量已達上限（%1$@）。";
 "message_limit_enabled_channel" = "同時啟用的群組數量已達上限 (%1$@)，在群組列表中向左滑動並鎖上不需要啟用的群組。";
+"google_maps" = "Google 地圖";
+"google_maps_navigation" = "Google 地圖 - 導航和大眾運輸";
