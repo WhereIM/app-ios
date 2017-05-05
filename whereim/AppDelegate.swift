@@ -16,7 +16,17 @@ import UserNotifications
 
 extension String {
     var localized: String {
-        return NSLocalizedString(self, tableName: nil, bundle: Bundle.main, value: "", comment: "")
+        let text = NSLocalizedString(self, tableName: nil, bundle: Bundle.main, value: "", comment: "")
+        if text != self {
+            return text
+        }
+        let path = Bundle.main.path(forResource: "Base", ofType: "lproj")
+        let bundle = Bundle(path: path!)
+        if let forcedString = bundle?.localizedString(forKey: self, value: nil, table: nil) {
+            return forcedString
+        } else {
+            return self
+        }
     }
 
     func trim() -> String {
