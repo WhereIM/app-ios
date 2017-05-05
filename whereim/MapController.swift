@@ -320,7 +320,7 @@ class MapController: UIViewController, ChannelChangedListener {
             return
         }
 
-        _ = DialogStartEditing(self, mapView, touchPosition)
+        _ = DialogMapMenu(self, mapView, touchPosition)
     }
 
     func refreshEditing(_ type: EditingType?) {

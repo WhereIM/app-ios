@@ -257,7 +257,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     func open_menu(sender: Any) {
-        _ = DialogMenu(self, menu)
+        _ = DialogAppMenu(self, menu)
     }
 
     func create_channel(sender: UIButton) {
