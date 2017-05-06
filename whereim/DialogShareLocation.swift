@@ -11,8 +11,8 @@ import SDCAlertView
 import UIKit
 
 class DialogShareLocation {
-    let layout = UICompactStackView()
-    let name = UICompactStackView()
+    let layout = UIStackView()
+    let name = UIStackView()
     let name_label = UILabel()
     let name_edit = UITextField()
 
@@ -61,8 +61,6 @@ class DialogShareLocation {
         name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
         name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
         name.addArrangedSubview(name_edit)
-
-        name.requestLayout()
 
         alert.contentView.addSubview(name)
 

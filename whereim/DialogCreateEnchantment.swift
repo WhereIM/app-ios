@@ -10,11 +10,11 @@ import SDCAlertView
 
 class DialogCreateEnchantment {
     let alert = AlertController(title: "create_enchantment".localized, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let name = UICompactStackView()
+    let layout = UIStackView()
+    let name = UIStackView()
     let name_label = UILabel()
     let name_edit = UITextField()
-    let ispublic = UICompactStackView()
+    let ispublic = UIStackView()
     let ispublic_label = UILabel()
     let ispublic_switch = UISwitch()
 
@@ -77,8 +77,6 @@ class DialogCreateEnchantment {
         ispublic.addArrangedSubview(ispublic_switch)
 
         layout.addArrangedSubview(ispublic)
-
-        layout.requestLayout()
 
         alert.contentView.addSubview(layout)
 

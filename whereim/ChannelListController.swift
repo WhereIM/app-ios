@@ -9,7 +9,7 @@
 import UIKit
 
 class ChannelCell: UITableViewCell {
-    let titleLayout = UICompactStackView()
+    let titleLayout = UIStackView()
     let title = UILabel()
     let subtitle = UILabel()
     let loadingSwitch = UILoadingSwitch()
@@ -27,9 +27,6 @@ class ChannelCell: UITableViewCell {
         subtitle.font = subtitle.font.withSize(12)
         subtitle.adjustsFontSizeToFitWidth = false
         titleLayout.addArrangedSubview(subtitle)
-
-        loadingSwitch.requestLayout()
-        titleLayout.requestLayout()
 
         titleLayout.translatesAutoresizingMaskIntoConstraints = false
         loadingSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -110,8 +107,6 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         } else {
             cell.loadingSwitch.isHidden = true
         }
-
-        cell.titleLayout.requestLayout()
 
         return cell
     }

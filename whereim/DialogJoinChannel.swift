@@ -11,8 +11,8 @@ import UIKit
 
 class DialogJoinChannel {
     let alert = AlertController(title: "join_channel".localized, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let display_name = UICompactStackView()
+    let layout = UIStackView()
+    let display_name = UIStackView()
     let display_name_label = UILabel()
     let display_name_edit = UITextField()
 
@@ -60,8 +60,6 @@ class DialogJoinChannel {
         display_name.addArrangedSubview(display_name_edit)
 
         layout.addArrangedSubview(display_name)
-
-        layout.requestLayout()
 
         check()
 

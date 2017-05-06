@@ -11,8 +11,8 @@ import UIKit
 
 class DialogEditSelf {
     let alert = AlertController(title: nil, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let mate_name = UICompactStackView()
+    let layout = UIStackView()
+    let mate_name = UIStackView()
     let mate_name_label = UILabel()
     let mate_name_edit = UITextField()
 
@@ -60,8 +60,6 @@ class DialogEditSelf {
         mate_name.addArrangedSubview(mate_name_edit)
 
         layout.addArrangedSubview(mate_name)
-
-        layout.requestLayout()
 
         check()
 

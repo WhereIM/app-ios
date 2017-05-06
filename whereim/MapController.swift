@@ -46,9 +46,16 @@ class MapController: UIViewController, ChannelChangedListener {
         mapControllerImpl = GoogleMapController(self)
     }
 
-    let enchantmentPanel = UICompactStackView()
-    let markerPanel = UICompactStackView()
-    let markerActionsPanel = UICompactStackView()
+    let enchantmentPanel = UIStackView()
+
+    let markerPanel = UIStackView()
+
+    let markerActionsPanel = UIStackView()
+    let createMarker = UIButton()
+    let createEnchantment = UIButton()
+    let share = UIButton()
+    let openin = UIButton()
+
     override func viewDidLoad() {
         service = CoreService.bind()
         let parent = self.tabBarController as! ChannelController
@@ -109,7 +116,6 @@ class MapController: UIViewController, ChannelChangedListener {
             enchantmentPanel.addArrangedSubview(ok)
         }
 
-        enchantmentPanel.requestLayout()
         enchantmentPanel.translatesAutoresizingMaskIntoConstraints = false
 
         self.view.addSubview(enchantmentPanel)
@@ -152,7 +158,6 @@ class MapController: UIViewController, ChannelChangedListener {
             markerPanel.addArrangedSubview(ok)
         }
 
-        markerPanel.requestLayout()
         markerPanel.translatesAutoresizingMaskIntoConstraints = false
 
         self.view.addSubview(markerPanel)
@@ -193,7 +198,6 @@ class MapController: UIViewController, ChannelChangedListener {
             openin.addTarget(self, action: #selector(marker_openin(sender:)), for: .touchUpInside)
         }
 
-        markerActionsPanel.requestLayout()
         markerActionsPanel.translatesAutoresizingMaskIntoConstraints = false
 
         self.view.addSubview(markerActionsPanel)

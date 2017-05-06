@@ -10,7 +10,7 @@ import UIKit
 
 
 class MateCell: UITableViewCell {
-    let titleLayout = UICompactStackView()
+    let titleLayout = UIStackView()
     let title = UILabel()
     let subtitle = UILabel()
 
@@ -27,8 +27,6 @@ class MateCell: UITableViewCell {
         subtitle.font = subtitle.font.withSize(12)
         subtitle.adjustsFontSizeToFitWidth = false
         titleLayout.addArrangedSubview(subtitle)
-
-        titleLayout.requestLayout()
 
         titleLayout.translatesAutoresizingMaskIntoConstraints = false
 
@@ -59,7 +57,6 @@ class MarkerCell: UITableViewCell {
         title.adjustsFontSizeToFitWidth = false
         title.translatesAutoresizingMaskIntoConstraints = false
 
-        loadingSwitch.requestLayout()
         loadingSwitch.translatesAutoresizingMaskIntoConstraints = false
 
         self.contentView.addSubview(icon)
@@ -155,7 +152,6 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
                     cell.subtitle.text = nil
                     cell.subtitle.isHidden = true
                 }
-                cell.titleLayout.requestLayout()
 
                 return cell
             } else {

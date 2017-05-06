@@ -9,7 +9,7 @@
 import UIKit
 
 class LogCell: UITableViewCell {
-    let layout = UICompactStackView()
+    let layout = UIStackView()
     let message = UILabel()
     let time = UILabel()
 
@@ -31,7 +31,6 @@ class LogCell: UITableViewCell {
         layout.addArrangedSubview(message)
 
         layout.translatesAutoresizingMaskIntoConstraints = false
-        layout.requestLayout()
 
         self.contentView.addSubview(layout)
     }

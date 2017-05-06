@@ -11,8 +11,8 @@ import UIKit
 
 class DialogEditMarker {
     let alert = AlertController(title: nil, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let name = UICompactStackView()
+    let layout = UIStackView()
+    let name = UIStackView()
     let name_label = UILabel()
     let name_edit = UITextField()
 
@@ -60,8 +60,6 @@ class DialogEditMarker {
         name.addArrangedSubview(name_edit)
 
         layout.addArrangedSubview(name)
-
-        layout.requestLayout()
 
         check()
 

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UILoadingSwitch: UIFrameView {
+class UILoadingSwitch: UIView {
     let uiswitch = UISwitch()
     let loading = UIActivityIndicatorView()
 

@@ -23,7 +23,7 @@ class GoogleSearchResult: SearchResult {
 }
 
 class GoogleSearchResultsListCell: UITableViewCell {
-    let layout = UICompactStackView()
+    let layout = UIStackView()
     let name = UILabel()
     let address = UILabel()
     let attribution = UILabel()
@@ -49,8 +49,6 @@ class GoogleSearchResultsListCell: UITableViewCell {
         attribution.adjustsFontSizeToFitWidth = false
         attribution.font = attribution.font.withSize(10)
         layout.addArrangedSubview(attribution)
-
-        layout.requestLayout()
 
         self.contentView.addSubview(layout)
         layout.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true

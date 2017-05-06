@@ -11,9 +11,9 @@ import UIKit
 
 class DialogEditMate {
     let alert = AlertController(title: "join_channel".localized, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
+    let layout = UIStackView()
     let mate_name_label = UILabel()
-    let user_mate_name = UICompactStackView()
+    let user_mate_name = UIStackView()
     let user_mate_name_label = UILabel()
     let user_mate_name_edit = UITextField()
 
@@ -59,8 +59,6 @@ class DialogEditMate {
         user_mate_name.addArrangedSubview(user_mate_name_edit)
 
         layout.addArrangedSubview(user_mate_name)
-
-        layout.requestLayout()
 
         alert.contentView.addSubview(layout)
 

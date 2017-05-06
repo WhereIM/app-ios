@@ -50,9 +50,6 @@
 		58568FD81E51ADF2002FAD41 /* whereimUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FD71E51ADF2002FAD41 /* whereimUITests.swift */; };
 		58568FE51E542E1D002FAD41 /* Pods_whereim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		586091301E75B60600377ADF /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5860912F1E75B60600377ADF /* LogController.swift */; };
-		5895F8541E5F638B00E00F02 /* AUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8531E5F638B00E00F02 /* AUIView.swift */; };
-		5895F8561E5F63B100E00F02 /* UICompactStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8551E5F63B100E00F02 /* UICompactStackView.swift */; };
-		5895F8581E5F671000E00F02 /* UIFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895F8571E5F671000E00F02 /* UIFrameView.swift */; };
 		58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */; };
 		58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */; };
 		58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB861E56F5CF00C29A49 /* Config.swift */; };
@@ -163,9 +160,6 @@
 		58568FD91E51ADF2002FAD41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		585A0E691E68344500C5E9CB /* whereim.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = whereim.entitlements; sourceTree = "<group>"; };
 		5860912F1E75B60600377ADF /* LogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogController.swift; sourceTree = "<group>"; };
-		5895F8531E5F638B00E00F02 /* AUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUIView.swift; sourceTree = "<group>"; };
-		5895F8551E5F63B100E00F02 /* UICompactStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICompactStackView.swift; sourceTree = "<group>"; };
-		5895F8571E5F671000E00F02 /* UIFrameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFrameView.swift; sourceTree = "<group>"; };
 		58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaController.swift; sourceTree = "<group>"; };
 		58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelListController.swift; sourceTree = "<group>"; };
 		58A6EB861E56F5CF00C29A49 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -238,9 +232,6 @@
 		581508B41E5DFA52003DDA80 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				5895F8531E5F638B00E00F02 /* AUIView.swift */,
-				5895F8551E5F63B100E00F02 /* UICompactStackView.swift */,
-				5895F8571E5F671000E00F02 /* UIFrameView.swift */,
 				581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */,
 				58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */,
 			);
@@ -705,7 +696,6 @@
 				583CA8F51EBCEF280043B171 /* DialogEditEnchantment.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
 				586091301E75B60600377ADF /* LogController.swift in Sources */,
-				5895F8541E5F638B00E00F02 /* AUIView.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,
 				583CA8FD1EBCEF800043B171 /* DialogDeleteMarker.swift in Sources */,
 				58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */,
@@ -728,7 +718,6 @@
 				58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */,
 				5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */,
 				5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */,
-				5895F8561E5F63B100E00F02 /* UICompactStackView.swift in Sources */,
 				583CA8F31EBCEF130043B171 /* DialogCreateEnchantment.swift in Sources */,
 				583CA8FB1EBCEF6A0043B171 /* DialogEditMarker.swift in Sources */,
 				5831E33B1E5CB95600A7EB0E /* Marker.swift in Sources */,
@@ -736,7 +725,6 @@
 				58D1C0401E6DA52B005A904F /* Message.swift in Sources */,
 				583CA8E71EBCEE770043B171 /* DialogEditChannel.swift in Sources */,
 				5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */,
-				5895F8581E5F671000E00F02 /* UIFrameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

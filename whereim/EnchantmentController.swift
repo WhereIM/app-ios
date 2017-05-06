@@ -18,7 +18,6 @@ class EnchantmentCell: UITableViewCell {
         title.adjustsFontSizeToFitWidth = false
         title.translatesAutoresizingMaskIntoConstraints = false
 
-        loadingSwitch.requestLayout()
         loadingSwitch.translatesAutoresizingMaskIntoConstraints = false
 
         self.contentView.addSubview(title)

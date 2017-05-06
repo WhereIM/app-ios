@@ -22,8 +22,8 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     let loadingSwitch = UILoadingSwitch()
     var channelListChangedCbkey: Int?
     var connectionStatusChangedCbKey: Int?
-    let layout = UICompactStackView()
-    let titleLayout = UICompactStackView()
+    let layout = UIStackView()
+    let titleLayout = UIStackView()
     let channelTitle = UILabel()
     let channelSubtitle = UILabel()
     let connectionStatusIndicator = UIActivityIndicatorView()
@@ -104,8 +104,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
         layout.addArrangedSubview(loadingSwitch)
 
-        layout.requestLayout()
-
         navigator.addSubview(layout)
 
         connectionStatusIndicator.activityIndicatorViewStyle = .gray
@@ -180,7 +178,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
             channelSubtitle.isHidden = true
         }
         loadingSwitch.setEnabled(channel!.active)
-        layout.requestLayout()
     }
 
     func onConnectionStatusChanged(_ connected: Bool) {

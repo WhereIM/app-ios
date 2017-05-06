@@ -47,14 +47,14 @@ class DialogCreateMarker {
     }
 
     let alert = AlertController(title: "create_marker".localized, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let name = UICompactStackView()
+    let layout = UIStackView()
+    let name = UIStackView()
     let name_edit = UITextField()
     let name_label = UILabel()
-    let ispublic = UICompactStackView()
+    let ispublic = UIStackView()
     let ispublic_label = UILabel()
     let ispublic_switch = UISwitch()
-    let icon = UICompactStackView()
+    let icon = UIStackView()
     let icon_label = UILabel()
     let icon_picker = UIPickerView()
     let pickerDelegate = PickerDelegate()
@@ -140,8 +140,6 @@ class DialogCreateMarker {
         icon.addArrangedSubview(icon_picker)
 
         layout.addArrangedSubview(icon)
-
-        layout.requestLayout()
 
         alert.contentView.addSubview(layout)
 

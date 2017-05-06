@@ -11,11 +11,11 @@ import UIKit
 
 class DialogEditChannel {
     let alert = AlertController(title: "edit_channel".localized, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let channel_name = UICompactStackView()
+    let layout = UIStackView()
+    let channel_name = UIStackView()
     let channel_name_label = UILabel()
     let channel_name_edit = UITextField()
-    let channel_alias = UICompactStackView()
+    let channel_alias = UIStackView()
     let channel_alias_label = UILabel()
     let channel_alias_edit = UITextField()
 
@@ -90,8 +90,6 @@ class DialogEditChannel {
         channel_alias.addArrangedSubview(channel_alias_edit)
 
         layout.addArrangedSubview(channel_alias)
-
-        layout.requestLayout()
 
         check()
 

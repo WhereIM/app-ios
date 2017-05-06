@@ -11,11 +11,11 @@ import UIKit
 
 class DialogCreateChannel {
     let alert = AlertController(title: "create_channel".localized, message: nil, preferredStyle: .alert)
-    let layout = UICompactStackView()
-    let channel_name = UICompactStackView()
+    let layout = UIStackView()
+    let channel_name = UIStackView()
     let channel_name_label = UILabel()
     let channel_name_edit = UITextField()
-    let display_name = UICompactStackView()
+    let display_name = UIStackView()
     let display_name_label = UILabel()
     let display_name_edit = UITextField()
 
@@ -89,8 +89,6 @@ class DialogCreateChannel {
         display_name.addArrangedSubview(display_name_edit)
 
         layout.addArrangedSubview(display_name)
-
-        layout.requestLayout()
 
         check()
 
