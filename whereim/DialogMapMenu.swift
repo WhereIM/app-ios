@@ -23,11 +23,11 @@ class DialogMapMenu {
         }
 
         let action_enchantment = UIAlertAction(title: "create_enchantment".localized + " ⭕", style: .default) { (alert: UIAlertAction!) -> Void in
-            _ = DialogCreateEnchantment(mapController)
+            _ = DialogCreateEnchantment(mapController, nil)
         }
 
         let action_marker = UIAlertAction(title: "create_marker".localized + " 📍", style: .default) { (alert: UIAlertAction!) -> Void in
-            _ = DialogCreateMarker(mapController)
+            _ = DialogCreateMarker(mapController, nil)
         }
 
         let action_forge = UIAlertAction(title: "forge_location".localized + " 😈", style: .default) { (alert: UIAlertAction!) -> Void in

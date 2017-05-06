@@ -18,7 +18,7 @@ class DialogCreateEnchantment {
     let ispublic_label = UILabel()
     let ispublic_switch = UISwitch()
 
-    init(_ mapController: MapController) {
+    init(_ mapController: MapController, _ title: String?) {
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             mapController.editingEnchantment.name = self.name_edit.text
@@ -49,6 +49,7 @@ class DialogCreateEnchantment {
         name.addArrangedSubview(name_label)
 
         name_edit.translatesAutoresizingMaskIntoConstraints = false
+        name_edit.text = title
         name_edit.backgroundColor = .white
         name_edit.layer.borderColor = UIColor.gray.cgColor
         name_edit.layer.borderWidth = 1

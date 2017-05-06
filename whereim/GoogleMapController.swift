@@ -68,16 +68,45 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        mapController.showMarkerActionsPanel(marker.position, marker.title)
+        if let obj = marker.userData {
+            var title: String?
+            var showCreateMarker = true
+            var showCreateEnchantment = true
+            var showShare = true
+            var showOpenIn = true
+            if obj is Marker {
+                let m = obj as! Marker
+                title = m.name
+                showCreateMarker = false
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
+            } else if obj is Mate {
+                let m = obj as! Mate
+                title = m.getDisplayName()
+                showCreateMarker = true
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
+            } else if obj is SearchResult {
+                let m = obj as! SearchResult
+                title = m.name
+                showCreateMarker = true
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
+            }
+            mapController.showMarkerActionsPanel(marker.position, title, showCreateMarker: showCreateMarker, showCreateEnchantment: showCreateEnchantment, showShare: showShare, showOpenIn: showOpenIn)
+        }
         return false
     }
 
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        mapController.clearActionsPanel()
+        mapController.clearActions()
     }
 
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-        mapController.clearActionsPanel()
+        mapController.clearActions()
         let p = mapView.projection.point(for: coordinate)
         mapController.startEditing(coordinate, mapView, p)
     }
@@ -135,6 +164,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             m.position = mapController.editingCoordinate
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
             m.icon = mapController.editingMarker.getIcon()
+            m.zIndex = 100
             m.map = self.mapView
             editingMarkerMarker = m
         } else {
@@ -179,9 +209,11 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             m.title = marker.name
             m.icon = marker.getIcon()
             m.opacity = marker.enabled == true ? 1 : 0.5
+            m.zIndex = 25
             m.map = self.mapView
 
             self.markerMarker[marker.id!] = m
+            m.userData = marker
 
             if focus {
                 mapView?.selectedMarker = m
@@ -209,7 +241,9 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
             m.title = r.name!
             m.icon = UIImage(named: "search_marker")
+            m.zIndex = 50
             m.map = self.mapView
+            m.userData = r
 
             searchResultMarker.append(m)
         }
@@ -307,7 +341,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         } else {
             if mate.latitude != nil && !mate.deleted && (!mate.stale || focusMate === mate) {
                 let m = GMSMarker()
-                m.zIndex = 10
+                m.zIndex = 75
                 m.position = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
                 m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
                 m.opacity = mate.stale ? 0.5 : 1
@@ -330,6 +364,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 UIGraphicsEndImageContext()
 
                 self.mateMarker[mate.id!] = m
+                m.userData = mate
             }
         }
         if mate.id! == mapController.channel!.mate_id! {
