@@ -301,6 +301,7 @@
 			children = (
 				581508B41E5DFA52003DDA80 /* views */,
 				58A6EB9C1E5897D900C29A49 /* models */,
+				583CA8D91EBCED850043B171 /* dialogs */,
 				58568FB41E51ADF2002FAD41 /* AppDelegate.swift */,
 				5840689F1EABE0E600E4964D /* SettingsController.swift */,
 				58DBA2A21E9F31D5000744F0 /* AboutController.swift */,
@@ -359,7 +360,6 @@
 				5831E33C1E5CC96500A7EB0E /* Enchantment.swift */,
 				58D1C03F1E6DA52B005A904F /* Message.swift */,
 				58202AC31E74854A00BC7FCD /* Log.swift */,
-				583CA8D91EBCED850043B171 /* dialogs */,
 			);
 			name = models;
 			sourceTree = "<group>";
