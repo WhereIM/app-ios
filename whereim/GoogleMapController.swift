@@ -68,6 +68,11 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        tapMarker(marker)
+        return false
+    }
+
+    func tapMarker(_ marker: GMSMarker) {
         if let obj = marker.userData {
             var title: String?
             var showCreateMarker = true
@@ -98,7 +103,6 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             }
             mapController.showMarkerActionsPanel(marker.position, title, showCreateMarker: showCreateMarker, showCreateEnchantment: showCreateEnchantment, showShare: showShare, showOpenIn: showOpenIn)
         }
-        return false
     }
 
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
@@ -256,6 +260,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
         if at < searchResultMarker.count {
             mapView!.selectedMarker = searchResultMarker[at]
+            tapMarker(searchResultMarker[at])
         }
     }
 
@@ -284,6 +289,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             mapView!.animate(toLocation: CLLocationCoordinate2DMake(m.latitude!, m.longitude!))
             if let mm = markerMarker[m.id!] {
                 mapView!.selectedMarker = mm
+                tapMarker(mm)
             }
         }
     }
@@ -418,8 +424,9 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             if m.latitude != nil && m.longitude != nil {
                 mapView!.animate(toLocation: CLLocationCoordinate2DMake(m.latitude!, m.longitude!))
             }
-            if let mm = markerMarker[m.id!] {
+            if let mm = mateMarker[m.id!] {
                 mapView!.selectedMarker = mm
+                tapMarker(mm)
             }
         }
     }
