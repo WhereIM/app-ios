@@ -24,6 +24,7 @@
 "leave" = "Salir";
 "ok" = "OK";
 "cancel" = "Cancelar";
+"close" = "Cerrar";
 "delete" = "Eliminar";
 "share" = "Compartir";
 "create_enchantment" = "Nuevo Encantamiento";

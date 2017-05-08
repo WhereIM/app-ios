@@ -17,11 +17,6 @@ extension String {
     }
 }
 
-class GoogleSearchResult: SearchResult {
-    var address: String?
-    var attribution: NSAttributedString?
-}
-
 class GoogleSearchResultsListCell: UITableViewCell {
     let layout = UIStackView()
     let name = UILabel()
@@ -79,7 +74,7 @@ class SearchResultsListDelegate: NSObject, UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let result = searchController.searchResults[indexPath.row] as! GoogleSearchResult
+        let result = searchController.searchResults[indexPath.row] as! GooglePOI
         let cell = tableView.dequeueReusableCell(withIdentifier: "google_result", for: indexPath) as! GoogleSearchResultsListCell
         cell.name.text = result.name
         cell.address.text = result.address
@@ -164,7 +159,7 @@ class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
                     guard let results = data["results"] as? [[String:Any]] else {
                         return
                     }
-                    var res = [GoogleSearchResult]()
+                    var res = [GooglePOI]()
                     for result in results {
                         print(result)
                         guard let name = result["name"] as? String else {
@@ -182,7 +177,7 @@ class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
                         guard let lng = location["lng"] as? Double else {
                             continue
                         }
-                        let r = GoogleSearchResult()
+                        let r = GooglePOI()
                         r.name = name
                         r.location = CLLocationCoordinate2D(latitude: lat, longitude: lng)
                         if let address = result["formatted_address"] as? String {

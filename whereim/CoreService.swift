@@ -332,15 +332,39 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
+    var pendingPOI: POI?
     private var pending_link: String?
     func processLink(_ link: String) {
-        if !mqttConnected {
-            pending_link = link
-            return
-        }
         do {
-            let pattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
-            if let match = pattern.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
+            let pattern_here = try NSRegularExpression(pattern: "^here/([0-9.]+)/([0-9.]+)(?:/(.*))?$", options: [])
+            let pattern_open_in_channel = try NSRegularExpression(pattern: "^open_in_channel/(.*)$", options: [])
+            let pattern_channel = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
+
+            if let match = pattern_here.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
+                guard let lat = Double((link as NSString).substring(with: match.rangeAt(1))) else {
+                    return
+                }
+                guard let lng = Double((link as NSString).substring(with: match.rangeAt(2))) else {
+                    return
+                }
+                let name = (link as NSString).substring(with: match.rangeAt(3))
+                DispatchQueue.main.async {
+                    let sb = UIStoryboard(name: "Main", bundle: nil)
+                    let pvc = sb.instantiateViewController(withIdentifier: "location_viewer") as! PoiViewerController
+                    let poi = POI()
+                    poi.location = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                    poi.name = name
+                    pvc.poi = poi
+                    self.appDelegate.window?.rootViewController = pvc;
+                }
+                return
+            }
+
+            if !mqttConnected {
+                pending_link = link
+                return
+            }
+            if let match = pattern_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
                 let channel_id = (link as NSString).substring(with: match.rangeAt(1))
                 DispatchQueue.main.async {
                     let sb = UIStoryboard(name: "Main", bundle: nil)
@@ -349,8 +373,29 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     _ = DialogJoinChannel(startupVC, channel_id)
                 }
             }
+            if let match = pattern_open_in_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
+                let sublink = (link as NSString).substring(with: match.rangeAt(1))
+                if let m = pattern_here.firstMatch(in: sublink, options: [], range: NSMakeRange(0, sublink.characters.count)) {
+                    guard let lat = Double((sublink as NSString).substring(with: m.rangeAt(1))) else {
+                        return
+                    }
+                    guard let lng = Double((sublink as NSString).substring(with: m.rangeAt(2))) else {
+                        return
+                    }
+                    let name = (sublink as NSString).substring(with: m.rangeAt(3))
+                    DispatchQueue.main.async {
+                        let sb = UIStoryboard(name: "Main", bundle: nil)
+                        let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
+                        let poi = POI()
+                        poi.location = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                        poi.name = name
+                        self.pendingPOI = poi
+                        self.appDelegate.window?.rootViewController = startupVC;
+                    }
+                }
+            }
         } catch {
-            print("Error in join_channel dialog")
+            print("Error in processLink")
         }
     }
 

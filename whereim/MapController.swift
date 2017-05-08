@@ -59,6 +59,7 @@ class MapController: UIViewController, ChannelChangedListener {
 
     override func viewDidLoad() {
         service = CoreService.bind()
+
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
         parent.setMapCtrl(self)
@@ -72,7 +73,6 @@ class MapController: UIViewController, ChannelChangedListener {
         enchantmentPanel.translatesAutoresizingMaskIntoConstraints = false
 
         do {
-
             radiusLabel.translatesAutoresizingMaskIntoConstraints = false
             radiusLabel.adjustsFontSizeToFitWidth = false
             enchantmentPanel.addArrangedSubview(radiusLabel)
@@ -227,7 +227,6 @@ class MapController: UIViewController, ChannelChangedListener {
         NSLayoutConstraint.activate([markerActionsPanel.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -15), markerActionsPanel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)])
         markerActionsPanel.isHidden = true
 
-
         super.viewDidLoad()
     }
 
@@ -235,13 +234,17 @@ class MapController: UIViewController, ChannelChangedListener {
         super.viewWillAppear(animated)
 
         mapControllerImpl!.viewWillAppear(self)
-        cbkey = service!.openMap(channel!, cbkey, mapControllerImpl as! MapDataReceiver)
-        channelCbkey = service!.addChannelChangedListener(channel!, channelCbkey, self)
+        if let sv = service {
+            cbkey = sv.openMap(channel!, cbkey, mapControllerImpl as! MapDataReceiver)
+            channelCbkey = sv.addChannelChangedListener(channel!, channelCbkey, self)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        service!.closeMap(channel: channel!, key: cbkey!)
-        service!.removeChannelChangedListener(channel!, channelCbkey)
+        if let sv = service {
+            sv.closeMap(channel: channel!, key: cbkey!)
+            sv.removeChannelChangedListener(channel!, channelCbkey)
+        }
         mapControllerImpl!.viewWillDisappear(self)
 
         super.viewWillDisappear(animated)
@@ -270,12 +273,52 @@ class MapController: UIViewController, ChannelChangedListener {
         enchantmentPanel.isHidden = true
     }
 
+    func tapMarker(_ dataObj: Any?) {
+        if let obj = dataObj {
+            var title: String?
+            var showCreateMarker = true
+            var showCreateEnchantment = true
+            var showShare = true
+            var showOpenIn = true
+            var location: CLLocationCoordinate2D?
+            if obj is Marker {
+                let marker = obj as! Marker
+                title = marker.name
+                location = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
+
+                showCreateMarker = false
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
+            } else if obj is Mate {
+                let mate = obj as! Mate
+                title = mate.getDisplayName()
+                location = CLLocationCoordinate2D(latitude: mate.latitude!, longitude: mate.longitude!)
+
+                showCreateMarker = true
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
+            } else if obj is POI {
+                let poi = obj as! POI
+                title = poi.name
+                location = poi.location
+
+                showCreateMarker = true
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
+            }
+            showMarkerActionsPanel(location!, title, showCreateMarker: showCreateMarker, showCreateEnchantment: showCreateEnchantment, showShare: showShare, showOpenIn: showOpenIn)
+        }
+    }
+
     func getMapCenter() -> CLLocationCoordinate2D {
         return mapControllerImpl!.getMapCenter()
     }
 
-    var searchResults = [SearchResult]()
-    func setSearchResults(_ results: [SearchResult]) {
+    var searchResults = [POI]()
+    func setSearchResults(_ results: [POI]) {
         searchResults = results
         mapControllerImpl?.updateSearchResults()
     }

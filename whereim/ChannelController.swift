@@ -16,7 +16,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     static let TAB_MARKER = 3
     static let TAB_ENCHANTMENT = 4
 
-    var service: CoreService?
+    let service = CoreService.bind()
     var channel: Channel?
     var defaultTab = 0
     let loadingSwitch = UILoadingSwitch()
@@ -41,7 +41,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         return CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
 
-    func setSearchResults(_ results: [SearchResult]) {
+    func setSearchResults(_ results: [POI]) {
         if let mc = mapController {
             mc.setSearchResults(results)
         }
@@ -78,8 +78,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     override func viewDidLoad() {
-        service = CoreService.bind()
-
         let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
 
         layout.axis = .horizontal
@@ -146,22 +144,20 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        service!.setViewController(self)
-        channelListChangedCbkey = service?.addChannelListChangedListener(channelListChangedCbkey, self)
-        connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
+        service.setViewController(self)
+        channelListChangedCbkey = service.addChannelListChangedListener(channelListChangedCbkey, self)
+        connectionStatusChangedCbKey = service.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        if let sv = service {
-            sv.setViewController(nil)
-            if channelListChangedCbkey != nil {
-                sv.removeChannelListChangedListener(channelListChangedCbkey)
-                channelListChangedCbkey = nil
-            }
-            if connectionStatusChangedCbKey != nil {
-                sv.removeConnectionStatusChangedListener(connectionStatusChangedCbKey)
-                connectionStatusChangedCbKey = nil
-            }
+        service.setViewController(nil)
+        if channelListChangedCbkey != nil {
+            service.removeChannelListChangedListener(channelListChangedCbkey)
+            channelListChangedCbkey = nil
+        }
+        if connectionStatusChangedCbKey != nil {
+            service.removeConnectionStatusChangedListener(connectionStatusChangedCbKey)
+            connectionStatusChangedCbKey = nil
         }
         super.viewWillDisappear(animated)
     }
@@ -189,6 +185,6 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func switchClicked(sender: UISwitch) {
-        service!.toggleChannelActive(channel!)
+        service.toggleChannelActive(channel!)
     }
 }

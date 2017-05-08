@@ -18,13 +18,15 @@
 "channel_alias" = "群組別稱";
 "display_name" = "個人暱稱";
 "create_channel" = "建立群組";
-"join_channel" = "加入全組";
-"edit_channel" = "編輯全組";
+"join_channel" = "加入群組";
+"edit_channel" = "編輯群組";
 "leave_channel" = "離開群組";
 "leave" = "離開";
 "ok" = "好";
 "cancel" = "取消";
+"close" = "關閉";
 "delete" = "刪除";
+"open_in_channel" = "在群組中開啟";
 "open_in" = "在其他應用程式中開啟";
 "share" = "分享";
 "create_enchantment" = "設立結界";
@@ -54,5 +56,6 @@
 "apn_radius_report" = "%1$@\n圈內/外：%2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "同時傳送中的群組數量已達上限（%1$@）。";
 "message_limit_enabled_channel" = "同時啟用的群組數量已達上限 (%1$@)，在群組列表中向左滑動並鎖上不需要啟用的群組。";
+"no_channel" = "沒有群組";
 "google_maps" = "Google 地圖";
 "google_maps_navigation" = "Google 地圖 - 導航和大眾運輸";

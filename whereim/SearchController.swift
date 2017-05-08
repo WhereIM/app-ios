@@ -19,11 +19,6 @@ protocol SearchControllerInterface {
     func search(_ keyword: String)
 }
 
-class SearchResult {
-    var name: String?
-    var location: CLLocationCoordinate2D?
-}
-
 class SearchController: UIViewController, UITextFieldDelegate {
     let service = CoreService.bind()
     let searchBar = UIStackView()
@@ -84,8 +79,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
         searchControllerImpl!.search(keyword)
     }
 
-    var searchResults = [SearchResult]()
-    func setSearchResults(_ results: [SearchResult]) {
+    var searchResults = [POI]()
+    func setSearchResults(_ results: [POI]) {
         searchResults = results
         let parent = self.tabBarController as! ChannelController
         parent.setSearchResults(results)

@@ -5,7 +5,6 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,38 +19,10 @@
                     <view key="view" contentMode="scaleToFill" id="5s5-7w-8Qk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="UOh-og-iSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JhC-5O-wso">
-                                <rect key="frame" x="164" y="318" width="46" height="30"/>
-                                <color key="backgroundColor" red="0.0" green="0.61465252229292133" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="QdU-9H-4WA"/>
-                                    <constraint firstAttribute="width" constant="64" id="ztW-6g-COu"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                                <state key="normal" title="+">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="t6p-Hb-5z9" firstAttribute="top" secondItem="UOh-og-iSF" secondAttribute="bottom" id="3WI-kT-fFq"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="JhC-5O-wso" secondAttribute="trailing" constant="16" id="73p-Nf-kik"/>
-                            <constraint firstItem="UOh-og-iSF" firstAttribute="leading" secondItem="5s5-7w-8Qk" secondAttribute="leading" id="8eb-oo-Ldw"/>
-                            <constraint firstItem="t6p-Hb-5z9" firstAttribute="top" secondItem="JhC-5O-wso" secondAttribute="bottom" constant="16" id="BSQ-gq-XHZ"/>
-                            <constraint firstAttribute="trailing" secondItem="UOh-og-iSF" secondAttribute="trailing" id="JnS-qB-gbU"/>
-                            <constraint firstItem="UOh-og-iSF" firstAttribute="top" secondItem="5s5-7w-8Qk" secondAttribute="top" id="cyG-0T-aIT"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="CDE-g2-IiB"/>
                     <connections>
-                        <outlet property="channelListView" destination="UOh-og-iSF" id="dAo-nE-rfn"/>
-                        <outlet property="fab" destination="JhC-5O-wso" id="L43-tb-heZ"/>
                         <segue destination="SdD-qD-DU8" kind="show" identifier="enter_channel" id="uwM-Lx-JIw"/>
                     </connections>
                 </viewController>
@@ -268,6 +239,24 @@
             </objects>
             <point key="canvasLocation" x="2788" y="2263.7181409295354"/>
         </scene>
+        <!--Poi Viewer Controller-->
+        <scene sceneID="qwG-yk-3dT">
+            <objects>
+                <viewController storyboardIdentifier="location_viewer" id="zBQ-gV-8pg" customClass="PoiViewerController" customModule="whereim" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="yWs-x6-vkC"/>
+                        <viewControllerLayoutGuide type="bottom" id="6XN-lE-40f"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="heK-Zq-bWj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1Ob-hh-aeb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="33" y="126"/>
+        </scene>
         <!--Login Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -354,7 +343,7 @@
             <objects>
                 <navigationController storyboardIdentifier="startup" automaticallyAdjustsScrollViewInsets="NO" id="yqW-EM-2cU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pLb-Vi-TfO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pLb-Vi-TfO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

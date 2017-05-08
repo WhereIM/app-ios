@@ -38,6 +38,10 @@
 		584068A01EABE0E600E4964D /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840689F1EABE0E600E4964D /* SettingsController.swift */; };
 		584068A21EB4672300E4964D /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584068A11EB4672300E4964D /* SearchController.swift */; };
 		584068A41EB4D04900E4964D /* GoogleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584068A31EB4D04900E4964D /* GoogleSearchController.swift */; };
+		584599D21EC05E4F003C53A8 /* POI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584599D11EC05E4F003C53A8 /* POI.swift */; };
+		584599D41EC05E8E003C53A8 /* GooglePOI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584599D31EC05E8E003C53A8 /* GooglePOI.swift */; };
+		584599D61EC06BC0003C53A8 /* PoiViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584599D51EC06BC0003C53A8 /* PoiViewerController.swift */; };
+		584599D81EC06BE1003C53A8 /* GooglePoiViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584599D71EC06BE1003C53A8 /* GooglePoiViewerController.swift */; };
 		58483BC3F34B2978F0A0DED9 /* Pods_whereimUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */; };
 		5849B1441EAA82AC0058B560 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */; };
 		58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FB41E51ADF2002FAD41 /* AppDelegate.swift */; };
@@ -143,6 +147,10 @@
 		5840689F1EABE0E600E4964D /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		584068A11EB4672300E4964D /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		584068A31EB4D04900E4964D /* GoogleSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSearchController.swift; sourceTree = "<group>"; };
+		584599D11EC05E4F003C53A8 /* POI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POI.swift; sourceTree = "<group>"; };
+		584599D31EC05E8E003C53A8 /* GooglePOI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GooglePOI.swift; sourceTree = "<group>"; };
+		584599D51EC06BC0003C53A8 /* PoiViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoiViewerController.swift; sourceTree = "<group>"; };
+		584599D71EC06BE1003C53A8 /* GooglePoiViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GooglePoiViewerController.swift; sourceTree = "<group>"; };
 		5849B1431EAA82AC0058B560 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		58568FB11E51ADF2002FAD41 /* whereim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = whereim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58568FB41E51ADF2002FAD41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -298,6 +306,8 @@
 				58DBA2A21E9F31D5000744F0 /* AboutController.swift */,
 				58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */,
 				58568FB61E51ADF2002FAD41 /* LoginController.swift */,
+				584599D51EC06BC0003C53A8 /* PoiViewerController.swift */,
+				584599D71EC06BE1003C53A8 /* GooglePoiViewerController.swift */,
 				58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */,
 				58E347A81E5A23F20025211B /* ChannelController.swift */,
 				58E347A41E5A183D0025211B /* MapController.swift */,
@@ -351,6 +361,8 @@
 				5831E33C1E5CC96500A7EB0E /* Enchantment.swift */,
 				58D1C03F1E6DA52B005A904F /* Message.swift */,
 				58202AC31E74854A00BC7FCD /* Log.swift */,
+				584599D11EC05E4F003C53A8 /* POI.swift */,
+				584599D31EC05E8E003C53A8 /* GooglePOI.swift */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -705,16 +717,20 @@
 				58A6EB8B1E56F5CF00C29A49 /* CoreService.swift in Sources */,
 				58E347A71E5A18F00025211B /* Mate.swift in Sources */,
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
+				584599D81EC06BE1003C53A8 /* GooglePoiViewerController.swift in Sources */,
 				584068A01EABE0E600E4964D /* SettingsController.swift in Sources */,
 				58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */,
 				583CA8F91EBCEF520043B171 /* DialogCreateMarker.swift in Sources */,
+				584599D21EC05E4F003C53A8 /* POI.swift in Sources */,
 				584068A41EB4D04900E4964D /* GoogleSearchController.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				583CA8DB1EBCEDCA0043B171 /* DialogAppMenu.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,
+				584599D61EC06BC0003C53A8 /* PoiViewerController.swift in Sources */,
 				583CA8ED1EBCEECC0043B171 /* DialogMapMenu.swift in Sources */,
 				580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */,
+				584599D41EC05E8E003C53A8 /* GooglePOI.swift in Sources */,
 				58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */,
 				5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */,
 				5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */,

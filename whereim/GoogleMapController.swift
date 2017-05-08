@@ -16,6 +16,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     var selfMate: Mate?
     var mapView: GMSMapView?
     var mapCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    var moveCameraToMyLocation = true
 
     required init(_ mapController: MapController) {
         self.mapController = mapController
@@ -37,7 +38,12 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         markerTemplate.addArrangedSubview(markerTemplateIcon)
     }
 
+    var pendingMarker: GMSMarker?
     func viewDidLoad(_ viewContrller: UIViewController) {
+        if let poi = mapController.service!.pendingPOI {
+            mapCenter = CLLocationCoordinate2D(latitude: poi.location!.latitude, longitude: poi.location!.longitude)
+        }
+
         let camera = GMSCameraPosition.camera(withLatitude: mapCenter.latitude, longitude: mapCenter.longitude, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.settings.compassButton = true
@@ -54,58 +60,56 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+
+        if self.mapController.service!.pendingPOI != nil {
+            moveCameraToMyLocation = false
+        }
+
+        DispatchQueue.main.async {
+            if let poi = self.mapController.service!.pendingPOI {
+                self.pendingMarker = GMSMarker()
+                self.pendingMarker!.position = poi.location!
+                self.pendingMarker!.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+                self.pendingMarker!.title = poi.name!
+                self.pendingMarker!.icon = UIImage(named: "search_marker")
+                self.pendingMarker!.zIndex = 50
+                self.pendingMarker!.map = self.mapView
+                self.pendingMarker!.userData = poi
+
+                self.mapController.tapMarker(poi)
+
+                self.mapView?.selectedMarker = self.pendingMarker
+
+                self.mapController.service!.pendingPOI = nil
+            }
+        }
     }
 
     func viewWillAppear(_ viewContrller: UIViewController) {
         mapView!.isMyLocationEnabled = true
-        mapView!.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
+        if moveCameraToMyLocation {
+            mapView!.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
+        }
         mapView!.delegate = self
     }
 
     func viewWillDisappear(_ viewContrller: UIViewController) {
-        mapView!.removeObserver(self, forKeyPath: "myLocation")
+        if moveCameraToMyLocation {
+            mapView!.removeObserver(self, forKeyPath: "myLocation")
+        }
         mapView!.isMyLocationEnabled = false
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        tapMarker(marker)
+        mapController.tapMarker(marker.userData)
         return false
     }
 
-    func tapMarker(_ marker: GMSMarker) {
-        if let obj = marker.userData {
-            var title: String?
-            var showCreateMarker = true
-            var showCreateEnchantment = true
-            var showShare = true
-            var showOpenIn = true
-            if obj is Marker {
-                let m = obj as! Marker
-                title = m.name
-                showCreateMarker = false
-                showCreateEnchantment = true
-                showShare = true
-                showOpenIn = true
-            } else if obj is Mate {
-                let m = obj as! Mate
-                title = m.getDisplayName()
-                showCreateMarker = true
-                showCreateEnchantment = true
-                showShare = true
-                showOpenIn = true
-            } else if obj is SearchResult {
-                let m = obj as! SearchResult
-                title = m.name
-                showCreateMarker = true
-                showCreateEnchantment = true
-                showShare = true
-                showOpenIn = true
-            }
-            mapController.showMarkerActionsPanel(marker.position, title, showCreateMarker: showCreateMarker, showCreateEnchantment: showCreateEnchantment, showShare: showShare, showOpenIn: showOpenIn)
-        }
-    }
-
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        if pendingMarker != nil {
+            pendingMarker!.map = nil
+            pendingMarker = nil
+        }
         mapController.clearActions()
     }
 
@@ -260,7 +264,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         }
         if at < searchResultMarker.count {
             mapView!.selectedMarker = searchResultMarker[at]
-            tapMarker(searchResultMarker[at])
+            mapController.tapMarker(searchResultMarker[at].userData)
         }
     }
 
@@ -289,7 +293,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             mapView!.animate(toLocation: CLLocationCoordinate2DMake(m.latitude!, m.longitude!))
             if let mm = markerMarker[m.id!] {
                 mapView!.selectedMarker = mm
-                tapMarker(mm)
+                mapController.tapMarker(mm.userData)
             }
         }
     }
@@ -426,7 +430,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             }
             if let mm = mateMarker[m.id!] {
                 mapView!.selectedMarker = mm
-                tapMarker(mm)
+                mapController.tapMarker(mm.userData)
             }
         }
     }

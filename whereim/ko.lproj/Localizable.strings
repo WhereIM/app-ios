@@ -24,6 +24,7 @@
 "leave" = "나가기";
 "ok" = "확인";
 "cancel" = "취소";
+"close" = "닫기";
 "delete" = "삭제";
 "share" = "공유";
 "create_enchantment" = "새로운 인챈트";

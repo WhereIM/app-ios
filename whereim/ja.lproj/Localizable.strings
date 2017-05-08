@@ -24,6 +24,7 @@
 "leave" = "ここから離れる";
 "ok" = "OK";
 "cancel" = "キャンセル";
+"close" = "閉じる";
 "delete" = "削除する";
 "open_in" = "開いている";
 "share" = "共有";

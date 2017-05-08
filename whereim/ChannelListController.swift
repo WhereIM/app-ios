@@ -175,19 +175,75 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+class PendingPoiViewHolder: UIStackView {
+    let title = UILabel()
+    let desc = UILabel()
+
+    init() {
+        super.init(frame: CGRect.zero)
+
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.axis = .horizontal
+        self.alignment = .leading
+        self.distribution = .fill
+
+        let marker = UIImageView()
+        marker.image = UIImage(named: "icon_marker_red")
+        self.addArrangedSubview(marker)
+
+        let layout = UIStackView()
+        layout.translatesAutoresizingMaskIntoConstraints = false
+        layout.axis = .vertical
+        layout.alignment = .leading
+        layout.distribution = .fill
+
+        self.addArrangedSubview(layout)
+
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.adjustsFontSizeToFitWidth = false
+        layout.addArrangedSubview(title)
+
+        desc.translatesAutoresizingMaskIntoConstraints = false
+        desc.adjustsFontSizeToFitWidth = false
+        layout.addArrangedSubview(desc)
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func setPOI(poi: POI) {
+        if let name = poi.name {
+            title.text = name
+            title.isHidden = false
+        } else {
+            title.isHidden = true
+        }
+        desc.text = String(format: "%f,%f", poi.location!.latitude, poi.location!.longitude)
+    }
+
+}
+
 class ChannelListController: UIViewController, ChannelListChangedListener, ConnectionStatusCallback {
     var service: CoreService?
     var channelListChangedCbkey: Int?
     var connectionStatusChangedCbKey: Int?
     let menu = UIButton()
 
-    @IBOutlet weak var channelListView: UITableView!
-    @IBOutlet weak var fab: UIButton!
+    let layout = UIStackView()
+    let listArea = UIView()
+    let pendingArea = UIView()
+    let channelListView = UITableView()
+    let fab = UIButton()
+    let pendingPOILayout = PendingPoiViewHolder()
+
 
     let connectionStatusIndicator = UIActivityIndicatorView()
     var adapter: ChannelListAdapter?
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        service = CoreService.bind()
 
         let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
 
@@ -234,19 +290,73 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
 
-        service = CoreService.bind()
-        adapter = ChannelListAdapter((service)!, self)
+        layout.translatesAutoresizingMaskIntoConstraints = false
+        layout.axis = .vertical
+        layout.alignment = .leading
+        layout.distribution = .fill
+
+        adapter = ChannelListAdapter(service!, self)
+        channelListView.translatesAutoresizingMaskIntoConstraints = false
         channelListView.register(ChannelCell.self, forCellReuseIdentifier: "channel")
         channelListView.dataSource = adapter
         channelListView.delegate = adapter
 
+        listArea.addSubview(channelListView)
+
+        channelListView.widthAnchor.constraint(equalTo: listArea.widthAnchor).isActive = true
+        channelListView.heightAnchor.constraint(equalTo: listArea.heightAnchor).isActive = true
+
+        fab.translatesAutoresizingMaskIntoConstraints = false
+        fab.setTitle("+", for: .normal)
+        fab.titleLabel?.font = fab.titleLabel?.font.withSize(32)
         fab.titleLabel?.baselineAdjustment = .alignCenters
+        fab.backgroundColor = UIColor(red: 0, green: 0.61465252229292133, blue: 1, alpha: 1)
         fab.layer.cornerRadius = 32
         fab.addTarget(self, action: #selector(create_channel(sender:)), for: .touchUpInside)
+
+        listArea.addSubview(fab)
+        listArea.bringSubview(toFront: fab)
+
+        fab.widthAnchor.constraint(equalToConstant: 64).isActive = true
+        fab.heightAnchor.constraint(equalToConstant: 64).isActive = true
+        fab.bottomAnchor.constraint(equalTo: listArea.bottomAnchor, constant: -16).isActive = true
+        fab.rightAnchor.constraint(equalTo: listArea.rightAnchor, constant: -16).isActive = true
+
+        listArea.translatesAutoresizingMaskIntoConstraints = false
+        layout.addArrangedSubview(listArea)
+
+        listArea.widthAnchor.constraint(equalTo: layout.widthAnchor).isActive = true
+
+        self.view.addSubview(layout)
+
+        layout.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).isActive = true
+        layout.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        layout.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        layout.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).isActive = true
+
+        let background = UIView()
+        background.translatesAutoresizingMaskIntoConstraints = false
+        background.backgroundColor = UIColor(red: 0.6666666666666666, green: 0.7333333333333333, blue: 1, alpha: 1)
+        pendingArea.insertSubview(background, at: 0)
+
+        layout.addArrangedSubview(pendingArea)
+        pendingArea.widthAnchor.constraint(equalTo: layout.widthAnchor).isActive = true
+        pendingArea.heightAnchor.constraint(equalToConstant: 64).isActive = true
+
+        background.topAnchor.constraint(equalTo: pendingArea.topAnchor).isActive = true
+        background.leftAnchor.constraint(equalTo: pendingArea.leftAnchor).isActive = true
+        background.rightAnchor.constraint(equalTo: pendingArea.rightAnchor).isActive = true
+        background.bottomAnchor.constraint(equalTo: pendingArea.bottomAnchor).isActive = true
+
+        pendingPOILayout.translatesAutoresizingMaskIntoConstraints = false
+
+        pendingArea.addSubview(pendingPOILayout)
+
+        pendingPOILayout.centerXAnchor.constraint(equalTo: pendingArea.centerXAnchor).isActive = true
+        pendingPOILayout.centerYAnchor.constraint(equalTo: pendingArea.centerYAnchor).isActive = true
     }
 
     func openLogController(recognizer: UITapGestureRecognizer) {
-        print(openLogController)
         let vc = self.storyboard!.instantiateViewController(withIdentifier: "log")
         self.show(vc, sender: self)
     }
@@ -260,18 +370,30 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        if service!.getClientId() == nil {
-            let vc = storyboard?.instantiateViewController(withIdentifier: "login")
-            self.present(vc!, animated: true)
-            return
+        if let sv = service {
+            if sv.getClientId() == nil {
+                let vc = storyboard?.instantiateViewController(withIdentifier: "login")
+                self.present(vc!, animated: true)
+                return
+            }
         }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        service!.setViewController(self)
-        channelListChangedCbkey = service!.addChannelListChangedListener(channelListChangedCbkey, self)
-        connectionStatusChangedCbKey = service!.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
+        if let sv = service {
+            if let poi = sv.pendingPOI {
+                pendingPOILayout.isHidden = false
+                pendingPOILayout.setPOI(poi: poi)
+                pendingArea.isHidden = false
+            } else {
+                pendingArea.isHidden = true
+            }
+
+            sv.setViewController(self)
+            channelListChangedCbkey = sv.addChannelListChangedListener(channelListChangedCbkey, self)
+            connectionStatusChangedCbKey = sv.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -286,7 +408,6 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
                 connectionStatusChangedCbKey = nil
             }
         }
-
         super.viewWillDisappear(animated)
     }
 
