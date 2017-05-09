@@ -357,8 +357,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     func openLogController(recognizer: UITapGestureRecognizer) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "log")
-        self.show(vc, sender: self)
+        performSegue(withIdentifier: "log", sender: nil)
     }
 
     func open_menu(sender: Any) {

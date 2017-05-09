@@ -15,13 +15,12 @@ class DialogAppMenu {
         let action_settings = UIAlertAction(title: "action_settings".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "settings")
             viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "action_settings".localized, style: .plain, target: nil, action: nil)
-            viewController.navigationController?.pushViewController(vc!, animated: true)
+            viewController.performSegue(withIdentifier: "settings", sender: nil)
         }
 
         let action_about = UIAlertAction(title: "action_about".localized, style: .default) { (alert: UIAlertAction!) -> Void in
-            let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "about")
             viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "action_about".localized, style: .plain, target: nil, action: nil)
-            viewController.navigationController?.pushViewController(vc!, animated: true)
+            viewController.performSegue(withIdentifier: "about", sender: nil)
         }
 
         alert.addAction(action_settings)

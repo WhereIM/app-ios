@@ -24,6 +24,10 @@
                     <navigationItem key="navigationItem" id="CDE-g2-IiB"/>
                     <connections>
                         <segue destination="SdD-qD-DU8" kind="show" identifier="enter_channel" id="uwM-Lx-JIw"/>
+                        <segue destination="BnQ-ya-KXx" kind="show" identifier="about" id="KY8-f3-fq4"/>
+                        <segue destination="1aX-Xk-dxn" kind="show" identifier="scanner" id="Jz9-MJ-EaB"/>
+                        <segue destination="tyM-kU-Xjq" kind="show" identifier="log" id="hdG-ud-8k9"/>
+                        <segue destination="Y8i-ie-LC7" kind="show" identifier="settings" id="O4X-9f-9Qc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xer-nB-ON2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -43,7 +47,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D5u-F9-Vpb">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                         </subviews>
@@ -61,7 +65,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yqa-pB-iv9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="33" y="1559"/>
+            <point key="canvasLocation" x="-857" y="1782"/>
         </scene>
         <!--Log Controller-->
         <scene sceneID="IJk-mb-Vth">
@@ -98,7 +102,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="thR-qf-71p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="972" y="1560"/>
+            <point key="canvasLocation" x="972" y="1782"/>
         </scene>
         <!--🌏-->
         <scene sceneID="he6-ng-qzx">
@@ -151,7 +155,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="rdx-Sw-lT6">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
@@ -169,7 +173,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvp-hU-d4y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1845.5999999999999" y="1557.5712143928038"/>
+            <point key="canvasLocation" x="1849" y="1782"/>
         </scene>
         <!--🚩-->
         <scene sceneID="LJX-E6-oY0">
@@ -203,7 +207,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pq8-2w-jSQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2788" y="1560.2698650674663"/>
+            <point key="canvasLocation" x="2788" y="1783"/>
         </scene>
         <!--⭕-->
         <scene sceneID="Dja-ks-jmu">
@@ -237,7 +241,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hsl-Fa-Qnq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2788" y="2263.7181409295354"/>
+            <point key="canvasLocation" x="2788" y="2533"/>
         </scene>
         <!--Poi Viewer Controller-->
         <scene sceneID="qwG-yk-3dT">
