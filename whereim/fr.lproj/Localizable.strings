@@ -16,7 +16,7 @@
 "icon" = "Icône";
 "channel_name" = "Nom de la Chaîne";
 "channel_alias" = "Alias de la Chaîne";
-"display_name" = "Afficher le Nom";
+"display_name" = "Nom affiché";
 "create_channel" = "Créer une Chaîne";
 "join_channel" = "Rejoindre la Chaîne";
 "edit_channel" = "Éditer la Chaîne";
@@ -32,7 +32,7 @@
 "create_marker" = "Nouveau Marqueur";
 "forge_location" = "Fabriquer une Position";
 "radius_m" = "%1$d m";
-"self" = "Soi-même";
+"self" = "Moi-même";
 "mate" = "Ami";
 "is_public" = "Partagé";
 "public_enchantment" = "Enchantement Partagé";

@@ -27,6 +27,9 @@
 "close" = "關閉";
 "delete" = "刪除";
 "open_in_channel" = "在群組中開啟";
+"scan_qr_code" = "掃瞄 QR  Code";
+"generate_qr_code" = "產生 QR Code";
+"send_invite_link" = "發送邀請連結";
 "open_in" = "在其他應用程式中開啟";
 "share" = "分享";
 "create_enchantment" = "設立結界";
@@ -56,6 +59,5 @@
 "apn_radius_report" = "%1$@\n圈內/外：%2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "同時傳送中的群組數量已達上限（%1$@）。";
 "message_limit_enabled_channel" = "同時啟用的群組數量已達上限 (%1$@)，在群組列表中向左滑動並鎖上不需要啟用的群組。";
-"no_channel" = "沒有群組";
 "google_maps" = "Google 地圖";
 "google_maps_navigation" = "Google 地圖 - 導航和大眾運輸";

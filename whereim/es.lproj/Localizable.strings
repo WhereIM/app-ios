@@ -54,4 +54,5 @@
 "apn_radius_report" = "%1$@\nDentro/Fuera: %2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "Límite en el número de canales activos (%1$@) ha sido alcanzado.";
 "message_limit_enabled_channel" = "Límite en el número de canales activados (%1$@) ha sido alcanzado., Deslice en la lista de canales y haga clic en el botón de bloqueo para desactivar algunos canales..";
+"apple_maps" = "Mapas de Apple";
 "google_maps_navigation" = "Google Maps: Navegación y tránsito";

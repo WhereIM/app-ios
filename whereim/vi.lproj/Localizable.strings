@@ -54,4 +54,5 @@
 "apn_radius_report" = "%1$@\nVào/Ra: %2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "Đã đạt tới hạn mức số kênh hoạt động (%1$@).";
 "message_limit_enabled_channel" = "Đã đạt tới hạn mức số kênh được kích hoạt (%1$@), vuốt vào danh sách kênh và chạm chuột vào biểu tượng khóa để khóa kích hoạt một số kênh.";
+"apple_maps" = "Bản đồ của Apple";
 "google_maps_navigation" = "Google Map - Bản đồ";

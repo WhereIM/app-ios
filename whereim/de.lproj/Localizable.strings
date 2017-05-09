@@ -55,4 +55,5 @@
 "apn_radius_report" = "%1$@\nEin/Aus: %2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "Die Anzahl aktiver Channels (%1$@) ist erreicht.";
 "message_limit_enabled_channel" = "Die Anzahl verfügbarer Channels (%1$@) ist erreicht., Streichen Sie über die Channelliste und klicken das Schlüsselsymbol, um Channel zu deaktivieren.";
-"google_maps_navigation" = "Google Maps – Navigation, Bus & Bahn";
+"apple_maps" = "Apple Karten";
+"google_maps_navigation" = "Google Maps – Navigation, Bus, Bahn & Verkehr";

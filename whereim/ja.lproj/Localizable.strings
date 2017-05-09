@@ -55,5 +55,6 @@
 "apn_radius_report" = "%1$@\nイン/アウト：%2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "アクティブなチャネル数の制限 (%1$@) に達しました。";
 "message_limit_enabled_channel" = "有効なチャンネル数の制限 (%1$@) に達しました。チャンネルリストをスワイプしてロックアイコンをクリックすると、一部のチャンネルが無効になります。";
+"apple_maps" = "Appleマップ";
 "google_maps" = "Google マップ";
 "google_maps_navigation" = "Google マップ - ナビ、乗換案内";

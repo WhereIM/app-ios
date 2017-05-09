@@ -54,4 +54,5 @@
 "apn_radius_report" = "%1$@\nIn / Uit: %2$@ / %3$@ (%4$@ m)";
 "message_limit_active_channel" = "Grens van het aantal actieve kanalen (%1$@) is bereikt.";
 "message_limit_enabled_channel" = "Grens van het aantal geactiveerde kanalen (%1$@) is bereikt, veeg over de kanaallijst en klik op het vergrendelingspictogram om sommige kanalen uit te schakelen.";
+"apple_maps" = "Kaarten van Apple";
 "google_maps_navigation" = "Google Maps: Navigatie en OV";
