@@ -336,7 +336,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     private var pending_link: String?
     func processLink(_ link: String) {
         do {
-            let pattern_here = try NSRegularExpression(pattern: "^here/([0-9.]+)/([0-9.]+)(?:/(.*))?$", options: [])
+            let pattern_here = try NSRegularExpression(pattern: "^here/(-?[0-9.]+)/(-?[0-9.]+)(?:/(.*))?$", options: [])
             let pattern_open_in_channel = try NSRegularExpression(pattern: "^open_in_channel/(.*)$", options: [])
             let pattern_channel = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
 
