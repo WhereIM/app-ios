@@ -54,6 +54,8 @@
 		58568FD81E51ADF2002FAD41 /* whereimUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FD71E51ADF2002FAD41 /* whereimUITests.swift */; };
 		58568FE51E542E1D002FAD41 /* Pods_whereim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		586091301E75B60600377ADF /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5860912F1E75B60600377ADF /* LogController.swift */; };
+		587F41E01EC159CB00823E6C /* DialogChannelInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41DF1EC159CB00823E6C /* DialogChannelInvite.swift */; };
+		587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */; };
 		58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */; };
 		58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */; };
 		58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB861E56F5CF00C29A49 /* Config.swift */; };
@@ -168,6 +170,8 @@
 		58568FD91E51ADF2002FAD41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		585A0E691E68344500C5E9CB /* whereim.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = whereim.entitlements; sourceTree = "<group>"; };
 		5860912F1E75B60600377ADF /* LogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogController.swift; sourceTree = "<group>"; };
+		587F41DF1EC159CB00823E6C /* DialogChannelInvite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogChannelInvite.swift; sourceTree = "<group>"; };
+		587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogChannelInviteQrCode.swift; sourceTree = "<group>"; };
 		58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaController.swift; sourceTree = "<group>"; };
 		58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelListController.swift; sourceTree = "<group>"; };
 		58A6EB861E56F5CF00C29A49 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -253,6 +257,8 @@
 				583CA8E01EBCEE300043B171 /* DialogRequestActiveDevice.swift */,
 				583CA8E41EBCEE5A0043B171 /* DialogCreateChannel.swift */,
 				583CA8E21EBCEE430043B171 /* DialogJoinChannel.swift */,
+				587F41DF1EC159CB00823E6C /* DialogChannelInvite.swift */,
+				587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */,
 				583CA8E61EBCEE770043B171 /* DialogEditChannel.swift */,
 				583CA8E81EBCEE8F0043B171 /* DialogDeleteChannel.swift */,
 				583CA8DC1EBCEDF70043B171 /* DialogEditSelf.swift */,
@@ -710,6 +716,7 @@
 				586091301E75B60600377ADF /* LogController.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,
 				583CA8FD1EBCEF800043B171 /* DialogDeleteMarker.swift in Sources */,
+				587F41E01EC159CB00823E6C /* DialogChannelInvite.swift in Sources */,
 				58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */,
 				583CA8F11EBCEEFF0043B171 /* DialogOpenIn.swift in Sources */,
 				58A6EB8D1E56F66D00C29A49 /* Key.swift in Sources */,
@@ -725,6 +732,7 @@
 				584068A41EB4D04900E4964D /* GoogleSearchController.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
+				587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */,
 				583CA8DB1EBCEDCA0043B171 /* DialogAppMenu.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,
 				584599D61EC06BC0003C53A8 /* PoiViewerController.swift in Sources */,

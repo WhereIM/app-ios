@@ -122,4 +122,8 @@ class Channel: Record {
         }
         return ""
     }
+
+    func getLink() -> String {
+        return String(format: Config.WHERE_IM_URL, "channel/\(id!)")
+    }
 }
