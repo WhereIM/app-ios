@@ -12,14 +12,65 @@ import UIKit
 
 protocol SearchControllerInterface {
     func viewDidLoad()
-    func viewWillAppear()
-    func viewWillDisappear()
     func getSearchResultsDataSource() -> UITableViewDataSource
     func getSearchResultsDelegate() -> UITableViewDelegate
     func search(_ keyword: String)
     func getAutoCompletesDataSource() -> UITableViewDataSource
     func getAutoCompletesDelegate() -> UITableViewDelegate
     func autoComplete(_ keyword: String)
+}
+
+class SearchHistoryCell: UITableViewCell {
+    let keyword = UILabel()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        keyword.translatesAutoresizingMaskIntoConstraints = false
+        keyword.adjustsFontSizeToFitWidth = false
+
+        self.contentView.addSubview(keyword)
+        keyword.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        keyword.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        keyword.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
+        keyword.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+class SearchHistoryDelegate: NSObject, UITableViewDelegate, UITableViewDataSource {
+    unowned let searchController: SearchController
+
+    init(_ searchController: SearchController) {
+        self.searchController = searchController
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchController.history.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let keyword = searchController.history[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "search_history", for: indexPath) as! SearchHistoryCell
+        cell.keyword.text = keyword
+
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let keyword = searchController.history[indexPath.row]
+        searchController.keyword.text = keyword
+        searchController.search(keyword)
+    }
 }
 
 class SearchController: UIViewController, UITextFieldDelegate {
@@ -34,6 +85,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
     let loading = UIActivityIndicatorView()
     let adView = GADNativeExpressAdView()
     let adViewRequest = GADRequest()
+    var history = [String]()
 
     var searchControllerImpl: SearchControllerInterface?
 
@@ -70,11 +122,21 @@ class SearchController: UIViewController, UITextFieldDelegate {
     }
 
     func search(_ keyword: String) {
+        let keyword = keyword.trim()
         if keyword.isEmpty {
             setSearchResults([])
             adView.isHidden = false
             return
         }
+        if let i = history.index(of: keyword) {
+            history.remove(at: i)
+        }
+        history.insert(keyword, at: 0)
+        while history.count > 15 {
+            history.remove(at: history.count-1)
+        }
+        UserDefaults.standard.set(history, forKey: Key.SEARCH_HISTORY)
+
         adView.isHidden = true
         listView.isHidden = true
         loading.startAnimating()
@@ -115,6 +177,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
     var searchResultsDelegate: UITableViewDelegate?
     var autoCompletesDataSource: UITableViewDataSource?
     var autoCompletesDelegate: UITableViewDelegate?
+    var searchHistoryDataSource: UITableViewDataSource?
+    var searchHistoryDelegate: UITableViewDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -203,6 +267,11 @@ class SearchController: UIViewController, UITextFieldDelegate {
         searchResultsDelegate = searchControllerImpl!.getSearchResultsDelegate()
         autoCompletesDataSource = searchControllerImpl!.getAutoCompletesDataSource()
         autoCompletesDelegate = searchControllerImpl?.getAutoCompletesDelegate()
+        let searchHistoryAdapter = SearchHistoryDelegate(self)
+        searchHistoryDataSource = searchHistoryAdapter
+        searchHistoryDelegate = searchHistoryAdapter
+
+        listView.register(SearchHistoryCell.self, forCellReuseIdentifier: "search_history")
 
         searchControllerImpl!.viewDidLoad()
     }
@@ -250,6 +319,10 @@ class SearchController: UIViewController, UITextFieldDelegate {
         adView.isHidden = true
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        history = UserDefaults.standard.stringArray(forKey: Key.SEARCH_HISTORY) ?? [String]()
+    }
+
     func keyword_changed(sender: Any) {
         btn_clear.isHidden = true
         btn_search.isHidden = false
@@ -260,7 +333,12 @@ class SearchController: UIViewController, UITextFieldDelegate {
         if keyword.text != nil && !keyword.text!.isEmpty {
             searchControllerImpl!.autoComplete(keyword.text!)
         } else {
-            //history
+            listView.dataSource = searchHistoryDataSource
+            listView.delegate = searchHistoryDelegate
+            listView.reloadData()
+            adView.isHidden = true
+            loading.stopAnimating()
+            listView.isHidden = false
         }
     }
 

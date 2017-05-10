@@ -52,6 +52,7 @@ class Key {
 
     static let RADIUS = "r"
 
+    static let SEARCH_HISTORY = "search_history"
     static let SN = "sn"
     static let SPEED = "spd"
     static let STALE = "stale"

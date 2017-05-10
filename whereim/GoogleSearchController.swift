@@ -168,7 +168,6 @@ class GoogleSearchAgent: ApiKeyCallback {
     }
 }
 
-
 class GoogleAutoCompletesCell: UITableViewCell {
     let prediction = UILabel()
 
@@ -299,14 +298,6 @@ class GoogleSearchController: SearchControllerInterface {
         autoCompleteAgent = GoogleAutoCompleteAgent(self)
         searchController.listView.register(GoogleSearchResultsCell.self, forCellReuseIdentifier: "google_result")
         searchController.listView.register(GoogleAutoCompletesCell.self, forCellReuseIdentifier: "google_autocomplete")
-    }
-
-    func viewWillAppear() {
-
-    }
-
-    func viewWillDisappear() {
-
     }
 
     func getSearchResultsDelegate() -> UITableViewDelegate {
