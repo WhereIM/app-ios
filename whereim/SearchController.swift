@@ -14,9 +14,12 @@ protocol SearchControllerInterface {
     func viewDidLoad()
     func viewWillAppear()
     func viewWillDisappear()
-    func getSearchResultListDataSource() -> UITableViewDataSource
-    func getSearchResultListDelegate() -> UITableViewDelegate
+    func getSearchResultsDataSource() -> UITableViewDataSource
+    func getSearchResultsDelegate() -> UITableViewDelegate
     func search(_ keyword: String)
+    func getAutoCompletesDataSource() -> UITableViewDataSource
+    func getAutoCompletesDelegate() -> UITableViewDelegate
+    func autoComplete(_ keyword: String)
 }
 
 class SearchController: UIViewController, UITextFieldDelegate {
@@ -59,8 +62,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        btn_clear.isHidden = true
-        btn_search.isHidden = false
+        history_or_autocomplete()
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -84,9 +86,22 @@ class SearchController: UIViewController, UITextFieldDelegate {
         searchResults = results
         let parent = self.tabBarController as! ChannelController
         parent.setSearchResults(results)
+        listView.dataSource = searchResultsDataSource
+        listView.delegate = searchResultsDelegate
         listView.reloadData()
         btn_search.isHidden = true
         btn_clear.isHidden = false
+        loading.stopAnimating()
+        listView.isHidden = false
+    }
+
+    var autoCompeltes = [String]()
+    func setAutoCompletes(_ autocompletes: [String]) {
+        autoCompeltes = autocompletes
+        listView.dataSource = autoCompletesDataSource
+        listView.delegate = autoCompletesDelegate
+        listView.reloadData()
+        adView.isHidden = true
         loading.stopAnimating()
         listView.isHidden = false
     }
@@ -96,6 +111,10 @@ class SearchController: UIViewController, UITextFieldDelegate {
         parent.moveToSearchResult(at: at)
     }
 
+    var searchResultsDataSource: UITableViewDataSource?
+    var searchResultsDelegate: UITableViewDelegate?
+    var autoCompletesDataSource: UITableViewDataSource?
+    var autoCompletesDelegate: UITableViewDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -119,6 +138,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
         keyword.backgroundColor = .white
         keyword.layer.cornerRadius = 10
         keyword.delegate = self
+        keyword.addTarget(self, action: #selector(keyword_changed(sender:)), for: .editingChanged)
         searchBar.addArrangedSubview(keyword)
 
         btn_search.translatesAutoresizingMaskIntoConstraints = false
@@ -179,8 +199,10 @@ class SearchController: UIViewController, UITextFieldDelegate {
 
         self.view.sendSubview(toBack: contentArea)
 
-        listView.dataSource = searchControllerImpl!.getSearchResultListDataSource()
-        listView.delegate = searchControllerImpl!.getSearchResultListDelegate()
+        searchResultsDataSource = searchControllerImpl!.getSearchResultsDataSource()
+        searchResultsDelegate = searchControllerImpl!.getSearchResultsDelegate()
+        autoCompletesDataSource = searchControllerImpl!.getAutoCompletesDataSource()
+        autoCompletesDelegate = searchControllerImpl?.getAutoCompletesDelegate()
 
         searchControllerImpl!.viewDidLoad()
     }
@@ -226,6 +248,20 @@ class SearchController: UIViewController, UITextFieldDelegate {
             return
         }
         adView.isHidden = true
+    }
+
+    func keyword_changed(sender: Any) {
+        btn_clear.isHidden = true
+        btn_search.isHidden = false
+        history_or_autocomplete()
+    }
+
+    func history_or_autocomplete() {
+        if keyword.text != nil && !keyword.text!.isEmpty {
+            searchControllerImpl!.autoComplete(keyword.text!)
+        } else {
+            //history
+        }
     }
 
     func search_clicked(sender: Any) {

@@ -17,7 +17,7 @@ extension String {
     }
 }
 
-class GoogleSearchResultsListCell: UITableViewCell {
+class GoogleSearchResultsCell: UITableViewCell {
     let layout = UIStackView()
     let name = UILabel()
     let address = UILabel()
@@ -58,7 +58,7 @@ class GoogleSearchResultsListCell: UITableViewCell {
 
 }
 
-class SearchResultsListDelegate: NSObject, UITableViewDelegate, UITableViewDataSource {
+class GoogleSearchResultsDelegate: NSObject, UITableViewDelegate, UITableViewDataSource {
     unowned let searchController: SearchController
 
     init(_ searchController: SearchController) {
@@ -75,7 +75,7 @@ class SearchResultsListDelegate: NSObject, UITableViewDelegate, UITableViewDataS
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let result = searchController.searchResults[indexPath.row] as! GooglePOI
-        let cell = tableView.dequeueReusableCell(withIdentifier: "google_result", for: indexPath) as! GoogleSearchResultsListCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "google_result", for: indexPath) as! GoogleSearchResultsCell
         cell.name.text = result.name
         cell.address.text = result.address
         cell.attribution.attributedText = result.attribution
@@ -89,47 +89,19 @@ class SearchResultsListDelegate: NSObject, UITableViewDelegate, UITableViewDataS
     }
 }
 
-class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
-    unowned let searchController: SearchController
-    let service = CoreService.bind()
-    let delegate: SearchResultsListDelegate
+class GoogleSearchAgent: ApiKeyCallback {
+    let googleSearchController: GoogleSearchController
+    var keyword: String?
 
-    init(_ searchController: SearchController) {
-        self.searchController = searchController
-        self.delegate = SearchResultsListDelegate(searchController)
-    }
-
-    func viewDidLoad() {
-        searchController.listView.register(GoogleSearchResultsListCell.self, forCellReuseIdentifier: "google_result")
-    }
-
-    func viewWillAppear() {
-
-    }
-
-    func viewWillDisappear() {
-
-    }
-
-    func getSearchResultListDelegate() -> UITableViewDelegate {
-        return delegate
-    }
-
-    func getSearchResultListDataSource() -> UITableViewDataSource {
-        return delegate
-    }
-
-    var query: String?
-    func search(_ keyword: String) {
-        query = keyword
-        service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
+    init(_ googleSearchController: GoogleSearchController) {
+        self.googleSearchController = googleSearchController
     }
 
     func apiKey(_ key: String) {
-        let center = searchController.getMapCenter()
+        let center = googleSearchController.searchController.getMapCenter()
         let params = [
             "key": key,
-            "query": query!,
+            "query": keyword!,
             "language": "google_lang".localized,
             "location": String(format: "%f,%f", center.latitude, center.longitude),
             "rankby": "distance"
@@ -147,21 +119,20 @@ class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
                 }
                 switch status {
                 case "REQUEST_DENIED":
-                    self.service.invalidateKey(forApi: Key.GOOGLE_SEARCH)
-                    self.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
+                    self.googleSearchController.service.invalidateKey(forApi: Key.GOOGLE_SEARCH)
+                    self.googleSearchController.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
                 case "OVER_QUERY_LIMIT":
                     DispatchQueue.main.async {
-                        self.searchController.view.makeToast("error".localized)
+                        self.googleSearchController.searchController.view.makeToast("error".localized)
                     }
                 case "ZERO_RESULTS":
-                    self.searchController.setSearchResults([])
+                    self.googleSearchController.searchController.setSearchResults([])
                 case "OK":
                     guard let results = data["results"] as? [[String:Any]] else {
                         return
                     }
                     var res = [GooglePOI]()
                     for result in results {
-                        print(result)
                         guard let name = result["name"] as? String else {
                             continue
                         }
@@ -188,12 +159,179 @@ class GoogleSearchController: SearchControllerInterface, ApiKeyCallback {
                         }
                         res.append(r)
                     }
-                    self.searchController.setSearchResults(res)
+                    self.googleSearchController.searchController.setSearchResults(res)
                 default:
                     return
                 }
             }
         }
     }
+}
 
+
+class GoogleAutoCompletesCell: UITableViewCell {
+    let prediction = UILabel()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        prediction.translatesAutoresizingMaskIntoConstraints = false
+        prediction.adjustsFontSizeToFitWidth = false
+
+        self.contentView.addSubview(prediction)
+        prediction.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        prediction.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        prediction.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
+        prediction.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+class GoogleAutoCompletesDelegate: NSObject, UITableViewDelegate, UITableViewDataSource {
+    unowned let searchController: SearchController
+
+    init(_ searchController: SearchController) {
+        self.searchController = searchController
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchController.autoCompeltes.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let prediction = searchController.autoCompeltes[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "google_autocomplete", for: indexPath) as! GoogleAutoCompletesCell
+        cell.prediction.text = prediction
+
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let prediction = searchController.autoCompeltes[indexPath.row]
+        searchController.keyword.text = prediction
+        searchController.search(prediction)
+    }
+}
+
+class GoogleAutoCompleteAgent: ApiKeyCallback {
+    let googleSearchController: GoogleSearchController
+    var keyword: String?
+
+    init(_ googleSearchController: GoogleSearchController) {
+        self.googleSearchController = googleSearchController
+    }
+
+    func apiKey(_ key: String) {
+        let center = googleSearchController.searchController.getMapCenter()
+        let params = [
+            "key": key,
+            "input": keyword!,
+            "language": "google_lang".localized,
+            "location": String(format: "%f,%f", center.latitude, center.longitude),
+            "radius": "50000"
+        ]
+        DispatchQueue.global(qos: .background).async {
+            Alamofire.request("https://maps.googleapis.com/maps/api/place/queryautocomplete/json", method: .get, parameters: params, encoding: URLEncoding.queryString, headers: ["Referer":"where.im"]).responseJSON{ response in
+                guard let result = response.result.value else {
+                    return
+                }
+                guard let data = result as? [String:Any] else {
+                    return
+                }
+                guard let status = data["status"] as? String else {
+                    return
+                }
+                switch status {
+                case "REQUEST_DENIED":
+                    self.googleSearchController.service.invalidateKey(forApi: Key.GOOGLE_SEARCH)
+                    self.googleSearchController.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
+                case "OVER_QUERY_LIMIT":
+                    DispatchQueue.main.async {
+                        self.googleSearchController.searchController.view.makeToast("error".localized)
+                    }
+                case "ZERO_RESULTS":
+                    self.googleSearchController.searchController.setAutoCompletes([])
+                case "OK":
+                    guard let predictions = data["predictions"] as? [[String:Any]] else {
+                        return
+                    }
+                    var res = [String]()
+                    for prediction in predictions {
+                        guard let description = prediction["description"] as? String else {
+                            continue
+                        }
+                        res.append(description)
+                    }
+                    self.googleSearchController.searchController.setAutoCompletes(res)
+                default:
+                    return
+                }
+            }
+        }
+    }
+}
+
+class GoogleSearchController: SearchControllerInterface {
+    unowned let searchController: SearchController
+    let service = CoreService.bind()
+    let searchDelegate: GoogleSearchResultsDelegate
+    let autoCompleteDelegate: GoogleAutoCompletesDelegate
+    var searchAgent: GoogleSearchAgent?
+    var autoCompleteAgent: GoogleAutoCompleteAgent?
+
+    init(_ searchController: SearchController) {
+        self.searchController = searchController
+        searchDelegate = GoogleSearchResultsDelegate(searchController)
+        autoCompleteDelegate = GoogleAutoCompletesDelegate(searchController)
+    }
+
+    func viewDidLoad() {
+        searchAgent = GoogleSearchAgent(self)
+        autoCompleteAgent = GoogleAutoCompleteAgent(self)
+        searchController.listView.register(GoogleSearchResultsCell.self, forCellReuseIdentifier: "google_result")
+        searchController.listView.register(GoogleAutoCompletesCell.self, forCellReuseIdentifier: "google_autocomplete")
+    }
+
+    func viewWillAppear() {
+
+    }
+
+    func viewWillDisappear() {
+
+    }
+
+    func getSearchResultsDelegate() -> UITableViewDelegate {
+        return searchDelegate
+    }
+
+    func getSearchResultsDataSource() -> UITableViewDataSource {
+        return searchDelegate
+    }
+
+    func getAutoCompletesDelegate() -> UITableViewDelegate {
+        return autoCompleteDelegate
+    }
+
+    func getAutoCompletesDataSource() -> UITableViewDataSource {
+        return autoCompleteDelegate
+    }
+
+    func search(_ keyword: String) {
+        searchAgent!.keyword = keyword
+        service.getKey(forApi: Key.GOOGLE_SEARCH, callback: searchAgent!)
+    }
+
+    func autoComplete(_ keyword: String) {
+        autoCompleteAgent!.keyword = keyword
+        service.getKey(forApi: Key.GOOGLE_SEARCH, callback: autoCompleteAgent!)
+    }
 }
