@@ -247,8 +247,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     func mqttOnMessage(_ topic: String, _ data: [String: Any]) {
         do {
             let clientChannelPattern = try NSRegularExpression(pattern: "^client/[a-f0-9]{32}/([^/]+)/get$", options: [])
-            if let match = clientChannelPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
-                let t = (topic as NSString).substring(with: match.rangeAt(1))
+            let nstopic = topic as NSString
+            if let match = clientChannelPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, nstopic.length)) {
+                let t = nstopic.substring(with: match.rangeAt(1))
                 switch t {
                 case "unicast":
                     mqttOnMessage(data["topic"] as! String, data["message"] as! [String: Any])
@@ -268,15 +269,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 return
             }
             let channelLocationPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/map/([^/]+)/get$", options: [])
-            if let match = channelLocationPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
-                let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
+            if let match = channelLocationPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, nstopic.length)) {
+                let channel_id = nstopic.substring(with: match.rangeAt(1))
                 mqttChannelLocationHandler(channel_id, data)
                 return
             }
             let channelDataPattern = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})/data/([^/]+)/get$", options: [])
-            if let match = channelDataPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
-                let channel_id = (topic as NSString).substring(with: match.rangeAt(1))
-                let category = (topic as NSString).substring(with: match.rangeAt(2))
+            if let match = channelDataPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, nstopic.length)) {
+                let channel_id = nstopic.substring(with: match.rangeAt(1))
+                let category = nstopic.substring(with: match.rangeAt(2))
                 switch category {
                 case "mate":
                     mqttChannelMateHandler(channel_id, data)
@@ -292,7 +293,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 return
             }
             let systemKeyPattern = try NSRegularExpression(pattern: "^system/key/get$", options: [])
-            if let _ = systemKeyPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, topic.characters.count)) {
+            if let _ = systemKeyPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, nstopic.length)) {
                 mqttSystemKeyHandler(data)
                 return
             }
@@ -340,11 +341,12 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             let pattern_open_in_channel = try NSRegularExpression(pattern: "^open_in_channel/(.*)$", options: [])
             let pattern_channel = try NSRegularExpression(pattern: "^channel/([a-f0-9]{32})$", options: [])
 
-            if let match = pattern_here.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
-                guard let lat = Double((link as NSString).substring(with: match.rangeAt(1))) else {
+            let nslink = link as NSString
+            if let match = pattern_here.firstMatch(in: link, options: [], range: NSMakeRange(0, nslink.length)) {
+                guard let lat = Double(nslink.substring(with: match.rangeAt(1))) else {
                     return
                 }
-                guard let lng = Double((link as NSString).substring(with: match.rangeAt(2))) else {
+                guard let lng = Double(nslink.substring(with: match.rangeAt(2))) else {
                     return
                 }
                 let name = (link as NSString).substring(with: match.rangeAt(3))
@@ -364,8 +366,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 pending_link = link
                 return
             }
-            if let match = pattern_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
-                let channel_id = (link as NSString).substring(with: match.rangeAt(1))
+            if let match = pattern_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, nslink.length)) {
+                let channel_id = nslink.substring(with: match.rangeAt(1))
                 DispatchQueue.main.async {
                     let sb = UIStoryboard(name: "Main", bundle: nil)
                     let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
@@ -373,16 +375,17 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     _ = DialogJoinChannel(startupVC, channel_id)
                 }
             }
-            if let match = pattern_open_in_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, link.characters.count)) {
-                let sublink = (link as NSString).substring(with: match.rangeAt(1))
-                if let m = pattern_here.firstMatch(in: sublink, options: [], range: NSMakeRange(0, sublink.characters.count)) {
-                    guard let lat = Double((sublink as NSString).substring(with: m.rangeAt(1))) else {
+            if let match = pattern_open_in_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, nslink.length)) {
+                let sublink = nslink.substring(with: match.rangeAt(1))
+                let nssublink = sublink as NSString
+                if let m = pattern_here.firstMatch(in: sublink, options: [], range: NSMakeRange(0, nssublink.length)) {
+                    guard let lat = Double(nssublink.substring(with: m.rangeAt(1))) else {
                         return
                     }
-                    guard let lng = Double((sublink as NSString).substring(with: m.rangeAt(2))) else {
+                    guard let lng = Double(nssublink.substring(with: m.rangeAt(2))) else {
                         return
                     }
-                    let name = (sublink as NSString).substring(with: m.rangeAt(3))
+                    let name = nssublink.substring(with: m.rangeAt(3))
                     DispatchQueue.main.async {
                         let sb = UIStoryboard(name: "Main", bundle: nil)
                         let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
