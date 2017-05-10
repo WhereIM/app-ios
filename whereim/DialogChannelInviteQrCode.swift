@@ -15,7 +15,7 @@ class DialogChannelInviteQrCode {
 
     init(_ viewController: UIViewController, _ channel: Channel) {
         let screenSize: CGRect = UIScreen.main.bounds
-        let e = min(screenSize.width, screenSize.height) * 0.75
+        let e = min(min(screenSize.width, screenSize.height) * 0.75, alert.visualStyle.width)
         let data = channel.getLink().data(using: String.Encoding.isoLatin1, allowLossyConversion: false)
 
         let filter = CIFilter(name: "CIQRCodeGenerator")
