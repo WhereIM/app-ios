@@ -105,14 +105,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
         self.channel = channel
         self.channelController = channelController
         self.mateList = [Mate]()
-        self.markerList = service.getChannelMarker(channel.id!)
-        for mate in service.getChannelMate(channel.id!) {
-            if mate.id! == channel.mate_id! {
-                self.selfMate = mate
-            } else {
-                self.mateList.append(mate)
-            }
-        }
+        self.markerList = MarkerList()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -335,6 +328,8 @@ class MarkerController: UIViewController, Callback {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        adapter!.reload()
+        markerListView.reloadData()
         cbMatekey = service!.addMateListener(channel!, cbMatekey, self)
         cbMarkerkey = service!.addMarkerListener(channel!, cbMarkerkey, self)
     }
