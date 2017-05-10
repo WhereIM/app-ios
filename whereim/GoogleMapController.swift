@@ -47,6 +47,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         let camera = GMSCameraPosition.camera(withLatitude: mapCenter.latitude, longitude: mapCenter.longitude, zoom: 15)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView!.settings.compassButton = true
+        mapView!.settings.myLocationButton = true
 
         mapView!.translatesAutoresizingMaskIntoConstraints = false
         viewContrller.view.addSubview(mapView!)
@@ -128,7 +129,6 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             let myLocation = change?[NSKeyValueChangeKey.newKey] as! CLLocation
             mapCenter = myLocation.coordinate
             mapView!.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 15.0)
-            mapView!.settings.myLocationButton = true
 
             didFindMyLocation = true
         }
