@@ -330,8 +330,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
     }
 
     func history_or_autocomplete() {
-        if keyword.text != nil && !keyword.text!.isEmpty {
-            searchControllerImpl!.autoComplete(keyword.text!)
+        if keyword.text != nil && !keyword.text!.trim().isEmpty {
+            searchControllerImpl!.autoComplete(keyword.text!.trim())
         } else {
             listView.dataSource = searchHistoryDataSource
             listView.delegate = searchHistoryDelegate
@@ -349,7 +349,9 @@ class SearchController: UIViewController, UITextFieldDelegate {
 
     func clear_clicked(sender: Any) {
         keyword.text = ""
+        keyword.resignFirstResponder()
         search("")
+        adView.isHidden = false
         listView.isHidden = true
         btn_clear.isHidden = true
         btn_search.isHidden = false
