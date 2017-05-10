@@ -6,53 +6,87 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
+import SDCAlertView
 
 class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-
-    var videoCaptureDevice: AVCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-    var device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-    var output = AVCaptureMetadataOutput()
-    var previewLayer: AVCaptureVideoPreviewLayer?
-
-    var captureSession = AVCaptureSession()
-    var code: String?
+    let cameraview = UIView()
+    var viewWindowSize: CGFloat?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.view.backgroundColor = UIColor.black
 
-        let input = try? AVCaptureDeviceInput(device: videoCaptureDevice)
-
-        if self.captureSession.canAddInput(input) {
-            self.captureSession.addInput(input)
-        }
-
-        self.previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-
         let screenSize: CGRect = UIScreen.main.bounds
-        let e = min(screenSize.width, screenSize.height) * 0.75
+        viewWindowSize = min(screenSize.width, screenSize.height) * 0.75
 
-        let cameraview = UIView()
         cameraview.translatesAutoresizingMaskIntoConstraints = false
-        if let videoPreviewLayer = self.previewLayer {
-            videoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
 
-
-            videoPreviewLayer.frame = CGRect(x: 0, y: 0, width: e, height: e)
-            cameraview.layer.addSublayer(videoPreviewLayer)
-        }
         self.view.addSubview(cameraview)
         cameraview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         cameraview.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        cameraview.widthAnchor.constraint(equalToConstant: e).isActive = true
-        cameraview.heightAnchor.constraint(equalToConstant: e).isActive = true
+        cameraview.widthAnchor.constraint(equalToConstant: viewWindowSize!).isActive = true
+        cameraview.heightAnchor.constraint(equalToConstant: viewWindowSize!).isActive = true
+
+        checkCamera()
+    }
+
+    func checkCamera() {
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized {
+            setupCamera()
+        } else {
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { response in
+                if response {
+                    self.setupCamera()
+                } else {
+                    self.alertNoPermission()
+                }
+            }
+        }
+    }
+
+    func alertNoPermission() {
+        let alert = AlertController(title: "scan_qr_code".localized, message: "NSCameraUsageDescription".localized, preferredStyle: .alert)
+        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        let action = AlertAction(title: "action_settings".localized, style: .preferred){ _ in
+            UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+        }
+        alert.add(action)
+        present(alert, animated: true, completion: nil)
+    }
+
+    var videoCaptureDevice: AVCaptureDevice?
+    var device: AVCaptureDevice?
+    var output: AVCaptureMetadataOutput?
+    var previewLayer: AVCaptureVideoPreviewLayer?
+    var captureSession: AVCaptureSession?
+
+    func setupCamera() {
+        videoCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        output = AVCaptureMetadataOutput()
+        captureSession = AVCaptureSession()
+
+        let input = try? AVCaptureDeviceInput(device: videoCaptureDevice)
+
+        if self.captureSession!.canAddInput(input!) {
+            self.captureSession!.addInput(input!)
+        }
+
+        self.previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+
+        if let videoPreviewLayer = self.previewLayer {
+            videoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+
+            videoPreviewLayer.frame = CGRect(x: 0, y: 0, width: viewWindowSize!, height: viewWindowSize!)
+            cameraview.layer.addSublayer(videoPreviewLayer)
+        }
 
         let metadataOutput = AVCaptureMetadataOutput()
-        if self.captureSession.canAddOutput(metadataOutput) {
-            self.captureSession.addOutput(metadataOutput)
+        if self.captureSession!.canAddOutput(metadataOutput) {
+            self.captureSession!.addOutput(metadataOutput)
 
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             metadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode, AVMetadataObjectTypeEAN13Code]
@@ -64,16 +98,20 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if (captureSession.isRunning == false) {
-            captureSession.startRunning();
+        if let session = captureSession {
+            if (session.isRunning == false) {
+                session.startRunning();
+            }
         }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        if (captureSession.isRunning == true) {
-            captureSession.stopRunning();
+        if let session = captureSession {
+            if (session.isRunning == true) {
+                session.stopRunning();
+            }
         }
     }
 
