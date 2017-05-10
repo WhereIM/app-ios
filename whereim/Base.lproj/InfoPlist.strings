@@ -1,2 +1,3 @@
 "NSLocationAlwaysUsageDescription" = "Your location is essential for this app to work.";
 "NSLocationWhenInUseUsageDescription" = "Your location is essential for this app to work.";
+"NSCameraUsageDescription" = "Camera will be used to join channel with QR code";

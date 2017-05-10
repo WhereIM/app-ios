@@ -312,7 +312,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         fab.titleLabel?.baselineAdjustment = .alignCenters
         fab.backgroundColor = UIColor(red: 0, green: 0.61465252229292133, blue: 1, alpha: 1)
         fab.layer.cornerRadius = 32
-        fab.addTarget(self, action: #selector(create_channel(sender:)), for: .touchUpInside)
+        fab.addTarget(self, action: #selector(new_channel(sender:)), for: .touchUpInside)
 
         listArea.addSubview(fab)
         listArea.bringSubview(toFront: fab)
@@ -364,8 +364,8 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         _ = DialogAppMenu(self, menu)
     }
 
-    func create_channel(sender: UIButton) {
-        _ = DialogCreateChannel(self)
+    func new_channel(sender: UIButton) {
+        _ = DialogNewChannel(self, sender)
     }
 
     override func viewDidAppear(_ animated: Bool) {
