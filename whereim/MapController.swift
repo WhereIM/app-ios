@@ -9,7 +9,7 @@
 import CoreLocation
 import UIKit
 
-protocol MapControllerInterface {
+protocol MapControllerInterface: MapDataReceiver {
     init(_ mapController: MapController)
     func viewDidLoad(_ viewContrller: UIViewController)
     func viewWillAppear(_ viewContrller: UIViewController)
@@ -25,7 +25,7 @@ protocol MapControllerInterface {
     func refreshEditing()
 }
 
-class MapController: UIViewController, ChannelChangedListener {
+class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     var service: CoreService?
     var channel: Channel?
     var cbkey: Int?
@@ -235,14 +235,12 @@ class MapController: UIViewController, ChannelChangedListener {
 
         mapControllerImpl!.viewWillAppear(self)
         if let sv = service {
-            cbkey = sv.openMap(channel!, cbkey, mapControllerImpl as! MapDataReceiver)
             channelCbkey = sv.addChannelChangedListener(channel!, channelCbkey, self)
         }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         if let sv = service {
-            sv.closeMap(channel: channel!, key: cbkey!)
             sv.removeChannelChangedListener(channel!, channelCbkey)
         }
         mapControllerImpl!.viewWillDisappear(self)
@@ -434,6 +432,18 @@ class MapController: UIViewController, ChannelChangedListener {
             }
         }
         mapControllerImpl!.refreshEditing()
+    }
+
+    func onMateData(_ mate: Mate) {
+        mapControllerImpl!.onMateData(mate)
+    }
+
+    func onMarkerData(_ marker: Marker) {
+        mapControllerImpl!.onMarkerData(marker)
+    }
+
+    func onEnchantmentData(_ enchantment: Enchantment) {
+        mapControllerImpl!.onEnchantmentData(enchantment)
     }
 
     /*

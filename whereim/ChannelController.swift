@@ -20,7 +20,8 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     var channel: Channel?
     var defaultTab = 0
     let loadingSwitch = UILoadingSwitch()
-    var channelListChangedCbkey: Int?
+    var mapCbKey: Int?
+    var channelListChangedCbKey: Int?
     var connectionStatusChangedCbKey: Int?
     let layout = UIStackView()
     let titleLayout = UIStackView()
@@ -140,19 +141,23 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         super.viewWillAppear(animated)
 
         service.setViewController(self)
-        channelListChangedCbkey = service.addChannelListChangedListener(channelListChangedCbkey, self)
+        mapCbKey = service.openMap(channel!, mapCbKey, mapController!)
+        channelListChangedCbKey = service.addChannelListChangedListener(channelListChangedCbKey, self)
         connectionStatusChangedCbKey = service.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         service.setViewController(nil)
-        if channelListChangedCbkey != nil {
-            service.removeChannelListChangedListener(channelListChangedCbkey)
-            channelListChangedCbkey = nil
+        if channelListChangedCbKey != nil {
+            service.removeChannelListChangedListener(channelListChangedCbKey)
+            channelListChangedCbKey = nil
         }
         if connectionStatusChangedCbKey != nil {
             service.removeConnectionStatusChangedListener(connectionStatusChangedCbKey)
             connectionStatusChangedCbKey = nil
+        }
+        if mapCbKey != nil{
+            service.closeMap(channel: channel!, key: mapCbKey!)
         }
         super.viewWillDisappear(animated)
     }

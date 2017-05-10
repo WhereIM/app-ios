@@ -10,12 +10,21 @@ import UIKit
 
 
 class MateCell: UITableViewCell {
+    let indicator = UILabel()
     let titleLayout = UIStackView()
     let title = UILabel()
     let subtitle = UILabel()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.adjustsFontSizeToFitWidth = false
+        indicator.text = "•"
+
+        self.contentView.addSubview(indicator)
+        indicator.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15).isActive = true
+        indicator.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
 
         titleLayout.axis = .vertical
         titleLayout.alignment = .leading
@@ -32,10 +41,8 @@ class MateCell: UITableViewCell {
 
         self.contentView.addSubview(titleLayout)
 
-        NSLayoutConstraint.activate([
-            titleLayout.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15),
-            titleLayout.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
-            ])
+        titleLayout.leadingAnchor.constraint(equalTo: indicator.trailingAnchor, constant:15).isActive = true
+        titleLayout.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -151,6 +158,14 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
                     cell.title.text = mate.mate_name
                     cell.subtitle.text = nil
                     cell.subtitle.isHidden = true
+                }
+
+                if mate.latitude == nil || mate.longitude == nil {
+                    cell.indicator.textColor = UIColor.gray
+                } else if mate.stale {
+                    cell.indicator.textColor = UIColor.orange
+                } else {
+                    cell.indicator.textColor = UIColor.green
                 }
 
                 return cell

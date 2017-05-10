@@ -508,7 +508,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         mateListener[channel.id!]![key!] = callback
-
         return key!
     }
 
@@ -1109,6 +1108,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     receiver.value.onMateData(mate)
                 }
             }
+            self.notifyMateListeners(channel_id)
         }
     }
 
