@@ -1,5 +1,6 @@
 "lang" = "ja";
 "google_lang" = "ja";
+"NSCameraUsageDescription" = "カメラはQRコードを使ってチャンネルに参加するために利用されます。";
 "action_invite" = "招待";
 "action_settings" = "設定";
 "action_about" = "紹介";
@@ -26,7 +27,11 @@
 "cancel" = "キャンセル";
 "close" = "閉じる";
 "delete" = "削除する";
-"open_in" = "開いている";
+"open_in_channel" = "チャンネルで開く";
+"scan_qr_code" = "QRコードをスキャンする";
+"generate_qr_code" = "QRコードを生成する";
+"send_invite_link" = "招待リンクを送信する";
+"open_in" = "開く";
 "share" = "共有";
 "create_enchantment" = "新しいエンチャントメント";
 "create_marker" = "新しいマーカー";

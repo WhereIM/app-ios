@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "Ihr Standort ist entscheidend, damit die App funktioniert.";
-"NSLocationWhenInUseUsageDescription" = "Ihr Standort ist entscheidend, damit die App funktioniert.";
+"NSLocationAlwaysUsageDescription" = "Ihr Standort wird verwendet, wenn Standortfreigabe aktiv ist";
+"NSLocationWhenInUseUsageDescription" = "Ihr Standort wird verwendet, wenn Standortfreigabe aktiv ist";
+"NSCameraUsageDescription" = "Die Kamera wird verwendet, um den Kanal mit dem QR-Code zu verbinden";

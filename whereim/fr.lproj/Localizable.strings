@@ -1,5 +1,6 @@
 "lang" = "fr";
 "google_lang" = "fr";
+"NSCameraUsageDescription" = "La caméra sera utilisée pour rejoindre la chaîne grâce au code QR";
 "action_invite" = "Inviter";
 "action_settings" = "Paramètres";
 "action_about" = "A propos";
@@ -26,6 +27,10 @@
 "cancel" = "Annuler";
 "close" = "Fermer";
 "delete" = "Effacer";
+"open_in_channel" = "Ouvrir dans la Chaîne";
+"scan_qr_code" = "Scanner le code QR";
+"generate_qr_code" = "Générer un code QR";
+"send_invite_link" = "Envoyer un Lien d'Invitation";
 "open_in" = "Ouvrir dans";
 "share" = "Partager";
 "create_enchantment" = "Nouvel Enchantement";

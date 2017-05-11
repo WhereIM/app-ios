@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "이 앱을 구동하는데 위치 정보가 필요합니다.";
-"NSLocationWhenInUseUsageDescription" = "이 앱을 구동하는데 위치 정보가 필요합니다.";
+"NSLocationAlwaysUsageDescription" = "위치공유옵션이활성화되면내위치정보를사용합니다.";
+"NSLocationWhenInUseUsageDescription" = "위치공유옵션이활성화되면내위치정보를사용합니다.";
+"NSCameraUsageDescription" = "QR코드로채널에참여하는데카메라가사용됩니다.";

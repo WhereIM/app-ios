@@ -1,3 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "本程式需要定位功能才能運作喔";
-"NSLocationWhenInUseUsageDescription" = "本程式需要定位功能才能運作喔";
-"NSCameraUsageDescription" = "掃描QR Code加入群租需要用到相機";
+"NSLocationAlwaysUsageDescription" = "位置分享需要使用定位功能";
+"NSLocationWhenInUseUsageDescription" = "位置分享需要使用定位功能";
+"NSCameraUsageDescription" = "掃描 QR Code 加入群組時需要用到相機";

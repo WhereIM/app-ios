@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "Uw locatie is essentieel om deze app te laten functioneren.";
-"NSLocationWhenInUseUsageDescription" = "Uw locatie is essentieel om deze app te laten functioneren.";
+"NSLocationAlwaysUsageDescription" = "Uw locatie wordt gebruikt wanneer locatie delen actief is.";
+"NSLocationWhenInUseUsageDescription" = "Uw locatie wordt gebruikt wanneer locatie delen actief is.";
+"NSCameraUsageDescription" = "Camera wordt gebruikt op kanaal met QR code";

@@ -1,5 +1,6 @@
 "lang" = "vi";
 "google_lang" = "vi";
+"NSCameraUsageDescription" = "Máy ảnh sẽ được sử dụng để kết nối kênh với mã QR";
 "action_invite" = "Mời";
 "action_settings" = "Cài đặt";
 "action_about" = "Thông tin";
@@ -26,6 +27,11 @@
 "cancel" = "Hủy";
 "close" = "Đóng";
 "delete" = "Xóa";
+"open_in_channel" = "Mở trong Kênh";
+"scan_qr_code" = "Quét mã QR";
+"generate_qr_code" = "Tạo mã QR";
+"send_invite_link" = "Gửi Liên kết Mời";
+"open_in" = "Mở trong";
 "share" = "Chia sẻ";
 "create_enchantment" = "Theo dõi Mới";
 "create_marker" = "Đánh dấu Mới";

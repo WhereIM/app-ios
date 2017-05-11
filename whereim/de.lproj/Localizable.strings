@@ -1,5 +1,6 @@
 "lang" = "de";
 "google_lang" = "de";
+"NSCameraUsageDescription" = "Die Kamera wird verwendet, um den Kanal mit dem QR-Code zu verbinden";
 "action_invite" = "Einladen";
 "action_settings" = "Einstellungen";
 "action_about" = "Über";
@@ -26,6 +27,10 @@
 "cancel" = "Abbrechen";
 "close" = "Schließen";
 "delete" = "Löschen";
+"open_in_channel" = "Im Kanal öffnen";
+"scan_qr_code" = "QR-Code scannen";
+"generate_qr_code" = "QR-Code generieren";
+"send_invite_link" = "Einladungs-Link senden";
 "open_in" = "Öffnen in";
 "share" = "Teilen";
 "create_enchantment" = "Neues Enchantment";

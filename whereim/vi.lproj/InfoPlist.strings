@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "Bắt buộc cần thông tin về địa điểm của bạn để ứng dụng này có thể làm việc.";
-"NSLocationWhenInUseUsageDescription" = "Bắt buộc cần thông tin về địa điểm của bạn để ứng dụng này có thể làm việc.";
+"NSLocationAlwaysUsageDescription" = "Địa điểm của bạn sẽ được sử dụng khi chia sẻ địa điểm đang hoạt động.";
+"NSLocationWhenInUseUsageDescription" = "Địa điểm của bạn sẽ được sử dụng khi chia sẻ địa điểm đang hoạt động.";
+"NSCameraUsageDescription" = "Máy ảnh sẽ được sử dụng để kết nối kênh với mã QR";

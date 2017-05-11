@@ -1,5 +1,6 @@
 "lang" = "ko";
 "google_lang" = "ko";
+"NSCameraUsageDescription" = "QR코드로채널에참여하는데카메라가사용됩니다.";
 "action_invite" = "초대";
 "action_settings" = "설정";
 "action_about" = "소개";
@@ -26,6 +27,11 @@
 "cancel" = "취소";
 "close" = "닫기";
 "delete" = "삭제";
+"open_in_channel" = "채널에서열기";
+"scan_qr_code" = "QR코드스캔";
+"generate_qr_code" = "QR코드생성";
+"send_invite_link" = "초대링크보내기";
+"open_in" = "열기";
 "share" = "공유";
 "create_enchantment" = "새로운 인챈트";
 "create_marker" = "새로운 마커";

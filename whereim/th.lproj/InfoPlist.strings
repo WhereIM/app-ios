@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "ตำแหน่งของคุณเป็นสิ่งสำคัญสำหรับการทำงานของแอปนี้";
-"NSLocationWhenInUseUsageDescription" = "ตำแหน่งของคุณเป็นสิ่งสำคัญสำหรับการทำงานของแอปนี้";
+"NSLocationAlwaysUsageDescription" = "สถานที่ของคุณจะถูกใช้เมื่อคุณเปิดใช้งานการแบ่งปันสถานที่อยู่";
+"NSLocationWhenInUseUsageDescription" = "สถานที่ของคุณจะถูกใช้เมื่อคุณเปิดใช้งานการแบ่งปันสถานที่อยู่";
+"NSCameraUsageDescription" = "กล้องจะถูกใช้งานเพื่อใช้รวมช่องรายการด้วยQRโค้ด";

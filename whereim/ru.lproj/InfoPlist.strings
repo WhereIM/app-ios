@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "Ваше расположение важно для корректной работы приложения.";
-"NSLocationWhenInUseUsageDescription" = "Ваше расположение важно для корректной работы приложения.";
+"NSLocationAlwaysUsageDescription" = "Ваше местоположение будет использоваться когда обмен информацией о местоположении активен";
+"NSLocationWhenInUseUsageDescription" = "Ваше местоположение будет использоваться когда обмен информацией о местоположении активен";
+"NSCameraUsageDescription" = "Камера будет использоваться для присоединения к каналу с QR-кодом";

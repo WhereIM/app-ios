@@ -1,5 +1,6 @@
 "lang" = "th";
 "google_lang" = "th";
+"NSCameraUsageDescription" = "กล้องจะถูกใช้งานเพื่อใช้รวมช่องรายการด้วยQRโค้ด";
 "action_invite" = "เชิญ";
 "action_settings" = "ตั้งค่า";
 "action_about" = "เกี่ยวกับ";
@@ -26,6 +27,11 @@
 "cancel" = "ยกเลิก";
 "close" = "ปิด";
 "delete" = "ลบ";
+"open_in_channel" = "เปิดในช่องรายการ";
+"scan_qr_code" = "สแกนQRโค้ด";
+"generate_qr_code" = "สร้างQRโค้ด";
+"send_invite_link" = "ส่งลิงก์คำเชิญ";
+"open_in" = "เปิดใน";
 "share" = "แบ่งปัน";
 "create_enchantment" = "เอนชานต์รูปแบบใหม่";
 "create_marker" = "เครื่องหมายใหม่";

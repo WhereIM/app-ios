@@ -1,5 +1,6 @@
 "lang" = "zh-TW";
 "google_lang" = "zh-TW";
+"NSCameraUsageDescription" = "掃描 QR Code 加入群組時需要用到相機";
 "action_invite" = "邀請";
 "action_settings" = "設定";
 "action_about" = "關於";

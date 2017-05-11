@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "Votre position est essentielle pour que cette application fonctionne.";
-"NSLocationWhenInUseUsageDescription" = "Votre position est essentielle pour que cette application fonctionne.";
+"NSLocationAlwaysUsageDescription" = "Votre position sera utilisée lorsque le partage de localisation sera active.";
+"NSLocationWhenInUseUsageDescription" = "Votre position sera utilisée lorsque le partage de localisation sera active.";
+"NSCameraUsageDescription" = "La caméra sera utilisée pour rejoindre la chaîne grâce au code QR";

@@ -1,5 +1,6 @@
 "lang" = "nl";
 "google_lang" = "nl";
+"NSCameraUsageDescription" = "Camera wordt gebruikt op kanaal met QR code";
 "action_invite" = "Uitnodigen";
 "action_settings" = "Instellingen";
 "action_about" = "Over";
@@ -26,6 +27,11 @@
 "cancel" = "Annuleren";
 "close" = "Sluiten";
 "delete" = "Wissen";
+"open_in_channel" = "Openen in Kanaal";
+"scan_qr_code" = "QR-code Scannen";
+"generate_qr_code" = "QR-code aanmaken";
+"send_invite_link" = "Link uitnodiging versturen";
+"open_in" = "Openen in";
 "share" = "Delen";
 "create_enchantment" = "Nieuwe Voorkeur";
 "create_marker" = "Nieuwe Marker";

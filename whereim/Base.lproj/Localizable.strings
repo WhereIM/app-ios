@@ -1,6 +1,7 @@
 "app_name" = "Where.IM";
 "lang" = "en";
 "google_lang" = "en";
+"NSCameraUsageDescription" = "Camera will be used to join channel with QR code";
 "action_invite" = "Invite";
 "action_settings" = "Settings";
 "action_about" = "About";

@@ -1,2 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "あなたの位置情報は、このアプリが動作するために不可欠です。";
-"NSLocationWhenInUseUsageDescription" = "あなたの位置情報は、このアプリが動作するために不可欠です。";
+"NSLocationAlwaysUsageDescription" = "あなたの位置情報は、位置情報の共有が有効になっている場合に利用されます。";
+"NSLocationWhenInUseUsageDescription" = "あなたの位置情報は、位置情報の共有が有効になっている場合に利用されます。";
+"NSCameraUsageDescription" = "カメラはQRコードを使ってチャンネルに参加するために利用されます。";

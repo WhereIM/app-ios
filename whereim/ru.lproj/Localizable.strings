@@ -1,5 +1,6 @@
 "lang" = "ru";
 "google_lang" = "ru";
+"NSCameraUsageDescription" = "Камера будет использоваться для присоединения к каналу с QR-кодом";
 "action_invite" = "Пригласить";
 "action_settings" = "Настройки";
 "action_about" = "Информация";
@@ -26,6 +27,10 @@
 "cancel" = "Отменить";
 "close" = "Закрыть";
 "delete" = "Удалить";
+"open_in_channel" = "Открыть в Канале";
+"scan_qr_code" = "Сканировать QR-код";
+"generate_qr_code" = "Сгенерировать QR-код";
+"send_invite_link" = "Отправить пригласительную ссылку";
 "open_in" = "Открыть в";
 "share" = "Поделиться";
 "create_enchantment" = "Новое волшебство";
