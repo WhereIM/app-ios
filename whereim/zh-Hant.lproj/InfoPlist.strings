@@ -1,3 +1,3 @@
-"NSLocationAlwaysUsageDescription" = "位置分享需要使用定位功能";
-"NSLocationWhenInUseUsageDescription" = "位置分享需要使用定位功能";
+"NSLocationAlwaysUsageDescription" = "你的位置會持續傳送到啟用位置傳送的群組，以供位置分享及遠端地利位置事件使用。只要有群組啟用位置傳送，定位功能會持續運作，包含在背景執行時。你可以使用其他導航軟體或社交軟體，或是關上手機休息一下，同時讓你的朋友家人能持續掌握你的位置。";
+"NSLocationWhenInUseUsageDescription" = "你的位置會持續傳送到啟用位置傳送的群組，以供位置分享及遠端地利位置事件使用。只要有群組啟用位置傳送，定位功能會持續運作，包含在背景執行時。你可以使用其他導航軟體或社交軟體，或是關上手機休息一下，同時讓你的朋友家人能持續掌握你的位置。";
 "NSCameraUsageDescription" = "掃描 QR Code 加入群組時需要用到相機";
