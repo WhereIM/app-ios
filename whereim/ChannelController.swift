@@ -9,7 +9,7 @@
 import CoreLocation
 import UIKit
 
-class ChannelController: UITabBarController, ChannelListChangedListener, ConnectionStatusCallback {
+class ChannelController: UITabBarController, ChannelListChangedListener, ConnectionStatusCallback, MapDataReceiver {
     static let TAB_MAP = 0
     static let TAB_SEARCH = 1
     static let TAB_MESSAGE = 2
@@ -141,7 +141,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         super.viewWillAppear(animated)
 
         service.setViewController(self)
-        mapCbKey = service.openMap(channel!, mapCbKey, mapController!)
+        mapCbKey = service.openMap(channel!, mapCbKey, self)
         channelListChangedCbKey = service.addChannelListChangedListener(channelListChangedCbKey, self)
         connectionStatusChangedCbKey = service.addConnectionStatusChangedListener(connectionStatusChangedCbKey, self)
     }
@@ -186,5 +186,22 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
     func switchClicked(sender: UISwitch) {
         service.toggleChannelActive(channel!)
+    }
+
+    func onMateData(_ mate: Mate) {
+        if let mc = mapController {
+            mc.onMateData(mate)
+        }
+    }
+
+    func onEnchantmentData(_ enchantment: Enchantment) {
+        if let mc = mapController {
+            mc.onEnchantmentData(enchantment)
+        }
+    }
+    func onMarkerData(_ marker: Marker) {
+        if let mc = mapController {
+            mc.onMarkerData(marker)
+        }
     }
 }
