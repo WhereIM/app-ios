@@ -125,6 +125,10 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
 
                     let nslink = link as NSString
                     if let match = pattern_channel.firstMatch(in: link, options: [], range: NSMakeRange(0, nslink.length)) {
+                        if matched {
+                            return
+                        }
+                        matched = true
                         let sublink = nslink.substring(with: match.rangeAt(1))
                         let service = CoreService.bind()
                         service.processLink(sublink)
