@@ -31,16 +31,13 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
         cameraview.heightAnchor.constraint(equalToConstant: viewWindowSize!).isActive = true
 
         checkCamera()
+        setupCamera()
     }
 
     func checkCamera() {
-        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized {
-            setupCamera()
-        } else {
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != AVAuthorizationStatus.authorized {
             AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { response in
-                if response {
-                    self.setupCamera()
-                } else {
+                if !response {
                     self.alertNoPermission()
                 }
             }
