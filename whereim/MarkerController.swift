@@ -348,7 +348,15 @@ class MarkerController: UIViewController, Callback, FilterBarDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
 
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+
         super.viewDidLoad()
+    }
+
+    func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     override func viewWillAppear(_ animated: Bool) {
