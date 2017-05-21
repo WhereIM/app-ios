@@ -140,10 +140,10 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
 
     func checkLogin() {
         if service!.getClientId() == nil {
-            auth_id = UserDefaults.standard.string(forKey: Key.ID)
-            auth_provider = UserDefaults.standard.string(forKey: Key.PROVIDER)
-            auth_token = UserDefaults.standard.string(forKey: Key.TOKEN)
-            auth_name = UserDefaults.standard.string(forKey: Key.NAME)
+            auth_id = UserDefaults.standard.string(forKey: Key.ID) ?? auth_id
+            auth_provider = UserDefaults.standard.string(forKey: Key.PROVIDER) ?? auth_provider
+            auth_token = UserDefaults.standard.string(forKey: Key.TOKEN) ?? auth_token
+            auth_name = UserDefaults.standard.string(forKey: Key.NAME) ?? auth_name
 
             UserDefaults.standard.removeObject(forKey: Key.ID)
             UserDefaults.standard.removeObject(forKey: Key.PROVIDER)
