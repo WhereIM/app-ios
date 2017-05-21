@@ -617,10 +617,20 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelEnchantmentListChangedListeners(enchantment.channel_id!)
     }
 
-    func getChannelEnchantment(_ channel_id: String) -> EnchantmentList {
+    func getChannelEnchantment(_ channel_id: String, _ filterKeyword: String?) -> EnchantmentList {
         let list = EnchantmentList()
         if let enchantments = channelEnchantment[channel_id] {
             for enchantment in enchantments.values {
+                var matched = true
+                if let f = filterKeyword {
+                    matched = false
+                    if enchantment.name?.localizedCaseInsensitiveContains(f) == true {
+                        matched = true
+                    }
+                }
+                if !matched {
+                    continue
+                }
                 if enchantment.isPublic == true {
                     list.public_list.append(enchantment)
                 } else if enchantment.isPublic == false {
@@ -798,10 +808,20 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelMarkerListChangedListeners(marker.channel_id!)
     }
 
-    func getChannelMarker(_ channel_id: String) -> MarkerList {
+    func getChannelMarker(_ channel_id: String, _ filter: String?) -> MarkerList {
         let list = MarkerList()
         if let Markers = channelMarker[channel_id] {
             for marker in Markers.values {
+                var matched = true
+                if let f = filter {
+                    matched = false
+                    if marker.name?.localizedCaseInsensitiveContains(f) == true {
+                        matched = true
+                    }
+                }
+                if !matched {
+                    continue
+                }
                 if marker.isPublic == true {
                     list.public_list.append(marker)
                 } else if marker.isPublic == false {
@@ -1113,10 +1133,23 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     var channelMate = [String:[String:Mate]]()
-    func getChannelMate(_ channel_id: String) -> [Mate] {
+    func getChannelMate(_ channel_id: String, filter: String?) -> [Mate] {
         var list = [Mate]()
         if channelMate[channel_id] != nil {
             for mate in channelMate[channel_id]!.values {
+                var matched = true
+                if let f = filter {
+                    matched = false
+                    if mate.mate_name?.localizedCaseInsensitiveContains(f) == true {
+                        matched = true
+                    }
+                    if mate.user_mate_name?.localizedCaseInsensitiveContains(f) == true {
+                        matched = true
+                    }
+                }
+                if !matched {
+                    continue
+                }
                 if !mate.deleted {
                     list.append(mate)
                 }

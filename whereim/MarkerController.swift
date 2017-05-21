@@ -93,13 +93,13 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     var selfMate: Mate?
     var mateList: [Mate]
     var markerList: MarkerList
-    let vc: UIViewController
+    let vc: MarkerController
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
     let numberOfSections = 4
 
-    init(_ viewController: UIViewController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+    init(_ viewController: MarkerController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.vc = viewController
         self.service = service
         self.channel = channel
@@ -165,7 +165,11 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "placeholder", for: indexPath) as! UIPlaceHolderCell
 
-                cell.label.text = "mate_invite_hint".localized
+                if vc.filterKeyword == nil {
+                    cell.label.text = "mate_invite_hint".localized
+                } else {
+                    cell.label.text = "no_match".localized
+                }
 
                 return cell
             }
@@ -182,7 +186,11 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "placeholder", for: indexPath) as! UIPlaceHolderCell
 
-                cell.label.text = "object_create_hint".localized
+                if vc.filterKeyword == nil {
+                    cell.label.text = "object_create_hint".localized
+                } else {
+                    cell.label.text = "no_match".localized
+                }
 
                 return cell
             }
@@ -289,9 +297,9 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     }
 
     func reload() {
-        self.markerList = service.getChannelMarker(channel.id!)
+        self.markerList = service.getChannelMarker(channel.id!, vc.filterKeyword)
         self.mateList = [Mate]()
-        for mate in service.getChannelMate(channel.id!) {
+        for mate in service.getChannelMate(channel.id!, filter: vc.filterKeyword) {
             if mate.id! == channel.mate_id! {
                 self.selfMate = mate
             } else {
@@ -301,26 +309,44 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
     }
 }
 
-class MarkerController: UIViewController, Callback {
+class MarkerController: UIViewController, Callback, FilterBarDelegate {
     var service: CoreService?
     var channel: Channel?
     var adapter: ChannelMarkerAdapter?
     var cbMatekey: Int?
     var cbMarkerkey: Int?
-
-    @IBOutlet weak var markerListView: UITableView!
+    var filterKeyword: String?
+    let filterBar = FilterBar()
+    let markerListView = UITableView()
 
     override func viewDidLoad() {
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
-
         service = CoreService.bind()
+
+        filterBar.delegate = self
+        filterBar.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(filterBar)
+        filterBar.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).isActive = true
+        filterBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        filterBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+
+        markerListView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(markerListView)
+        markerListView.topAnchor.constraint(equalTo: filterBar.bottomAnchor).isActive = true
+        markerListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        markerListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        markerListView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).isActive = true
+
         adapter = ChannelMarkerAdapter(self, (service)!, channel!, parent)
         markerListView.register(MateCell.self, forCellReuseIdentifier: "mate")
         markerListView.register(MarkerCell.self, forCellReuseIdentifier: "marker")
         markerListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         markerListView.dataSource = adapter
         markerListView.delegate = adapter
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
 
         super.viewDidLoad()
     }
@@ -343,6 +369,11 @@ class MarkerController: UIViewController, Callback {
         super.viewWillDisappear(animated)
     }
 
+    func onFilter(keyword: String?) {
+        filterKeyword = keyword
+        onCallback()
+    }
+
     func onCallback() {
         adapter!.reload()
         markerListView.reloadData()
@@ -353,6 +384,18 @@ class MarkerController: UIViewController, Callback {
         // Dispose of any resources that can be recreated.
     }
 
+    func keyboardShown(_ n:NSNotification) {
+        let d = n.userInfo!
+        var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        r = self.markerListView.convert(r, from:nil)
+        self.markerListView.contentInset.bottom = r.size.height
+        self.markerListView.scrollIndicatorInsets.bottom = r.size.height
+    }
+
+    func keyboardHide(_ n:NSNotification) {
+        self.markerListView.contentInset.bottom = 0
+        self.markerListView.scrollIndicatorInsets.bottom = 0
+    }
 
     /*
      // MARK: - Navigation

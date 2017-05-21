@@ -13,6 +13,7 @@
 "invitation" = "Invitation : %1$@";
 "object_create_hint" = "Appuyez longuement sur la carte pour créer";
 "mate_invite_hint" = "Il n'y a personne ici, invitez d'autres à se joindre à cette chaîne";
+"no_match" = "Aucune concordance";
 "name" = "Nom";
 "icon" = "Icône";
 "channel_name" = "Nom de la Chaîne";

@@ -13,6 +13,7 @@
 "invitation" = "Einladung: %1$@";
 "object_create_hint" = "Lange gedrückt halten, um eine Karte zu erstellen";
 "mate_invite_hint" = "Niemand hier, laden Sie jemanden ein um diesen Channel zu nutzen";
+"no_match" = "Keine Übereinstimmung";
 "name" = "Name";
 "icon" = "Symbol";
 "channel_name" = "Channel Name";

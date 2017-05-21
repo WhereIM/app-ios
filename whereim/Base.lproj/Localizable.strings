@@ -14,6 +14,7 @@
 "invitation" = "Invitation: %1$@";
 "object_create_hint" = "Long press on map to create";
 "mate_invite_hint" = "No one here, invite others to this channel";
+"no_match" = "No match";
 "name" = "Name";
 "icon" = "Icon";
 "channel_name" = "Channel Name";

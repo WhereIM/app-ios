@@ -13,6 +13,7 @@
 "invitation" = "邀請：%1$@";
 "object_create_hint" = "在地圖上長按即可建立";
 "mate_invite_hint" = "沒有人，邀請別人進來吧";
+"no_match" = "找不到";
 "name" = "名稱";
 "icon" = "圖示";
 "channel_name" = "群組名稱";

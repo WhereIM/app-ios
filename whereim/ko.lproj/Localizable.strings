@@ -13,6 +13,7 @@
 "invitation" = "초대: %1$@";
 "object_create_hint" = "지도를 길게 눌러 생성하세요";
 "mate_invite_hint" = "아무도 없습니다. 현재 채널로 다른 사람들을 초대하세요";
+"no_match" = "일치하는 항목 없음";
 "name" = "이름";
 "icon" = "아이콘";
 "channel_name" = "채널 이름";

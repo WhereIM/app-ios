@@ -274,6 +274,9 @@ class SearchController: UIViewController, UITextFieldDelegate {
         listView.register(SearchHistoryCell.self, forCellReuseIdentifier: "search_history")
 
         searchControllerImpl!.viewDidLoad()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
     }
 
     var adWidth: NSLayoutConstraint?
@@ -362,6 +365,18 @@ class SearchController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func keyboardShown(_ n:NSNotification) {
+        let d = n.userInfo!
+        var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        r = self.listView.convert(r, from:nil)
+        self.listView.contentInset.bottom = r.size.height
+        self.listView.scrollIndicatorInsets.bottom = r.size.height
+    }
+
+    func keyboardHide(_ n:NSNotification) {
+        self.listView.contentInset.bottom = 0
+        self.listView.scrollIndicatorInsets.bottom = 0
+    }
 
     /*
     // MARK: - Navigation

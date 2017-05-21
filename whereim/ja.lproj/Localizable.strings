@@ -13,6 +13,7 @@
 "invitation" = "招待状：%1$@";
 "object_create_hint" = "地図を長押しして作成する";
 "mate_invite_hint" = "誰もこここにいません。このチャンネルに他の人を招待してください。";
+"no_match" = "一致するものがありません";
 "name" = "名前";
 "icon" = "アイコン";
 "channel_name" = "チャンネル名";

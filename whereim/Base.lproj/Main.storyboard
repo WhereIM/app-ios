@@ -204,24 +204,9 @@
                     <view key="view" contentMode="scaleToFill" id="qyx-XD-nqT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tTX-Jw-Kwd">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="tTX-Jw-Kwd" firstAttribute="top" secondItem="vX7-Py-ikd" secondAttribute="bottom" id="BKI-WP-BYt"/>
-                            <constraint firstItem="tTX-Jw-Kwd" firstAttribute="leading" secondItem="qyx-XD-nqT" secondAttribute="leading" id="Qd0-91-XFO"/>
-                            <constraint firstItem="Z6W-dE-jer" firstAttribute="top" secondItem="tTX-Jw-Kwd" secondAttribute="bottom" id="gK6-Vb-7O8"/>
-                            <constraint firstAttribute="trailing" secondItem="tTX-Jw-Kwd" secondAttribute="trailing" id="soT-GP-uin"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="🚩" id="hwa-Zo-CjZ"/>
-                    <connections>
-                        <outlet property="markerListView" destination="tTX-Jw-Kwd" id="DoD-tT-cZS"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pq8-2w-jSQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -238,24 +223,9 @@
                     <view key="view" contentMode="scaleToFill" id="dr1-ne-ESS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5yi-5B-Uf1">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="5yi-5B-Uf1" firstAttribute="leading" secondItem="dr1-ne-ESS" secondAttribute="leading" id="DkY-Fo-rLg"/>
-                            <constraint firstAttribute="trailing" secondItem="5yi-5B-Uf1" secondAttribute="trailing" id="VQ3-ns-gmI"/>
-                            <constraint firstItem="5yi-5B-Uf1" firstAttribute="top" secondItem="A7h-NO-MgP" secondAttribute="bottom" id="qon-HC-jMc"/>
-                            <constraint firstItem="sLk-81-i5U" firstAttribute="top" secondItem="5yi-5B-Uf1" secondAttribute="bottom" id="voG-f9-afI"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="⭕" id="5vJ-pd-LIc"/>
-                    <connections>
-                        <outlet property="enchantmentListView" destination="5yi-5B-Uf1" id="kQR-yR-Bnr"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hsl-Fa-Qnq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

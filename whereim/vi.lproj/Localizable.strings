@@ -13,6 +13,7 @@
 "invitation" = "Mời: %1$@";
 "object_create_hint" = "Ấn lâu trên bản đồ để tạo";
 "mate_invite_hint" = "Không có ai ở đây, mời những người khác vào kênh này";
+"no_match" = "Không tìm thấy phù hợp";
 "name" = "Tên";
 "icon" = "Biểu tượng";
 "channel_name" = "Tên Kênh";

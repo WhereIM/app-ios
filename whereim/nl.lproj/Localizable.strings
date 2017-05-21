@@ -13,6 +13,7 @@
 "invitation" = "Uitnodiging: %1$@";
 "object_create_hint" = "Druk wat langer op de kaart voor het aanmaken";
 "mate_invite_hint" = "Niemand aanwezig, nodig anderen voor dit kanaal uit";
+"no_match" = "Geen overeenkomst";
 "name" = "Naam";
 "icon" = "Icoon";
 "channel_name" = "Naam kanaal";

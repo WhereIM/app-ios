@@ -13,6 +13,7 @@
 "invitation" = "Invitación: %1$@";
 "object_create_hint" = "Pulsación larga en el mapa para crear";
 "mate_invite_hint" = "Nadie por aquí, invite a otros a este canal";
+"no_match" = "Sin coincidencias";
 "name" = "Nombre";
 "icon" = "Icono";
 "channel_name" = "Nombre del Canal";

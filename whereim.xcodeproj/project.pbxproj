@@ -72,6 +72,7 @@
 		58E347A51E5A183D0025211B /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A41E5A183D0025211B /* MapController.swift */; };
 		58E347A71E5A18F00025211B /* Mate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A61E5A18F00025211B /* Mate.swift */; };
 		58E347A91E5A23F20025211B /* ChannelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A81E5A23F20025211B /* ChannelController.swift */; };
+		58F5C5D41ED1668B00BD9567 /* FilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F5C5D31ED1668B00BD9567 /* FilterBar.swift */; };
 		F9AB810CBC94F21B55C4C54F /* Pods_whereimTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E406CB010A4BCE20D71AD2 /* Pods_whereimTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -190,6 +191,7 @@
 		58E347A41E5A183D0025211B /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		58E347A61E5A18F00025211B /* Mate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mate.swift; sourceTree = "<group>"; };
 		58E347A81E5A23F20025211B /* ChannelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelController.swift; sourceTree = "<group>"; };
+		58F5C5D31ED1668B00BD9567 /* FilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterBar.swift; sourceTree = "<group>"; };
 		704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7959DEF4F849C6B55348887F /* Pods-whereimUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimUITests/Pods-whereimUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -250,6 +252,7 @@
 			children = (
 				581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */,
 				58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */,
+				58F5C5D31ED1668B00BD9567 /* FilterBar.swift */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -733,6 +736,7 @@
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
 				584599D81EC06BE1003C53A8 /* GooglePoiViewerController.swift in Sources */,
 				584068A01EABE0E600E4964D /* SettingsController.swift in Sources */,
+				58F5C5D41ED1668B00BD9567 /* FilterBar.swift in Sources */,
 				58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */,
 				583CA8F91EBCEF520043B171 /* DialogCreateMarker.swift in Sources */,
 				584599D21EC05E4F003C53A8 /* POI.swift in Sources */,

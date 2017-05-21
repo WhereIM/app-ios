@@ -40,18 +40,18 @@ class EnchantmentCell: UITableViewCell {
 
 class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var enchantmentList: EnchantmentList
-    let vc: UIViewController
+    let vc: EnchantmentController
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
     let numberOfSections = 3
 
-    init(_ viewController: UIViewController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+    init(_ viewController: EnchantmentController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.vc = viewController
         self.service = service
         self.channel = channel
         self.channelController = channelController
-        self.enchantmentList = service.getChannelEnchantment(channel.id!)
+        self.enchantmentList = service.getChannelEnchantment(channel.id!, nil)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -181,29 +181,47 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func reload() {
-        self.enchantmentList = service.getChannelEnchantment(channel.id!)
+        self.enchantmentList = service.getChannelEnchantment(channel.id!, vc.filterKeyword)
     }
 }
 
-class EnchantmentController: UIViewController, Callback, ChannelChangedListener {
+class EnchantmentController: UIViewController, Callback, ChannelChangedListener, FilterBarDelegate {
     var service: CoreService?
     var channel: Channel?
     var adapter: ChannelEnchantmentAdapter?
     var cbkey: Int?
     var channelCbkey: Int?
+    var filterKeyword: String?
+    let filterBar = FilterBar()
+    let enchantmentListView = UITableView()
 
-    @IBOutlet weak var enchantmentListView: UITableView!
-    
     override func viewDidLoad() {
         let parent = self.tabBarController as! ChannelController
         channel = parent.channel
-        
         service = CoreService.bind()
+
+        filterBar.delegate = self
+        filterBar.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(filterBar)
+        filterBar.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).isActive = true
+        filterBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        filterBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+
+        enchantmentListView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(enchantmentListView)
+        enchantmentListView.topAnchor.constraint(equalTo: filterBar.bottomAnchor).isActive = true
+        enchantmentListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        enchantmentListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        enchantmentListView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).isActive = true
+
         adapter = ChannelEnchantmentAdapter(self, (service)!, channel!, parent)
         enchantmentListView.register(EnchantmentCell.self, forCellReuseIdentifier: "enchantment")
         enchantmentListView.register(UIPlaceHolderCell.self, forCellReuseIdentifier: "placeholder")
         enchantmentListView.dataSource = adapter
         enchantmentListView.delegate = adapter
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
 
         super.viewDidLoad()
     }
@@ -224,6 +242,11 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
         super.viewWillDisappear(animated)
     }
 
+    func onFilter(keyword: String?) {
+        filterKeyword = keyword
+        onCallback()
+    }
+
     func onCallback() {
         adapter!.reload()
         enchantmentListView.reloadData()
@@ -237,7 +260,19 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener 
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
+    func keyboardShown(_ n:NSNotification) {
+        let d = n.userInfo!
+        var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        r = self.enchantmentListView.convert(r, from:nil)
+        self.enchantmentListView.contentInset.bottom = r.size.height
+        self.enchantmentListView.scrollIndicatorInsets.bottom = r.size.height
+    }
+
+    func keyboardHide(_ n:NSNotification) {
+        self.enchantmentListView.contentInset.bottom = 0
+        self.enchantmentListView.scrollIndicatorInsets.bottom = 0
+    }
 
     /*
     // MARK: - Navigation
