@@ -98,7 +98,9 @@ class GoogleSearchAgent: ApiKeyCallback {
     }
 
     func apiKey(_ key: String) {
-        let center = googleSearchController.searchController.getMapCenter()
+        guard let center = googleSearchController.searchController?.getMapCenter() else {
+            return
+        }
         let params = [
             "key": key,
             "query": keyword!,
@@ -123,10 +125,10 @@ class GoogleSearchAgent: ApiKeyCallback {
                     self.googleSearchController.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
                 case "OVER_QUERY_LIMIT":
                     DispatchQueue.main.async {
-                        self.googleSearchController.searchController.view.makeToast("error".localized)
+                        self.googleSearchController.searchController?.view.makeToast("error".localized)
                     }
                 case "ZERO_RESULTS":
-                    self.googleSearchController.searchController.setSearchResults([])
+                    self.googleSearchController.searchController?.setSearchResults([])
                 case "OK":
                     guard let results = data["results"] as? [[String:Any]] else {
                         return
@@ -159,7 +161,7 @@ class GoogleSearchAgent: ApiKeyCallback {
                         }
                         res.append(r)
                     }
-                    self.googleSearchController.searchController.setSearchResults(res)
+                    self.googleSearchController.searchController?.setSearchResults(res)
                 default:
                     return
                 }
@@ -230,7 +232,9 @@ class GoogleAutoCompleteAgent: ApiKeyCallback {
     }
 
     func apiKey(_ key: String) {
-        let center = googleSearchController.searchController.getMapCenter()
+        guard let center = googleSearchController.searchController?.getMapCenter() else {
+            return
+        }
         let params = [
             "key": key,
             "input": keyword!,
@@ -255,10 +259,10 @@ class GoogleAutoCompleteAgent: ApiKeyCallback {
                     self.googleSearchController.service.getKey(forApi: Key.GOOGLE_SEARCH, callback: self)
                 case "OVER_QUERY_LIMIT":
                     DispatchQueue.main.async {
-                        self.googleSearchController.searchController.view.makeToast("error".localized)
+                        self.googleSearchController.searchController?.view.makeToast("error".localized)
                     }
                 case "ZERO_RESULTS":
-                    self.googleSearchController.searchController.setAutoCompletes([])
+                    self.googleSearchController.searchController?.setAutoCompletes([])
                 case "OK":
                     guard let predictions = data["predictions"] as? [[String:Any]] else {
                         return
@@ -270,7 +274,7 @@ class GoogleAutoCompleteAgent: ApiKeyCallback {
                         }
                         res.append(description)
                     }
-                    self.googleSearchController.searchController.setAutoCompletes(res)
+                    self.googleSearchController.searchController?.setAutoCompletes(res)
                 default:
                     return
                 }
@@ -280,7 +284,7 @@ class GoogleAutoCompleteAgent: ApiKeyCallback {
 }
 
 class GoogleSearchController: SearchControllerInterface {
-    unowned let searchController: SearchController
+    weak var searchController: SearchController?
     let service = CoreService.bind()
     let searchDelegate: GoogleSearchResultsDelegate
     let autoCompleteDelegate: GoogleAutoCompletesDelegate
@@ -296,8 +300,8 @@ class GoogleSearchController: SearchControllerInterface {
     func viewDidLoad() {
         searchAgent = GoogleSearchAgent(self)
         autoCompleteAgent = GoogleAutoCompleteAgent(self)
-        searchController.listView.register(GoogleSearchResultsCell.self, forCellReuseIdentifier: "google_result")
-        searchController.listView.register(GoogleAutoCompletesCell.self, forCellReuseIdentifier: "google_autocomplete")
+        searchController?.listView.register(GoogleSearchResultsCell.self, forCellReuseIdentifier: "google_result")
+        searchController?.listView.register(GoogleAutoCompletesCell.self, forCellReuseIdentifier: "google_autocomplete")
     }
 
     func getSearchResultsDelegate() -> UITableViewDelegate {
