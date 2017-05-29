@@ -17,6 +17,17 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return newImage
     }
+
+    func centerBottom() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: self.size.width,
+                   height: self.size.height * 2), false, self.scale)
+        let _ = UIGraphicsGetCurrentContext()
+        self.draw(at: CGPoint.zero)
+        let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return imageWithInsets
+    }
 }
 
 class WimPointAnnotation: MGLPointAnnotation {
@@ -119,7 +130,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             self.pendingMarker = WimPointAnnotation()
             self.pendingMarker!.coordinate = poi.location!
             self.pendingMarker!.title = poi.name!
-            self.pendingMarker!.icon = UIImage(named: "search_marker")
+            self.pendingMarker!.icon = UIImage(named: "search_marker")?.centerBottom()
             self.pendingMarker!.userData = poi
             self.mapView!.addAnnotation(self.pendingMarker!)
 
@@ -160,7 +171,8 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
 
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         if let m = annotation as? WimPointAnnotation {
-            return MGLAnnotationImage(image: m.icon!, reuseIdentifier: m.hashValue.description)
+            let icon = m.icon!.withAlignmentRectInsets(UIEdgeInsets(top: 0, left: 0, bottom: m.icon!.size.height/2, right: 0))
+            return MGLAnnotationImage(image: icon, reuseIdentifier: m.hashValue.description)
         }
         return nil
     }
@@ -276,7 +288,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             let m = WimPointAnnotation()
             m.coordinate = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
             m.title = marker.name
-            m.icon = marker.getIcon().image(alpha: marker.enabled == true ? 1 : 0.5)
+            m.icon = marker.getIcon().image(alpha: marker.enabled == true ? 1 : 0.5)?.centerBottom()
             m.zIndex = 25
             m.userData = marker
             self.mapView!.addAnnotation(m)
@@ -307,7 +319,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             let m = WimPointAnnotation()
             m.coordinate = r.location!
             m.title = r.name!
-            m.icon = UIImage(named: "search_marker")
+            m.icon = UIImage(named: "search_marker")?.centerBottom()
             m.zIndex = 50
             m.userData = r
 
@@ -393,7 +405,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
                         self.markerTemplate.layer.render(in: currentContext)
                         var imageMarker = UIImage()
                         imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
-                        m.icon = imageMarker.image(alpha: m.opacity)
+                        m.icon = imageMarker.image(alpha: m.opacity)?.centerBottom()
                     }
                     UIGraphicsEndImageContext()
                 }
@@ -421,7 +433,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
                     self.markerTemplate.layer.render(in: currentContext)
                     var imageMarker = UIImage()
                     imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
-                    m.icon = imageMarker.image(alpha: m.opacity)
+                    m.icon = imageMarker.image(alpha: m.opacity)?.centerBottom()
                 }
                 UIGraphicsEndImageContext()
 
