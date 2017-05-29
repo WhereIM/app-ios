@@ -41,6 +41,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     var pendingMarker: GMSMarker?
     func viewDidLoad(_ viewContrller: UIViewController) {
         if let poi = mapController.service!.pendingPOI {
+            moveCameraToMyLocation = false
             mapCenter = CLLocationCoordinate2D(latitude: poi.location!.latitude, longitude: poi.location!.longitude)
         }
 
@@ -61,28 +62,24 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+    }
 
-        if self.mapController.service!.pendingPOI != nil {
-            moveCameraToMyLocation = false
-        }
+    func viewDidAppear(_ viewController: UIViewController) {
+        if let poi = self.mapController.service!.pendingPOI {
+            self.pendingMarker = GMSMarker()
+            self.pendingMarker!.position = poi.location!
+            self.pendingMarker!.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+            self.pendingMarker!.title = poi.name!
+            self.pendingMarker!.icon = UIImage(named: "search_marker")
+            self.pendingMarker!.zIndex = 50
+            self.pendingMarker!.map = self.mapView
+            self.pendingMarker!.userData = poi
 
-        DispatchQueue.main.async {
-            if let poi = self.mapController.service!.pendingPOI {
-                self.pendingMarker = GMSMarker()
-                self.pendingMarker!.position = poi.location!
-                self.pendingMarker!.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-                self.pendingMarker!.title = poi.name!
-                self.pendingMarker!.icon = UIImage(named: "search_marker")
-                self.pendingMarker!.zIndex = 50
-                self.pendingMarker!.map = self.mapView
-                self.pendingMarker!.userData = poi
+            self.mapController.tapMarker(poi)
 
-                self.mapController.tapMarker(poi)
+            self.mapView?.selectedMarker = self.pendingMarker
 
-                self.mapView?.selectedMarker = self.pendingMarker
-
-                self.mapController.service!.pendingPOI = nil
-            }
+            self.mapController.service!.pendingPOI = nil
         }
     }
 
@@ -186,6 +183,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     func onEnchantmentData(_ enchantment: Enchantment) {
         if let c = self.enchantmentCircle[enchantment.id!] {
             c.map = nil
+            self.enchantmentCircle.removeValue(forKey: enchantment.id!)
         }
         if enchantment.enabled == true || enchantment === focusEnchantment {
             let c = GMSCircle()
@@ -398,6 +396,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 }
             } else {
                 c.map = nil
+                radiusCircle = nil
             }
         } else {
             if selfMate!.latitude != nil && mapController.channel!.enable_radius==true {

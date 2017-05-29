@@ -1,10 +1,8 @@
 "lang" = "es";
 "google_lang" = "es";
 "NSCameraUsageDescription" = "La cámara será usada para unirse al canal mediante código QR";
-"action_invite" = "Invitar";
-"action_settings" = "Configuración";
-"action_about" = "Sobre";
-"action_quit" = "Salir";
+"settings" = "Configuración";
+"about" = "Sobre";
 "active_client" = "Cliente no activo";
 "active_client_message" = "Este cliente no está activo, ¿encargarse de otro cliente?";
 "power_saving" = "Ahorro de Energía";

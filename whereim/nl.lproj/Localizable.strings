@@ -1,10 +1,8 @@
 "lang" = "nl";
 "google_lang" = "nl";
 "NSCameraUsageDescription" = "Camera wordt gebruikt op kanaal met QR code";
-"action_invite" = "Uitnodigen";
-"action_settings" = "Instellingen";
-"action_about" = "Over";
-"action_quit" = "Verlaten";
+"settings" = "Instellingen";
+"about" = "Over";
 "active_client" = "Klant niet actief";
 "active_client_message" = "Deze klant is niet actief, overnemen van uw andere klant?";
 "power_saving" = "Energiebesparend";

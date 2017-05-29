@@ -1,10 +1,8 @@
 "lang" = "zh-TW";
 "google_lang" = "zh-TW";
 "NSCameraUsageDescription" = "掃描 QR Code 加入群組時需要用到相機";
-"action_invite" = "邀請";
-"action_settings" = "設定";
-"action_about" = "關於";
-"action_quit" = "關閉程式";
+"settings" = "設定";
+"about" = "關於";
 "active_client" = "此裝置不是主要裝置";
 "active_client_message" = "取代您的其他裝置成為主要裝置？";
 "power_saving" = "省電模式";

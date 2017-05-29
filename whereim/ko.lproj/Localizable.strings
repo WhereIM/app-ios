@@ -1,10 +1,8 @@
 "lang" = "ko";
 "google_lang" = "ko";
 "NSCameraUsageDescription" = "QR코드로채널에참여하는데카메라가사용됩니다.";
-"action_invite" = "초대";
-"action_settings" = "설정";
-"action_about" = "소개";
-"action_quit" = "끝내기";
+"settings" = "설정";
+"about" = "소개";
 "active_client" = "클라이언트가 활성화되지 않았습니다";
 "active_client_message" = "이 클라이언트가 활성화되지 않았습니다. 다른 클라이언트로 대체 하시겠습니까?";
 "power_saving" = "절전";

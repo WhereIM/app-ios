@@ -8,12 +8,45 @@
 
 import UIKit
 
+class SelectableSettingCell: UITableViewCell {
+    let checked = UILabel()
+    let title = UILabel()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.selectionStyle = .none
+
+        checked.adjustsFontSizeToFitWidth = false
+        checked.translatesAutoresizingMaskIntoConstraints = false
+        checked.text = "✔"
+
+        title.adjustsFontSizeToFitWidth = false
+        title.translatesAutoresizingMaskIntoConstraints = false
+
+
+        self.contentView.addSubview(checked)
+        self.contentView.addSubview(title)
+
+        checked.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15).isActive = true
+        checked.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        title.leadingAnchor.constraint(equalTo: checked.trailingAnchor, constant:15).isActive = true
+        title.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class SwitchSettingCell: UITableViewCell {
     let title = UILabel()
     let toggle = UISwitch()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.selectionStyle = .none
 
         title.adjustsFontSizeToFitWidth = false
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -40,17 +73,33 @@ class SwitchSettingCell: UITableViewCell {
 
 class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     let SETTING_POWER_SAVING = 0
+    let tableView: UITableView
+
+    init(_ tableView: UITableView) {
+        self.tableView = tableView
+    }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1;
+        return 2;
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
+        case 0: // general
+            return 1
+        case 1: // map provider
             return 2
         default:
             return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0: return "settings".localized
+        case 1: return "service_provider".localized
+        default:
+            return nil
         }
     }
 
@@ -69,8 +118,36 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             default:
                 return UITableViewCell()
             }
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "selectable", for: indexPath) as! SelectableSettingCell
+            switch indexPath.row {
+            case 0:
+                cell.title.text = "Google"
+                cell.checked.isHidden = !(Config.getMapProvider()==MapProvider.GOOGLE)
+            case 1:
+                cell.title.text = "Mapbox"
+                cell.checked.isHidden = !(Config.getMapProvider()==MapProvider.MAPBOX)
+            default:
+                break
+            }
+            return cell
         default:
             return UITableViewCell()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 { // map provider
+            switch indexPath.row {
+            case 0:
+                Config.setMapProvider(.GOOGLE)
+                tableView.reloadData()
+            case 1:
+                Config.setMapProvider(.MAPBOX)
+                tableView.reloadData()
+            default:
+                break
+            }
         }
     }
 
@@ -93,11 +170,11 @@ class SettingsController: UIViewController {
 
     override func viewDidLoad() {
 
-        adapter = SettingsAdapter()
+        adapter = SettingsAdapter(settings)
+        settings.register(SelectableSettingCell.self, forCellReuseIdentifier: "selectable")
         settings.register(SwitchSettingCell.self, forCellReuseIdentifier: "switch")
         settings.estimatedRowHeight = 70
         settings.rowHeight = UITableViewAutomaticDimension
-        settings.allowsSelection = false
         settings.dataSource = adapter
         settings.delegate = adapter
 

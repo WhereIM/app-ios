@@ -1,10 +1,8 @@
 "lang" = "th";
 "google_lang" = "th";
 "NSCameraUsageDescription" = "กล้องจะถูกใช้งานเพื่อใช้รวมช่องรายการด้วยQRโค้ด";
-"action_invite" = "เชิญ";
-"action_settings" = "ตั้งค่า";
-"action_about" = "เกี่ยวกับ";
-"action_quit" = "ออก";
+"settings" = "ตั้งค่า";
+"about" = "เกี่ยวกับ";
 "active_client" = "ไคลเอ็นต์ไม่ทำงาน";
 "active_client_message" = "ไคลเอ็นต์นี้ไม่ทำงาน ให้นำไคลเอ็นต์อื่นของคุณมาใช้งานหรือไม่?";
 "power_saving" = "ประหยัดพลังงาน";

@@ -12,14 +12,14 @@ class DialogAppMenu {
     init(_ viewController: UIViewController, _ sourceView: UIView) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        let action_settings = UIAlertAction(title: "action_settings".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+        let action_settings = UIAlertAction(title: "settings".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "settings")
-            viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "action_settings".localized, style: .plain, target: nil, action: nil)
+            viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "settings".localized, style: .plain, target: nil, action: nil)
             viewController.performSegue(withIdentifier: "settings", sender: nil)
         }
 
-        let action_about = UIAlertAction(title: "action_about".localized, style: .default) { (alert: UIAlertAction!) -> Void in
-            viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "action_about".localized, style: .plain, target: nil, action: nil)
+        let action_about = UIAlertAction(title: "about".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+            viewController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "about".localized, style: .plain, target: nil, action: nil)
             viewController.performSegue(withIdentifier: "about", sender: nil)
         }
 

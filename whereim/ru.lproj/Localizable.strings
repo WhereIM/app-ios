@@ -1,10 +1,8 @@
 "lang" = "ru";
 "google_lang" = "ru";
 "NSCameraUsageDescription" = "Камера будет использоваться для присоединения к каналу с QR-кодом";
-"action_invite" = "Пригласить";
-"action_settings" = "Настройки";
-"action_about" = "Информация";
-"action_quit" = "Выход";
+"settings" = "Настройки";
+"about" = "Информация";
 "active_client" = "Клиент не активен";
 "active_client_message" = "Этот клиент не активен, принять его от другого клиента?";
 "power_saving" = "Экономия энергии";

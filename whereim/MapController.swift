@@ -13,6 +13,7 @@ protocol MapControllerInterface: MapDataReceiver {
     init(_ mapController: MapController)
     func viewDidLoad(_ viewContrller: UIViewController)
     func viewWillAppear(_ viewContrller: UIViewController)
+    func viewDidAppear(_ viewController: UIViewController)
     func viewWillDisappear(_ viewContrller: UIViewController)
     func didReceiveMemoryWarning()
     func channelChanged()
@@ -43,7 +44,12 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     }
 
     func _init() {
-        mapControllerImpl = GoogleMapController(self)
+        switch Config.getMapProvider() {
+        case .GOOGLE:
+            mapControllerImpl = GoogleMapController(self)
+        case .MAPBOX:
+            mapControllerImpl = MapboxController(self)
+        }
     }
 
     let enchantmentPanel = UIStackView()
@@ -237,6 +243,10 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
         if let sv = service {
             channelCbkey = sv.addChannelChangedListener(channel!, channelCbkey, self)
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        mapControllerImpl!.viewDidAppear(self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {

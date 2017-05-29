@@ -1,10 +1,8 @@
 "lang" = "vi";
 "google_lang" = "vi";
 "NSCameraUsageDescription" = "Máy ảnh sẽ được sử dụng để kết nối kênh với mã QR";
-"action_invite" = "Mời";
-"action_settings" = "Cài đặt";
-"action_about" = "Thông tin";
-"action_quit" = "Thoát";
+"settings" = "Cài đặt";
+"about" = "Thông tin";
 "active_client" = "Thiết bị không kích hoạt";
 "active_client_message" = "Thiết bị này hiện không kích hoạt, bạn có chuyển từ thiết bị khác sang?";
 "power_saving" = "Tiết Kiệm Năng Lượng";

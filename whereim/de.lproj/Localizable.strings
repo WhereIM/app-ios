@@ -1,10 +1,8 @@
 "lang" = "de";
 "google_lang" = "de";
 "NSCameraUsageDescription" = "Die Kamera wird verwendet, um den Kanal mit dem QR-Code zu verbinden";
-"action_invite" = "Einladen";
-"action_settings" = "Einstellungen";
-"action_about" = "Über";
-"action_quit" = "Abbrechen";
+"settings" = "Einstellungen";
+"about" = "Über";
 "active_client" = "Kunde nicht aktiv";
 "active_client_message" = "Der Kunde ist nicht aktiv, anderen Kunden übernehmen?";
 "power_saving" = "Energie sparen";

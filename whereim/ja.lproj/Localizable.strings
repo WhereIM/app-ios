@@ -1,10 +1,8 @@
 "lang" = "ja";
 "google_lang" = "ja";
 "NSCameraUsageDescription" = "カメラはQRコードを使ってチャンネルに参加するために利用されます。";
-"action_invite" = "招待";
-"action_settings" = "設定";
-"action_about" = "紹介";
-"action_quit" = "終了";
+"settings" = "設定";
+"about" = "紹介";
 "active_client" = "クライアントがアクティブではありません。";
 "active_client_message" = "このクライアントはアクティブではありません。他のクライアントから継承しますか？";
 "power_saving" = "省エネ";

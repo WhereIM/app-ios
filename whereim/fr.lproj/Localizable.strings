@@ -1,10 +1,8 @@
 "lang" = "fr";
 "google_lang" = "fr";
 "NSCameraUsageDescription" = "La caméra sera utilisée pour rejoindre la chaîne grâce au code QR";
-"action_invite" = "Inviter";
-"action_settings" = "Paramètres";
-"action_about" = "A propos";
-"action_quit" = "Quitter";
+"settings" = "Paramètres";
+"about" = "A propos";
 "active_client" = "Le client n'est pas actif";
 "active_client_message" = "Ce client n'est pas actif, continuez avec votre autre client ?";
 "power_saving" = "Économie d'Énergie";

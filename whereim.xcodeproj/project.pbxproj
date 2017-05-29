@@ -54,6 +54,7 @@
 		58568FD81E51ADF2002FAD41 /* whereimUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58568FD71E51ADF2002FAD41 /* whereimUITests.swift */; };
 		58568FE51E542E1D002FAD41 /* Pods_whereim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		586091301E75B60600377ADF /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5860912F1E75B60600377ADF /* LogController.swift */; };
+		587CBBF41ED6149D00197A90 /* MapboxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587CBBF31ED6149D00197A90 /* MapboxController.swift */; };
 		587F41E01EC159CB00823E6C /* DialogChannelInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41DF1EC159CB00823E6C /* DialogChannelInvite.swift */; };
 		587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */; };
 		587F41E41EC16A6C00823E6C /* DialogNewChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41E31EC16A6C00823E6C /* DialogNewChannel.swift */; };
@@ -173,6 +174,7 @@
 		58568FD91E51ADF2002FAD41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		585A0E691E68344500C5E9CB /* whereim.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = whereim.entitlements; sourceTree = "<group>"; };
 		5860912F1E75B60600377ADF /* LogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogController.swift; sourceTree = "<group>"; };
+		587CBBF31ED6149D00197A90 /* MapboxController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxController.swift; sourceTree = "<group>"; };
 		587F41DF1EC159CB00823E6C /* DialogChannelInvite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogChannelInvite.swift; sourceTree = "<group>"; };
 		587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogChannelInviteQrCode.swift; sourceTree = "<group>"; };
 		587F41E31EC16A6C00823E6C /* DialogNewChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogNewChannel.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 				58E347A81E5A23F20025211B /* ChannelController.swift */,
 				58E347A41E5A183D0025211B /* MapController.swift */,
 				580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */,
+				587CBBF31ED6149D00197A90 /* MapboxController.swift */,
 				584068A11EB4672300E4964D /* SearchController.swift */,
 				584068A31EB4D04900E4964D /* GoogleSearchController.swift */,
 				58230E101E6EEB7400AF4087 /* MessengerController.swift */,
@@ -723,6 +726,7 @@
 				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
 				583CA8F51EBCEF280043B171 /* DialogEditEnchantment.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
+				587CBBF41ED6149D00197A90 /* MapboxController.swift in Sources */,
 				586091301E75B60600377ADF /* LogController.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,
 				583CA8FD1EBCEF800043B171 /* DialogDeleteMarker.swift in Sources */,

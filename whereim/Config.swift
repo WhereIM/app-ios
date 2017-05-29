@@ -6,6 +6,12 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+import Foundation
+
+enum MapProvider: String {
+    case GOOGLE = "google"
+    case MAPBOX = "mapbox"
+}
 
 class Config {
     static let LOGGING = false
@@ -38,4 +44,12 @@ class Config {
     static let LOCATION_UPDATE_MIN_DISTANCE = 15.0 // m
     static let GENERIC_LOCATION_UPDATE_MIN_TIME = 10.0 // s
     static let GENERIC_LOCATION_UPDATE_MIN_DISTANCE = 5.0 // m
+
+    static func getMapProvider() -> MapProvider {
+        return MapProvider.init(rawValue: UserDefaults.standard.string(forKey: Key.PROVIDER) ?? MapProvider.GOOGLE.rawValue) ?? MapProvider.GOOGLE
+    }
+
+    static func setMapProvider(_ provider: MapProvider) {
+        UserDefaults.standard.set(provider.rawValue, forKey: Key.PROVIDER)
+    }
 }

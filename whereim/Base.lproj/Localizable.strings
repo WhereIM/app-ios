@@ -2,13 +2,12 @@
 "lang" = "en";
 "google_lang" = "en";
 "NSCameraUsageDescription" = "Camera will be used to join channel with QR code";
-"action_invite" = "Invite";
-"action_settings" = "Settings";
-"action_about" = "About";
-"action_quit" = "Quit";
+"settings" = "Settings";
+"about" = "About";
 "active_client" = "Client not active";
 "active_client_message" = "This client is not active, take over from your other client?";
 "power_saving" = "Power Saving";
+"service_provider" = "Service Provider (Map & Search)";
 "error" = "Error";
 "retry" = "Retry";
 "invitation" = "Invitation: %1$@";
