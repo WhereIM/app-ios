@@ -65,7 +65,6 @@ func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRad
         let pointLat = pointLatRadians * 180 / Double.pi
         let pointLon = pointLonRadians * 180 / Double.pi
         let point: CLLocationCoordinate2D = CLLocationCoordinate2DMake(pointLat, pointLon)
-        print("circle point \(point)")
         coordinates.append(point)
         i += 1
     }
@@ -387,59 +386,35 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             self.mateCircle[mate.id!] = c
         }
         if let m = self.mateMarker[mate.id!] {
-            if mate.latitude != nil && !mate.deleted && (!mate.stale || focusMate === mate) {
-                m.coordinate = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                m.opacity = mate.stale ? 0.5 : 1
+            self.mapView!.removeAnnotation(m)
+            self.mateMarker.removeValue(forKey: mate.id!)
+        }
+        if mate.latitude != nil && !mate.deleted && (!mate.stale || focusMate === mate) {
+            let m = WimPointAnnotation()
 
-                if mateName[mate.id!] != mate.getDisplayName() || mateOpacity[mate.id!] != m.opacity {
-                    mateName[mate.id!] = mate.getDisplayName()
-                    mateOpacity[mate.id!] = m.opacity
+            m.coordinate = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
+            m.opacity = mate.stale ? 0.5 : 1
+            m.zIndex = 75
 
-                    self.markerTemplateText.text = mate.getDisplayName()
+            mateName[mate.id!] = mate.getDisplayName()
 
-                    self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
+            self.markerTemplateText.text = mate.getDisplayName()
 
-                    UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
-                    if let currentContext = UIGraphicsGetCurrentContext()
-                    {
-                        self.markerTemplate.layer.render(in: currentContext)
-                        var imageMarker = UIImage()
-                        imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
-                        m.icon = imageMarker.image(alpha: m.opacity)?.centerBottom()
-                    }
-                    UIGraphicsEndImageContext()
-                }
-            } else {
-                self.mapView!.removeAnnotation(m)
-                self.mateMarker.removeValue(forKey: mate.id!)
+            self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
+
+            UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
+            if let currentContext = UIGraphicsGetCurrentContext()
+            {
+                self.markerTemplate.layer.render(in: currentContext)
+                var imageMarker = UIImage()
+                imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
+                m.icon = imageMarker.image(alpha: m.opacity)?.centerBottom()
             }
-        } else {
-            if mate.latitude != nil && !mate.deleted && (!mate.stale || focusMate === mate) {
-                let m = WimPointAnnotation()
+            UIGraphicsEndImageContext()
 
-                m.coordinate = CLLocationCoordinate2DMake(mate.latitude!, mate.longitude!)
-                m.opacity = mate.stale ? 0.5 : 1
-                m.zIndex = 75
-
-                mateName[mate.id!] = mate.getDisplayName()
-
-                self.markerTemplateText.text = mate.getDisplayName()
-
-                self.markerTemplate.frame = CGRect(x: 0, y: 0, width: max(self.markerTemplateText.intrinsicContentSize.width, self.markerTemplateIcon.intrinsicContentSize.width), height: self.markerTemplateText.intrinsicContentSize.height+self.markerTemplateIcon.intrinsicContentSize.height)
-
-                UIGraphicsBeginImageContextWithOptions(self.markerTemplate.bounds.size, false, UIScreen.main.scale)
-                if let currentContext = UIGraphicsGetCurrentContext()
-                {
-                    self.markerTemplate.layer.render(in: currentContext)
-                    var imageMarker = UIImage()
-                    imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
-                    m.icon = imageMarker.image(alpha: m.opacity)?.centerBottom()
-                }
-                UIGraphicsEndImageContext()
-
-                self.mateMarker[mate.id!] = m
-                m.userData = mate
-            }
+            self.mapView!.addAnnotation(m)
+            self.mateMarker[mate.id!] = m
+            m.userData = mate
         }
         if mate.id! == mapController.channel!.mate_id! {
             selfMate = mate
