@@ -19,6 +19,8 @@ target 'whereim' do
 
   pod 'JSQMessagesViewController'
 
+  pod 'Mapbox-iOS-SDK', '~> 3.5.2'
+
   pod 'Moscapsule', :git => 'https://github.com/flightonary/Moscapsule.git'
   pod 'OpenSSL-Universal', '~> 1.0.1.18'
 

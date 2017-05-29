@@ -61,6 +61,7 @@ PODS:
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - Mapbox-iOS-SDK (3.5.2)
   - Moscapsule (0.5.2)
   - OpenSSL-Universal (1.0.1.20)
   - Protobuf (3.2.1)
@@ -78,6 +79,7 @@ DEPENDENCIES:
   - GoogleMaps
   - GRDB.swift
   - JSQMessagesViewController
+  - Mapbox-iOS-SDK (~> 3.5.2)
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
   - OpenSSL-Universal (~> 1.0.1.18)
   - SDCAlertView (~> 7.1)
@@ -111,12 +113,13 @@ SPEC CHECKSUMS:
   GRDB.swift: d91023bca3912810d46a76ff5d1e1ac30da278e1
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  Mapbox-iOS-SDK: d0d58079e56e4eed4f0d8726afdbd49a76de8e5a
   Moscapsule: 16da766e698792911aafd11d9a26c6dbc42199f4
   OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
   Protobuf: 2ccbaf193f6c65adc67745453ca0c13234c32796
   SDCAlertView: 4798cda4a480f90b24313d3cb07640243943d129
   Toast-Swift: 5b2f8f720f7e78e48511f693df1f9c9a6e38a25a
 
-PODFILE CHECKSUM: 7a4646e623b7ba74dd25a80a5ea4ae73713fd8dd
+PODFILE CHECKSUM: 4c48c1d8001ccde651aa19bd4ec7b93658da8462
 
 COCOAPODS: 1.2.0
