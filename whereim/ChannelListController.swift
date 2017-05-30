@@ -309,7 +309,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         fab.translatesAutoresizingMaskIntoConstraints = false
         fab.setTitle("+", for: .normal)
         fab.titleLabel?.font = fab.titleLabel?.font.withSize(32)
-        fab.titleLabel?.baselineAdjustment = .alignCenters
+        fab.contentEdgeInsets = UIEdgeInsetsMake(-5.0, 0, 0, 0)
         fab.backgroundColor = UIColor(red: 0, green: 0.61465252229292133, blue: 1, alpha: 1)
         fab.layer.cornerRadius = 32
         fab.addTarget(self, action: #selector(new_channel(sender:)), for: .touchUpInside)
