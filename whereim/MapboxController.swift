@@ -30,23 +30,6 @@ extension UIImage {
     }
 }
 
-class WimPointAnnotation: MGLPointAnnotation {
-    var userData: Any?
-    var selected = false
-    var icon: UIImage?
-    var opacity = CGFloat(1.0)
-    var zIndex = 0 // unused
-}
-
-class WimPolygon: MGLPolygon {
-    var opacity = CGFloat(1.0)
-    var fillColor = UIColor.clear
-}
-
-class WimPolyline: MGLPolyline {
-    var strokeColor = UIColor.clear
-}
-
 // https://github.com/mapbox/mapbox-gl-native/issues/2167#issuecomment-192686761
 func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) -> [CLLocationCoordinate2D] {
     let degreesBetweenPoints = 8.0
@@ -71,6 +54,38 @@ func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRad
     coordinates.append(coordinates[0])
 
     return coordinates
+}
+
+
+class WimPointAnnotation: MGLPointAnnotation {
+    var userData: Any?
+    var selected = false
+    var icon: UIImage?
+    var opacity = CGFloat(1.0)
+    var zIndex = 0 // unused
+}
+
+class WimPolygon: MGLPolygon {
+    var opacity = CGFloat(1.0)
+    var fillColor = UIColor.clear
+}
+
+class WimPolyline: MGLPolyline {
+    var strokeColor = UIColor.clear
+}
+
+class WimMapView: MGLMapView {
+    override func updateConstraints() {
+        super.updateConstraints()
+
+        for constraint in constraints {
+            if constraint.secondItem as? UIButton == attributionButton {
+                constraint.isActive = false
+            }
+        }
+        self.attributionButton.leadingAnchor.constraint(equalTo: self.logoView.trailingAnchor, constant: 8).isActive = true
+        self.attributionButton.centerYAnchor.constraint(equalTo: self.logoView.centerYAnchor).isActive = true
+    }
 }
 
 class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, MapDataReceiver {
@@ -108,7 +123,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             mapCenter = CLLocationCoordinate2D(latitude: poi.location!.latitude, longitude: poi.location!.longitude)
         }
 
-        mapView = MGLMapView()
+        mapView = WimMapView()
         mapView!.setCenter(mapCenter, zoomLevel: 15, direction: 0, animated: false)
         mapView!.delegate = self
         mapView!.showsUserLocation = true
