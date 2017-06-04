@@ -190,6 +190,10 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         }
     }
 
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        return true
+    }
+
     func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if let m = annotation as? WimPolyline {
             return m.strokeColor
