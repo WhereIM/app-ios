@@ -6,6 +6,7 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+import CoreLocation
 import UIKit
 import Mapbox
 
@@ -92,6 +93,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     unowned let mapController: MapController
     var didFindMyLocation = false
     var selfMate: Mate?
+    let btnMyLocation = UIButton()
     var mapView: MGLMapView?
     var mapCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     var moveCameraToMyLocation = true
@@ -137,6 +139,25 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             mapView!.topAnchor.constraint(equalTo: viewContrller.topLayoutGuide.bottomAnchor),
             mapView!.bottomAnchor.constraint(equalTo: viewContrller.bottomLayoutGuide.topAnchor),
             ])
+
+        btnMyLocation.translatesAutoresizingMaskIntoConstraints = false
+        btnMyLocation.setImage(UIImage(named: "icon_gps_fixed"), for: .normal)
+        btnMyLocation.backgroundColor = UIColor(red: 0.98, green: 0.98, blue: 0.98, alpha: 1)
+        btnMyLocation.layer.cornerRadius = 28
+        btnMyLocation.addTarget(self, action: #selector(moveToMyLocation(sender:)), for: .touchUpInside)
+        btnMyLocation.layer.shadowColor = UIColor.gray.cgColor
+        btnMyLocation.layer.shadowOpacity = 1
+        btnMyLocation.layer.shadowOffset = CGSize.init(width: 0, height: 2)
+        btnMyLocation.layer.shadowRadius = 2
+
+        viewContrller.view.addSubview(btnMyLocation)
+        viewContrller.view.bringSubview(toFront: btnMyLocation)
+
+        btnMyLocation.widthAnchor.constraint(equalToConstant: 56).isActive = true
+        btnMyLocation.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        btnMyLocation.bottomAnchor.constraint(equalTo: viewContrller.bottomLayoutGuide.topAnchor, constant: -10).isActive = true
+        btnMyLocation.rightAnchor.constraint(equalTo: viewContrller.view.rightAnchor, constant: -10).isActive = true
+
     }
 
     func viewDidAppear(_ viewController: UIViewController)  {
@@ -160,6 +181,13 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     }
 
     func viewWillDisappear(_ viewContrller: UIViewController) {
+    }
+
+    func moveToMyLocation(sender: Any) {
+        if let ll = lastUserLocation {
+            mapCenter = ll
+            mapView!.setCenter(ll, zoomLevel: mapView!.zoomLevel, animated: true)
+        }
     }
 
     func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
@@ -223,7 +251,9 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         mapCenter = mapView.centerCoordinate
     }
 
+    private var lastUserLocation: CLLocationCoordinate2D?
     func mapView(_ mapView: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
+        lastUserLocation = userLocation!.coordinate
         if !didFindMyLocation {
             mapCenter = userLocation!.coordinate
             mapView.setCenter(userLocation!.coordinate, zoomLevel: 15, animated: true)
