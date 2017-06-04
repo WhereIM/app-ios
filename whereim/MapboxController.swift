@@ -133,6 +133,15 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         mapView!.translatesAutoresizingMaskIntoConstraints = false
         viewContrller.view.addSubview(mapView!)
 
+        let mapTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(mapDidTap))
+        for recognizer in mapView!.gestureRecognizers! where recognizer is UITapGestureRecognizer {
+            mapTapGestureRecognizer.require(toFail: recognizer)
+        }
+        mapView!.addGestureRecognizer(mapTapGestureRecognizer)
+
+        let mapLongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(mapDidLongPress))
+        mapView!.addGestureRecognizer(mapLongPressGestureRecognizer)
+
         NSLayoutConstraint.activate([
             mapView!.leftAnchor.constraint(equalTo: viewContrller.view.leftAnchor),
             mapView!.rightAnchor.constraint(equalTo: viewContrller.view.rightAnchor),
@@ -157,7 +166,6 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         btnMyLocation.heightAnchor.constraint(equalToConstant: 56).isActive = true
         btnMyLocation.bottomAnchor.constraint(equalTo: viewContrller.bottomLayoutGuide.topAnchor, constant: -10).isActive = true
         btnMyLocation.rightAnchor.constraint(equalTo: viewContrller.view.rightAnchor, constant: -10).isActive = true
-
     }
 
     func viewDidAppear(_ viewController: UIViewController)  {
@@ -235,21 +243,27 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             m.selected = false
             mapController.tapMarker(nil)
         }
+        clearActions()
     }
 
-//    func mapView(_ mapView: MGLMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-//        if pendingMarker != nil {
-//            mapView.removeAnnotation(pendingMarker!)
-//            pendingMarker = nil
-//        }
-//        mapController.clearActions()
-//    }
-//
-//    func mapView(_ mapView: MGLMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-//        mapController.clearActions()
-//        let p = mapView.projection.point(for: coordinate)
-//        mapController.startEditing(coordinate, mapView, p)
-//    }
+    func clearActions() {
+        if pendingMarker != nil {
+            mapView!.removeAnnotation(pendingMarker!)
+            pendingMarker = nil
+        }
+        mapController.clearActions()
+    }
+
+    func mapDidTap(gesture: UITapGestureRecognizer) {
+        clearActions()
+    }
+
+    func mapDidLongPress(gesture: UILongPressGestureRecognizer) {
+        mapController.clearActions()
+        let p = gesture.location(in: mapView!)
+        let coordinate: CLLocationCoordinate2D = mapView!.convert(p, toCoordinateFrom: mapView!)
+        mapController.startEditing(coordinate, mapView!, p)
+    }
 
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         mapCenter = mapView.centerCoordinate
