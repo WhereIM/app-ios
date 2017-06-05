@@ -100,7 +100,12 @@ class SearchController: UIViewController, UITextFieldDelegate {
     }
 
     func _init() {
-        searchControllerImpl = GoogleSearchController(self)
+        switch Config.getMapProvider() {
+        case .GOOGLE:
+            searchControllerImpl = GoogleSearchController(self)
+        case .MAPBOX:
+            searchControllerImpl = MapboxSearchController(self)
+        }
     }
 
     func getMapCenter() -> CLLocationCoordinate2D {
@@ -121,8 +126,14 @@ class SearchController: UIViewController, UITextFieldDelegate {
         search(textField.text!)
     }
 
+    private var lastKeyword: String?
     func search(_ keyword: String) {
+        self.keyword.resignFirstResponder()
         let keyword = keyword.trim()
+        if lastKeyword == keyword {
+            return
+        }
+        lastKeyword = keyword
         if keyword.isEmpty {
             setSearchResults([])
             adView.isHidden = false

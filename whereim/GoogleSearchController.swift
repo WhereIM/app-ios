@@ -9,14 +9,6 @@
 import Alamofire
 import CoreLocation
 
-extension String {
-    func htmlAttributedString() -> NSAttributedString? {
-        guard let data = self.data(using: String.Encoding.utf16, allowLossyConversion: false) else { return nil }
-        guard let html = try? NSMutableAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil) else { return nil }
-        return html
-    }
-}
-
 class GoogleSearchResultsCell: UITableViewCell {
     let layout = UIStackView()
     let name = UILabel()

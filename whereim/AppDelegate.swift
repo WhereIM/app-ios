@@ -12,27 +12,8 @@ import GRDB
 import UIKit
 import FBSDKCoreKit
 import GoogleMaps
+import Mapbox
 import UserNotifications
-
-extension String {
-    var localized: String {
-        let text = NSLocalizedString(self, tableName: nil, bundle: Bundle.main, value: "", comment: "")
-        if text != self {
-            return text
-        }
-        let path = Bundle.main.path(forResource: "Base", ofType: "lproj")
-        let bundle = Bundle(path: path!)
-        if let forcedString = bundle?.localizedString(forKey: self, value: nil, table: nil) {
-            return forcedString
-        } else {
-            return self
-        }
-    }
-
-    func trim() -> String {
-        return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
-    }
-}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -45,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GMSServices.provideAPIKey(Config.GOOGLE_MAP_KEY)
+        MGLAccountManager.setAccessToken(Config.MAPBOX_KEY)
 
         FIRApp.configure()
 

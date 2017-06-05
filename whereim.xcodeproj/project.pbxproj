@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5801156C1EE5BB1700DB8F2A /* MapboxSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5801156B1EE5BB1700DB8F2A /* MapboxSearchController.swift */; };
+		5801156E1EE5C0AB00DB8F2A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5801156D1EE5C0AB00DB8F2A /* Utils.swift */; };
 		580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */; };
 		581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */; };
 		58202AB61E743B6A00BC7FCD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 58202AB41E743B6A00BC7FCD /* Localizable.strings */; };
@@ -102,6 +104,8 @@
 		3FF6FDF16300892FC2995FD2 /* Pods-whereim.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereim.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereim/Pods-whereim.debug.xcconfig"; sourceTree = "<group>"; };
 		4F2B6675A012E8969BE7DE7C /* Pods_whereimUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereimUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F5BC4E91993D704AA8B9A80 /* Pods-whereimTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimTests/Pods-whereimTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5801156B1EE5BB1700DB8F2A /* MapboxSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxSearchController.swift; sourceTree = "<group>"; };
+		5801156D1EE5C0AB00DB8F2A /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleMapController.swift; sourceTree = "<group>"; };
 		581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILoadingSwitch.swift; sourceTree = "<group>"; };
 		58202AB51E743B6A00BC7FCD /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = whereim/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -332,6 +336,7 @@
 				587CBBF31ED6149D00197A90 /* MapboxController.swift */,
 				584068A11EB4672300E4964D /* SearchController.swift */,
 				584068A31EB4D04900E4964D /* GoogleSearchController.swift */,
+				5801156B1EE5BB1700DB8F2A /* MapboxSearchController.swift */,
 				58230E101E6EEB7400AF4087 /* MessengerController.swift */,
 				5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */,
 				5831E3401E5D632900A7EB0E /* MarkerController.swift */,
@@ -339,6 +344,7 @@
 				58A6EB871E56F5CF00C29A49 /* CoreService.swift */,
 				58A6EB861E56F5CF00C29A49 /* Config.swift */,
 				58A6EB8C1E56F66D00C29A49 /* Key.swift */,
+				5801156D1EE5C0AB00DB8F2A /* Utils.swift */,
 				58568FB81E51ADF2002FAD41 /* Main.storyboard */,
 				58568FBE1E51ADF2002FAD41 /* Assets.xcassets */,
 				58568FC01E51ADF2002FAD41 /* LaunchScreen.storyboard */,
@@ -710,6 +716,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5801156C1EE5BB1700DB8F2A /* MapboxSearchController.swift in Sources */,
 				583CA8E51EBCEE5A0043B171 /* DialogCreateChannel.swift in Sources */,
 				58568FB71E51ADF2002FAD41 /* LoginController.swift in Sources */,
 				584068A21EB4672300E4964D /* SearchController.swift in Sources */,
@@ -726,6 +733,7 @@
 				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
 				583CA8F51EBCEF280043B171 /* DialogEditEnchantment.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
+				5801156E1EE5C0AB00DB8F2A /* Utils.swift in Sources */,
 				587CBBF41ED6149D00197A90 /* MapboxController.swift in Sources */,
 				586091301E75B60600377ADF /* LogController.swift in Sources */,
 				58568FB51E51ADF2002FAD41 /* AppDelegate.swift in Sources */,

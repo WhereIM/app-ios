@@ -392,7 +392,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     func moveToSearchResult(at: Int) {
         if at < mapController.searchResults.count {
             let r = mapController.searchResults[at]
-            mapView?.setCenter(r.location!, animated: false)
+            mapView!.setCenter(r.location!, animated: false)
         }
         if at < searchResultMarker.count {
             mapView!.selectAnnotation(searchResultMarker[at], animated: false)

@@ -22,6 +22,7 @@ class Config {
     static let CRT_FILE = "whereim.crt"
 
     static let GOOGLE_MAP_KEY = "AIzaSyAtP4_TFI7E_88lUQQTo9NBqJvF9KcC8HA"
+    static let MAPBOX_KEY = "pk.eyJ1Ijoid2hlcmVpbSIsImEiOiJjaXltbmtvbHUwMDM4MzNwZnNsZHVtbHE4In0.n36bMG_LdA9yOu8-fQS2vw"
 
     static let FACEBOOK_SLUG = "facebook"
 
