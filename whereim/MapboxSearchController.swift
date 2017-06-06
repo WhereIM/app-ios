@@ -92,6 +92,9 @@ class MapboxSearchAgent: ApiKeyCallback {
                 guard let data = result as? [String:Any] else {
                     return
                 }
+                guard let attribution = data["attribution"] as? String else {
+                    return
+                }
                 guard let features = data["features"] as? [[String:Any]] else {
                     return
                 }
@@ -108,6 +111,7 @@ class MapboxSearchAgent: ApiKeyCallback {
                     poi.location = CLLocationCoordinate2D(latitude: center[1], longitude: center[0])
                     res.append(poi)
                 }
+                self.mapboxSearchController.searchController?.setTextAttribution(attribution)
                 self.mapboxSearchController.searchController?.setSearchResults(res)
             }
         }
@@ -192,6 +196,9 @@ class MapboxAutoCompleteAgent: ApiKeyCallback {
                 guard let data = result as? [String:Any] else {
                     return
                 }
+                guard let attribution = data["attribution"] as? String else {
+                    return
+                }
                 guard let features = data["features"] as? [[String:Any]] else {
                     return
                 }
@@ -201,6 +208,7 @@ class MapboxAutoCompleteAgent: ApiKeyCallback {
                         res.append(name)
                     }
                 }
+                self.mapboxSearchController.searchController?.setTextAttribution(attribution)
                 self.mapboxSearchController.searchController?.setAutoCompletes(res)
             }
         }

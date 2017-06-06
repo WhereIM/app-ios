@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// Google Places
 extension String {
     func htmlAttributedString() -> NSAttributedString? {
         guard let data = self.data(using: String.Encoding.utf16, allowLossyConversion: false) else { return nil }
@@ -17,6 +18,7 @@ extension String {
     }
 }
 
+// Localization
 extension String {
     var localized: String {
         let text = NSLocalizedString(self, tableName: nil, bundle: Bundle.main, value: "", comment: "")
@@ -34,5 +36,28 @@ extension String {
 
     func trim() -> String {
         return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
+    }
+}
+
+
+// Mapbox
+extension UIImage {
+    func image(alpha: CGFloat) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        draw(at: CGPoint.zero, blendMode: .normal, alpha: alpha)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+
+    func centerBottom() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: self.size.width,
+                   height: self.size.height * 2), false, self.scale)
+        let _ = UIGraphicsGetCurrentContext()
+        self.draw(at: CGPoint.zero)
+        let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return imageWithInsets
     }
 }

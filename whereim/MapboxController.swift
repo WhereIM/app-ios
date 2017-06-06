@@ -10,27 +10,6 @@ import CoreLocation
 import UIKit
 import Mapbox
 
-extension UIImage {
-    func image(alpha: CGFloat) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        draw(at: CGPoint.zero, blendMode: .normal, alpha: alpha)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage
-    }
-
-    func centerBottom() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(
-            CGSize(width: self.size.width,
-                   height: self.size.height * 2), false, self.scale)
-        let _ = UIGraphicsGetCurrentContext()
-        self.draw(at: CGPoint.zero)
-        let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return imageWithInsets
-    }
-}
-
 // https://github.com/mapbox/mapbox-gl-native/issues/2167#issuecomment-192686761
 func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) -> [CLLocationCoordinate2D] {
     let degreesBetweenPoints = 8.0

@@ -120,6 +120,7 @@ class GoogleSearchAgent: ApiKeyCallback {
                         self.googleSearchController.searchController?.view.makeToast("error".localized)
                     }
                 case "ZERO_RESULTS":
+                    self.googleSearchController.searchController?.setGoogleAttribution()
                     self.googleSearchController.searchController?.setSearchResults([])
                 case "OK":
                     guard let results = data["results"] as? [[String:Any]] else {
@@ -153,6 +154,7 @@ class GoogleSearchAgent: ApiKeyCallback {
                         }
                         res.append(r)
                     }
+                    self.googleSearchController.searchController?.setGoogleAttribution()
                     self.googleSearchController.searchController?.setSearchResults(res)
                 default:
                     return
@@ -254,6 +256,7 @@ class GoogleAutoCompleteAgent: ApiKeyCallback {
                         self.googleSearchController.searchController?.view.makeToast("error".localized)
                     }
                 case "ZERO_RESULTS":
+                    self.googleSearchController.searchController?.setGoogleAttribution()
                     self.googleSearchController.searchController?.setAutoCompletes([])
                 case "OK":
                     guard let predictions = data["predictions"] as? [[String:Any]] else {
@@ -266,6 +269,7 @@ class GoogleAutoCompleteAgent: ApiKeyCallback {
                         }
                         res.append(description)
                     }
+                    self.googleSearchController.searchController?.setGoogleAttribution()
                     self.googleSearchController.searchController?.setAutoCompletes(res)
                 default:
                     return

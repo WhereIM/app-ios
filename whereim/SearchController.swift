@@ -81,6 +81,11 @@ class SearchController: UIViewController, UITextFieldDelegate {
     let btn_search = UIButton()
     let btn_clear = UIButton()
     let listView = UITableView()
+    var bottomConstraint: NSLayoutConstraint?
+    let googleAttribution = UIImageView()
+    var googleAttributionHidden: NSLayoutConstraint?
+    let textAttribution = UITextView()
+    var textAttributionHidden: NSLayoutConstraint?
     let contentArea = UIView()
     let loading = UIActivityIndicatorView()
     let adView = GADNativeExpressAdView()
@@ -134,6 +139,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
             return
         }
         lastKeyword = keyword
+        clearAttribution()
         if keyword.isEmpty {
             setSearchResults([])
             adView.isHidden = false
@@ -182,6 +188,22 @@ class SearchController: UIViewController, UITextFieldDelegate {
     func moveToSearchResult(at: Int) {
         let parent = self.tabBarController as! ChannelController
         parent.moveToSearchResult(at: at)
+    }
+
+    func setGoogleAttribution() {
+        googleAttributionHidden!.isActive = false
+        textAttributionHidden!.isActive = true
+    }
+
+    func setTextAttribution(_ text: String) {
+        googleAttributionHidden!.isActive = true
+        textAttribution.text = text
+        textAttributionHidden!.isActive = false
+    }
+
+    func clearAttribution() {
+        googleAttributionHidden!.isActive = true
+        textAttributionHidden!.isActive = true
     }
 
     var searchResultsDataSource: UITableViewDataSource?
@@ -238,12 +260,39 @@ class SearchController: UIViewController, UITextFieldDelegate {
         searchBar.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).isActive = true
         searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
 
+        googleAttribution.translatesAutoresizingMaskIntoConstraints = false
+        googleAttribution.image = UIImage(named: "powered_by_google_on_white")
+        googleAttribution.contentMode = .center
+        googleAttribution.clipsToBounds = true
+        let h = googleAttribution.heightAnchor.constraint(equalToConstant: googleAttribution.intrinsicContentSize.height + 10)
+        h.priority = 900
+        h.isActive = true
+        self.view.addSubview(googleAttribution)
+        googleAttribution.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        bottomConstraint = googleAttribution.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: 0)
+        bottomConstraint!.isActive = true
+        googleAttributionHidden = googleAttribution.heightAnchor.constraint(equalToConstant: 0)
+        googleAttributionHidden!.isActive = true
+
+        textAttribution.translatesAutoresizingMaskIntoConstraints = false
+        textAttribution.font = UIFont.systemFont(ofSize: 8)
+        textAttribution.isEditable = false
+        textAttribution.dataDetectorTypes = .link
+        textAttribution.sizeToFit()
+        textAttribution.isScrollEnabled = false
+        self.view.addSubview(textAttribution)
+        textAttribution.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        textAttribution.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        textAttribution.bottomAnchor.constraint(equalTo: googleAttribution.topAnchor).isActive = true
+        textAttributionHidden = textAttribution.heightAnchor.constraint(equalToConstant: 0)
+        textAttributionHidden!.isActive = true
+
         listView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(listView)
         listView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
         listView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         listView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        listView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).isActive = true
+        listView.bottomAnchor.constraint(equalTo: textAttribution.topAnchor).isActive = true
         listView.isHidden = true
 
         contentArea.translatesAutoresizingMaskIntoConstraints = false
@@ -378,15 +427,12 @@ class SearchController: UIViewController, UITextFieldDelegate {
     
     func keyboardShown(_ n:NSNotification) {
         let d = n.userInfo!
-        var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        r = self.listView.convert(r, from:nil)
-        self.listView.contentInset.bottom = r.size.height
-        self.listView.scrollIndicatorInsets.bottom = r.size.height
+        let r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        bottomConstraint?.constant = -(r.size.height - self.tabBarController!.tabBar.frame.size.height)
     }
 
     func keyboardHide(_ n:NSNotification) {
-        self.listView.contentInset.bottom = 0
-        self.listView.scrollIndicatorInsets.bottom = 0
+        bottomConstraint?.constant = 0
     }
 
     /*
