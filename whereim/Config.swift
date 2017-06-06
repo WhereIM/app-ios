@@ -47,10 +47,10 @@ class Config {
     static let GENERIC_LOCATION_UPDATE_MIN_DISTANCE = 5.0 // m
 
     static func getMapProvider() -> MapProvider {
-        return MapProvider.init(rawValue: UserDefaults.standard.string(forKey: Key.PROVIDER) ?? MapProvider.GOOGLE.rawValue) ?? MapProvider.GOOGLE
+        return MapProvider.init(rawValue: UserDefaults.standard.string(forKey: Key.SERVICE_PROVIDER) ?? MapProvider.GOOGLE.rawValue) ?? MapProvider.GOOGLE
     }
 
     static func setMapProvider(_ provider: MapProvider) {
-        UserDefaults.standard.set(provider.rawValue, forKey: Key.PROVIDER)
+        UserDefaults.standard.set(provider.rawValue, forKey: Key.SERVICE_PROVIDER)
     }
 }
