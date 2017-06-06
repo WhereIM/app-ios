@@ -42,6 +42,7 @@ class WimPointAnnotation: MGLPointAnnotation {
     var selected = false
     var icon: UIImage?
     var opacity = CGFloat(1.0)
+    var reuseId: String?
     var zIndex = 0 // unused
 }
 
@@ -205,7 +206,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         if let m = annotation as? WimPointAnnotation {
             let icon = m.icon!.withAlignmentRectInsets(UIEdgeInsets(top: 0, left: 0, bottom: m.icon!.size.height/2, right: 0))
-            return MGLAnnotationImage(image: icon, reuseIdentifier: m.hashValue.description)
+            return MGLAnnotationImage(image: icon, reuseIdentifier: m.reuseId!)
         }
         return nil
     }
@@ -289,6 +290,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             m.coordinate = mapController.editingCoordinate
             m.icon = mapController.editingMarker.getIcon()
             m.zIndex = 100
+            m.reuseId = mapController.editingMarker.getColor()
             self.mapView!.addAnnotation(m)
             editingMarkerMarker = m
         } else {
@@ -329,9 +331,11 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             let m = WimPointAnnotation()
             m.coordinate = CLLocationCoordinate2DMake(marker.latitude!, marker.longitude!)
             m.title = marker.name
-            m.icon = marker.getIcon().image(alpha: marker.enabled == true ? 1 : 0.5)?.centerBottom()
+            m.opacity = marker.enabled == true ? 1 : 0.5
+            m.icon = marker.getIcon().image(alpha: m.opacity)?.centerBottom()
             m.zIndex = 25
             m.userData = marker
+            m.reuseId = "\(marker.getColor())/\(m.opacity)"
             self.mapView!.addAnnotation(m)
 
             self.markerMarker[marker.id!] = m
@@ -363,6 +367,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             m.icon = UIImage(named: "search_marker")?.centerBottom()
             m.zIndex = 50
             m.userData = r
+            m.reuseId = "search_marker"
 
             searchResultMarker.append(m)
         }
@@ -448,15 +453,15 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             if let currentContext = UIGraphicsGetCurrentContext()
             {
                 self.markerTemplate.layer.render(in: currentContext)
-                var imageMarker = UIImage()
-                imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
+                let imageMarker = UIGraphicsGetImageFromCurrentImageContext()!
                 m.icon = imageMarker.image(alpha: m.opacity)?.centerBottom()
             }
             UIGraphicsEndImageContext()
 
-            self.mapView!.addAnnotation(m)
-            self.mateMarker[mate.id!] = m
             m.userData = mate
+            m.reuseId = "\(mate.getDisplayName())/\(m.opacity)"
+            self.mateMarker[mate.id!] = m
+            self.mapView!.addAnnotation(m)
         }
         if mate.id! == mapController.channel!.mate_id! {
             selfMate = mate

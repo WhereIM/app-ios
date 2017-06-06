@@ -135,15 +135,16 @@ class Marker: Record {
         "grey"]
     }
 
-    func getIcon() -> UIImage {
-        return Marker.getIcon(attr?[Key.COLOR] as? String)
+    func getColor() -> String {
+        return attr?[Key.COLOR] as? String ?? "red"
     }
 
-    static func getIcon(_ color: String?) -> UIImage {
-        if color == nil {
-            return UIImage(named: "icon_marker_red")!
-        }
-        switch color! {
+    func getIcon() -> UIImage {
+        return Marker.getIcon(getColor())
+    }
+
+    static func getIcon(_ color: String) -> UIImage {
+        switch color {
         case "azure": return UIImage(named: "icon_marker_azure")!
         case "blue": return UIImage(named: "icon_marker_blue")!
         case "cyan": return UIImage(named: "icon_marker_cyan")!
