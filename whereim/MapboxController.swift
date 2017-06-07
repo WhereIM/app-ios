@@ -94,13 +94,12 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             self.pendingMarker = WimPointAnnotation()
             self.pendingMarker!.coordinate = poi.location!
             self.pendingMarker!.title = poi.name!
+            self.pendingMarker!.reuseId = "poi"
             self.pendingMarker!.icon = UIImage(named: "search_marker")?.centerBottom()
             self.pendingMarker!.userData = poi
             self.mapView!.addAnnotation(self.pendingMarker!)
 
             self.mapController.tapMarker(poi)
-
-            self.mapView!.selectAnnotation(self.pendingMarker!, animated: false)
 
             self.mapController.service!.pendingPOI = nil
         }
@@ -146,6 +145,11 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
 
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         if let m = annotation as? WimPointAnnotation {
+            if annotation === pendingMarker {
+                DispatchQueue.main.async {
+                    self.mapView!.selectAnnotation(self.pendingMarker!, animated: false)
+                }
+            }
             let icon = m.icon!.withAlignmentRectInsets(UIEdgeInsets(top: 0, left: 0, bottom: m.icon!.size.height/2, right: 0))
             return MGLAnnotationImage(image: icon, reuseIdentifier: m.reuseId!)
         }
@@ -194,8 +198,10 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     func mapView(_ mapView: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
         lastUserLocation = userLocation!.coordinate
         if !didFindMyLocation {
-            mapCenter = userLocation!.coordinate
-            mapView.setCenter(userLocation!.coordinate, zoomLevel: 15, animated: true)
+            if moveCameraToMyLocation {
+                mapCenter = userLocation!.coordinate
+                mapView.setCenter(userLocation!.coordinate, zoomLevel: 15, animated: true)
+            }
 
             didFindMyLocation = true
         }
