@@ -172,7 +172,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     }
 
     func moveToMyLocation(sender: Any) {
-        if let ll = lastUserLocation {
+        if let ll = self.mapView?.userLocation?.coordinate {
             mapCenter = ll
             mapView!.setCenter(ll, zoomLevel: mapView!.zoomLevel, animated: true)
         }
