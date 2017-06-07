@@ -34,7 +34,12 @@ class PoiViewerController: UIViewController {
     }
 
     func _init() {
-        poiViewerControllerImpl = GooglePoiViewerController(self)
+        switch Config.getMapProvider() {
+        case .GOOGLE:
+            poiViewerControllerImpl = GooglePoiViewerController(self)
+        case .MAPBOX:
+            poiViewerControllerImpl = MapboxPoiViewerController(self)
+        }
     }
 
     override func viewDidLoad() {

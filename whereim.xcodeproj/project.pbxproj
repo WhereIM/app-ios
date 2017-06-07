@@ -76,6 +76,8 @@
 		58E347A71E5A18F00025211B /* Mate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A61E5A18F00025211B /* Mate.swift */; };
 		58E347A91E5A23F20025211B /* ChannelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E347A81E5A23F20025211B /* ChannelController.swift */; };
 		58F5C5D41ED1668B00BD9567 /* FilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F5C5D31ED1668B00BD9567 /* FilterBar.swift */; };
+		58FA16161EE854110094A610 /* MapboxPoiViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FA16151EE854110094A610 /* MapboxPoiViewerController.swift */; };
+		58FA16181EE854BD0094A610 /* MapboxUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FA16171EE854BD0094A610 /* MapboxUtils.swift */; };
 		F9AB810CBC94F21B55C4C54F /* Pods_whereimTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E406CB010A4BCE20D71AD2 /* Pods_whereimTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -198,6 +200,8 @@
 		58E347A61E5A18F00025211B /* Mate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mate.swift; sourceTree = "<group>"; };
 		58E347A81E5A23F20025211B /* ChannelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelController.swift; sourceTree = "<group>"; };
 		58F5C5D31ED1668B00BD9567 /* FilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterBar.swift; sourceTree = "<group>"; };
+		58FA16151EE854110094A610 /* MapboxPoiViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxPoiViewerController.swift; sourceTree = "<group>"; };
+		58FA16171EE854BD0094A610 /* MapboxUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxUtils.swift; sourceTree = "<group>"; };
 		704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7959DEF4F849C6B55348887F /* Pods-whereimUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimUITests/Pods-whereimUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -328,6 +332,7 @@
 				58568FB61E51ADF2002FAD41 /* LoginController.swift */,
 				584599D51EC06BC0003C53A8 /* PoiViewerController.swift */,
 				584599D71EC06BE1003C53A8 /* GooglePoiViewerController.swift */,
+				58FA16151EE854110094A610 /* MapboxPoiViewerController.swift */,
 				587F41E51EC2223F00823E6C /* ScannerController.swift */,
 				58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */,
 				58E347A81E5A23F20025211B /* ChannelController.swift */,
@@ -344,6 +349,7 @@
 				58A6EB871E56F5CF00C29A49 /* CoreService.swift */,
 				58A6EB861E56F5CF00C29A49 /* Config.swift */,
 				58A6EB8C1E56F66D00C29A49 /* Key.swift */,
+				58FA16171EE854BD0094A610 /* MapboxUtils.swift */,
 				5801156D1EE5C0AB00DB8F2A /* Utils.swift */,
 				58568FB81E51ADF2002FAD41 /* Main.storyboard */,
 				58568FBE1E51ADF2002FAD41 /* Assets.xcassets */,
@@ -726,11 +732,13 @@
 				583CA8EF1EBCEEE60043B171 /* DialogShareLocation.swift in Sources */,
 				58202AC41E74854A00BC7FCD /* Log.swift in Sources */,
 				583CA8F71EBCEF3F0043B171 /* DialogDeleteEnchantment.swift in Sources */,
+				58FA16181EE854BD0094A610 /* MapboxUtils.swift in Sources */,
 				587F41E61EC2223F00823E6C /* ScannerController.swift in Sources */,
 				583CA8EB1EBCEEAA0043B171 /* DialogEditRadius.swift in Sources */,
 				583CA8DF1EBCEE150043B171 /* DialogEditMate.swift in Sources */,
 				58230E111E6EEB7400AF4087 /* MessengerController.swift in Sources */,
 				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
+				58FA16161EE854110094A610 /* MapboxPoiViewerController.swift in Sources */,
 				583CA8F51EBCEF280043B171 /* DialogEditEnchantment.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
 				5801156E1EE5C0AB00DB8F2A /* Utils.swift in Sources */,
