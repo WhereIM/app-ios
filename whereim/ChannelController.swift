@@ -90,7 +90,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         layout.axis = .horizontal
         layout.alignment = .center
         layout.distribution = .fill
-        layout.spacing = 25
+        layout.spacing = 10
 
         titleLayout.axis = .vertical
         titleLayout.alignment = .leading
