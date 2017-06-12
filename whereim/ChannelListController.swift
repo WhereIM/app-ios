@@ -52,9 +52,9 @@ class ChannelCell: UITableViewCell {
 class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var channelList: [Channel]
     let service: CoreService
-    let vc: UIViewController
+    let vc: ChannelListController
 
-    init(_ service: CoreService, _ viewcontroller: UIViewController) {
+    init(_ service: CoreService, _ viewcontroller: ChannelListController) {
         self.service = service
         self.channelList = service.getChannelList()
         self.vc = viewcontroller
@@ -106,6 +106,36 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             cell.loadingSwitch.isHidden = false
         } else {
             cell.loadingSwitch.isHidden = true
+        }
+
+        if indexPath.row == 0 {
+            if let c = self.vc.toggleChannelPointerRight {
+                c.isActive = false
+            }
+            self.vc.toggleChannelPointerRight = self.vc.toggleChannelPointer.rightAnchor.constraint(equalTo: cell.loadingSwitch.leftAnchor)
+            self.vc.toggleChannelPointerRight!.isActive = true
+
+            if let c = self.vc.toggleChannelPointerTop {
+                c.isActive = false
+            }
+            self.vc.toggleChannelPointerTop = self.vc.toggleChannelPointer.topAnchor.constraint(equalTo: cell.loadingSwitch.bottomAnchor)
+            self.vc.toggleChannelPointerTop!.isActive = true
+
+            if let c = self.vc.enterChannelPointerTop {
+                c.isActive = false
+            }
+            self.vc.enterChannelPointerTop = self.vc.enterChannelPointer.topAnchor.constraint(equalTo: cell.loadingSwitch.bottomAnchor, constant: -5)
+            self.vc.enterChannelPointerTop!.isActive = true
+
+            if let c = self.vc.enterChannelPointerCenter {
+                c.isActive = false
+            }
+            self.vc.enterChannelPointerCenter = self.vc.enterChannelPointer.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
+            self.vc.enterChannelPointerCenter!.isActive = true
+
+            DispatchQueue.main.async {
+                self.vc.checkTips()
+            }
         }
 
         return cell
@@ -237,6 +267,17 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     let fab = UIButton()
     let pendingPOILayout = PendingPoiViewHolder()
 
+    let cover = UIView()
+    let newChannelPointer = UIImageView()
+    let newChannelDesc = UIHintDialog()
+    let toggleChannelPointer = UIImageView()
+    let toggleChannelDesc = UIHintDialog()
+    weak var toggleChannelPointerRight: NSLayoutConstraint?
+    weak var toggleChannelPointerTop: NSLayoutConstraint?
+    let enterChannelPointer = UIImageView()
+    let enterChannelDesc = UIHintDialog()
+    weak var enterChannelPointerTop: NSLayoutConstraint?
+    weak var enterChannelPointerCenter: NSLayoutConstraint?
 
     let connectionStatusIndicator = UIActivityIndicatorView()
     var adapter: ChannelListAdapter?
@@ -354,6 +395,94 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
 
         pendingPOILayout.centerXAnchor.constraint(equalTo: pendingArea.centerXAnchor).isActive = true
         pendingPOILayout.centerYAnchor.constraint(equalTo: pendingArea.centerYAnchor).isActive = true
+
+        cover.translatesAutoresizingMaskIntoConstraints = false
+        cover.isExclusiveTouch = true
+        cover.isUserInteractionEnabled = true
+        self.view.addSubview(cover)
+        self.view.bringSubview(toFront: cover)
+        cover.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        cover.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        cover.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        cover.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        cover.isHidden = true
+
+        newChannelPointer.translatesAutoresizingMaskIntoConstraints = false
+        newChannelPointer.image = UIImage(named: "pointer_bottom_right")
+        self.view.addSubview(newChannelPointer)
+        self.view.bringSubview(toFront: newChannelPointer)
+        newChannelPointer.rightAnchor.constraint(equalTo: fab.leftAnchor).isActive = true
+        newChannelPointer.bottomAnchor.constraint(equalTo: fab.topAnchor).isActive = true
+        newChannelPointer.isHidden = true
+
+        newChannelDesc.key = Key.TIP_NEW_CHANNEL
+        newChannelDesc.callback = checkTips
+        self.view.addSubview(newChannelDesc)
+        self.view.bringSubview(toFront: newChannelDesc)
+        newChannelDesc.bottomAnchor.constraint(equalTo: newChannelPointer.topAnchor).isActive = true
+        newChannelDesc.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        newChannelDesc.isHidden = true
+
+        enterChannelPointer.translatesAutoresizingMaskIntoConstraints = false
+        enterChannelPointer.image = UIImage(named: "pointer_up")
+        self.view.addSubview(enterChannelPointer)
+        self.view.bringSubview(toFront: enterChannelPointer)
+        enterChannelPointer.isHidden = true
+
+        enterChannelDesc.key = Key.TIP_ENTER_CHANNEL
+        enterChannelDesc.callback = checkTips
+        self.view.addSubview(enterChannelDesc)
+        self.view.bringSubview(toFront: enterChannelDesc)
+        enterChannelDesc.topAnchor.constraint(equalTo: enterChannelPointer.bottomAnchor).isActive = true
+        enterChannelDesc.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        enterChannelDesc.isHidden = true
+
+        toggleChannelPointer.translatesAutoresizingMaskIntoConstraints = false
+        toggleChannelPointer.image = UIImage(named: "pointer_up_right")
+        self.view.addSubview(toggleChannelPointer)
+        self.view.bringSubview(toFront: toggleChannelPointer)
+        toggleChannelPointer.isHidden = true
+
+        toggleChannelDesc.key = Key.TIP_TOGGLE_CHANNEL
+        toggleChannelDesc.callback = checkTips
+        self.view.addSubview(toggleChannelDesc)
+        self.view.bringSubview(toFront: toggleChannelDesc)
+        toggleChannelDesc.topAnchor.constraint(equalTo: toggleChannelPointer.bottomAnchor).isActive = true
+        toggleChannelDesc.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        toggleChannelDesc.isHidden = true
+    }
+
+    func checkTips() {
+        cover.isHidden = true
+        newChannelPointer.isHidden = true
+        newChannelDesc.isHidden = true
+        toggleChannelPointer.isHidden = true
+        toggleChannelDesc.isHidden = true
+        enterChannelPointer.isHidden = true
+        enterChannelDesc.isHidden = true
+
+        if UserDefaults.standard.bool(forKey: Key.TIP_NEW_CHANNEL) != true {
+            newChannelPointer.isHidden = false
+            newChannelDesc.isHidden = false
+            cover.isHidden = false
+            return
+        }
+
+        let hasChannel = adapter!.tableView(channelListView, numberOfRowsInSection: 0) > 0
+
+        if hasChannel && UserDefaults.standard.bool(forKey: Key.TIP_TOGGLE_CHANNEL) != true {
+            toggleChannelPointer.isHidden = false
+            toggleChannelDesc.isHidden = false
+            cover.isHidden = false
+            return
+        }
+
+        if hasChannel && UserDefaults.standard.bool(forKey: Key.TIP_ENTER_CHANNEL) != true {
+            enterChannelPointer.isHidden = false
+            enterChannelDesc.isHidden = false
+            cover.isHidden = false
+            return
+        }
     }
 
     func openLogController(recognizer: UITapGestureRecognizer) {
@@ -376,6 +505,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
                 return
             }
         }
+        checkTips()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

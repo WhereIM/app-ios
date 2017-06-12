@@ -71,6 +71,30 @@ class SwitchSettingCell: UITableViewCell {
     }
 }
 
+class TextSettingCell: UITableViewCell {
+    let title = UILabel()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.selectionStyle = .none
+
+        title.adjustsFontSizeToFitWidth = false
+        title.translatesAutoresizingMaskIntoConstraints = false
+
+        self.contentView.addSubview(title)
+
+        NSLayoutConstraint.activate([
+            title.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15),
+            title.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            ])
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     let SETTING_POWER_SAVING = 0
     let tableView: UITableView
@@ -80,7 +104,7 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2;
+        return 3;
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -89,6 +113,8 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             return 1
         case 1: // map provider
             return 2
+        case 2: // misc
+            return 1
         default:
             return 0
         }
@@ -98,6 +124,7 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         switch section {
         case 0: return "settings".localized
         case 1: return "service_provider".localized
+        case 2: return "misc".localized
         default:
             return nil
         }
@@ -131,13 +158,30 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 break
             }
             return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "text", for: indexPath) as! TextSettingCell
+            switch indexPath.row {
+            case 0:
+                cell.title.text = "reset_tips".localized
+                var resettable = false
+                resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_ENTER_CHANNEL) == true
+                resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_INVITE) == true
+                resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_NEW_CHANNEL) == true
+                resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_TOGGLE_CHANNEL) == true
+                resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_TOGGLE_CHANNEL_2) == true
+                cell.title.textColor = resettable ? UIColor.black : UIColor.lightGray
+            default:
+                break
+            }
+            return cell
         default:
             return UITableViewCell()
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1 { // map provider
+        switch indexPath.section {
+        case 1: // map provider
             switch indexPath.row {
             case 0:
                 Config.setMapProvider(.GOOGLE)
@@ -148,6 +192,20 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             default:
                 break
             }
+        case 2:
+            switch indexPath.row {
+            case 0:
+                UserDefaults.standard.removeObject(forKey: Key.TIP_ENTER_CHANNEL)
+                UserDefaults.standard.removeObject(forKey: Key.TIP_INVITE)
+                UserDefaults.standard.removeObject(forKey: Key.TIP_NEW_CHANNEL)
+                UserDefaults.standard.removeObject(forKey: Key.TIP_TOGGLE_CHANNEL)
+                UserDefaults.standard.removeObject(forKey: Key.TIP_TOGGLE_CHANNEL_2)
+                tableView.reloadData()
+            default:
+                break
+            }
+        default:
+            break
         }
     }
 
@@ -173,6 +231,7 @@ class SettingsController: UIViewController {
         adapter = SettingsAdapter(settings)
         settings.register(SelectableSettingCell.self, forCellReuseIdentifier: "selectable")
         settings.register(SwitchSettingCell.self, forCellReuseIdentifier: "switch")
+        settings.register(TextSettingCell.self, forCellReuseIdentifier: "text")
         settings.estimatedRowHeight = 70
         settings.rowHeight = UITableViewAutomaticDimension
         settings.dataSource = adapter

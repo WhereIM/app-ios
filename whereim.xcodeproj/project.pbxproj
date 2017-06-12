@@ -78,6 +78,7 @@
 		58F5C5D41ED1668B00BD9567 /* FilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F5C5D31ED1668B00BD9567 /* FilterBar.swift */; };
 		58FA16161EE854110094A610 /* MapboxPoiViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FA16151EE854110094A610 /* MapboxPoiViewerController.swift */; };
 		58FA16181EE854BD0094A610 /* MapboxUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FA16171EE854BD0094A610 /* MapboxUtils.swift */; };
+		58FA161A1EE9DB1E0094A610 /* UIHintDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FA16191EE9DB1E0094A610 /* UIHintDialog.swift */; };
 		F9AB810CBC94F21B55C4C54F /* Pods_whereimTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E406CB010A4BCE20D71AD2 /* Pods_whereimTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -202,6 +203,7 @@
 		58F5C5D31ED1668B00BD9567 /* FilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterBar.swift; sourceTree = "<group>"; };
 		58FA16151EE854110094A610 /* MapboxPoiViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxPoiViewerController.swift; sourceTree = "<group>"; };
 		58FA16171EE854BD0094A610 /* MapboxUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxUtils.swift; sourceTree = "<group>"; };
+		58FA16191EE9DB1E0094A610 /* UIHintDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIHintDialog.swift; sourceTree = "<group>"; };
 		704BDAB48B07EAEDFC22BF28 /* Pods_whereim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_whereim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7959DEF4F849C6B55348887F /* Pods-whereimUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-whereimUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-whereimUITests/Pods-whereimUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -263,6 +265,7 @@
 				581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */,
 				58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */,
 				58F5C5D31ED1668B00BD9567 /* FilterBar.swift */,
+				58FA16191EE9DB1E0094A610 /* UIHintDialog.swift */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */,
+				58FA161A1EE9DB1E0094A610 /* UIHintDialog.swift in Sources */,
 				583CA8DB1EBCEDCA0043B171 /* DialogAppMenu.swift in Sources */,
 				587F41E41EC16A6C00823E6C /* DialogNewChannel.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,

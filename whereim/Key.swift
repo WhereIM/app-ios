@@ -63,6 +63,12 @@ class Key {
     static let TOKEN = "token"
     static let TS = "ts"
 
+    static let TIP_ENTER_CHANNEL = "tip_enter_channel"
+    static let TIP_INVITE = "tip_invite"
+    static let TIP_NEW_CHANNEL = "tip_new_channel"
+    static let TIP_TOGGLE_CHANNEL = "tip_toggle_channel"
+    static let TIP_TOGGLE_CHANNEL_2 = "tip_toggle_channel_2"
+
     static let USER_CHANNEL_NAME = "user_channel_name"
     static let USER_MATE_NAME = "user_mate_name"
 }
