@@ -13,7 +13,7 @@ class DialogEditMate {
     let alert = AlertController(title: "join_channel".localized, message: nil, preferredStyle: .alert)
     let layout = UIStackView()
     let mate_name_label = UILabel()
-    let user_mate_name = UIStackView()
+    let mate_name_edit = UITextField()
     let user_mate_name_label = UILabel()
     let user_mate_name_edit = UITextField()
 
@@ -28,41 +28,39 @@ class DialogEditMate {
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         layout.axis = .vertical
-        layout.alignment = .leading
+        layout.alignment = .fill
         layout.distribution = .fill
         layout.spacing = 5
 
         mate_name_label.translatesAutoresizingMaskIntoConstraints = false
         mate_name_label.adjustsFontSizeToFitWidth = false
-        mate_name_label.text = mate.mate_name
+        mate_name_label.text = "name".localized
         layout.addArrangedSubview(mate_name_label)
 
-        user_mate_name.translatesAutoresizingMaskIntoConstraints = false
-        user_mate_name.axis = .horizontal
-        user_mate_name.alignment = .center
-        user_mate_name.distribution = .fill
-        user_mate_name.spacing = 5
+        mate_name_edit.translatesAutoresizingMaskIntoConstraints = false
+        mate_name_edit.adjustsFontSizeToFitWidth = false
+        mate_name_edit.text = mate.mate_name
+        mate_name_edit.isEnabled = false
+        layout.addArrangedSubview(mate_name_edit)
 
         user_mate_name_label.translatesAutoresizingMaskIntoConstraints = false
         user_mate_name_label.adjustsFontSizeToFitWidth = false
-        user_mate_name_label.text = "name".localized
-        user_mate_name.addArrangedSubview(user_mate_name_label)
+        user_mate_name_label.text = "display_name".localized
+        layout.addArrangedSubview(user_mate_name_label)
 
         user_mate_name_edit.text = mate.user_mate_name
         user_mate_name_edit.translatesAutoresizingMaskIntoConstraints = false
         user_mate_name_edit.backgroundColor = .white
         user_mate_name_edit.layer.borderColor = UIColor.gray.cgColor
         user_mate_name_edit.layer.borderWidth = 1
-        user_mate_name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
         user_mate_name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
 
-        user_mate_name.addArrangedSubview(user_mate_name_edit)
-
-        layout.addArrangedSubview(user_mate_name)
+        layout.addArrangedSubview(user_mate_name_edit)
 
         alert.contentView.addSubview(layout)
 
         layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.widthAnchor.constraint(equalTo: alert.contentView.widthAnchor).isActive = true
         layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 

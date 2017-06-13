@@ -12,7 +12,6 @@ import UIKit
 class DialogJoinChannel {
     let alert = AlertController(title: "join_channel".localized, message: nil, preferredStyle: .alert)
     let layout = UIStackView()
-    let display_name = UIStackView()
     let display_name_label = UILabel()
     let display_name_edit = UITextField()
 
@@ -31,41 +30,33 @@ class DialogJoinChannel {
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         layout.axis = .vertical
-        layout.alignment = .leading
+        layout.alignment = .fill
         layout.distribution = .fill
         layout.spacing = 5
-
-        display_name.translatesAutoresizingMaskIntoConstraints = false
-        display_name.axis = .horizontal
-        display_name.alignment = .center
-        display_name.distribution = .fill
-        display_name.spacing = 5
 
         display_name_label.translatesAutoresizingMaskIntoConstraints = false
         display_name_label.adjustsFontSizeToFitWidth = false
         display_name_label.text = "display_name".localized
-        display_name.addArrangedSubview(display_name_label)
+        layout.addArrangedSubview(display_name_label)
 
         display_name_edit.text = UserDefaults.standard.string(forKey: Key.NAME)
         display_name_edit.translatesAutoresizingMaskIntoConstraints = false
         display_name_edit.backgroundColor = .white
         display_name_edit.layer.borderColor = UIColor.gray.cgColor
         display_name_edit.layer.borderWidth = 1
-        display_name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
         display_name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: display_name_edit, queue: OperationQueue.main) { (notification) in
             check()
         }
 
-        display_name.addArrangedSubview(display_name_edit)
-
-        layout.addArrangedSubview(display_name)
+        layout.addArrangedSubview(display_name_edit)
 
         check()
 
         alert.contentView.addSubview(layout)
 
         layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.widthAnchor.constraint(equalTo: alert.contentView.widthAnchor).isActive = true
         layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 

@@ -48,7 +48,6 @@ class DialogCreateMarker {
 
     let alert = AlertController(title: "create_marker".localized, message: nil, preferredStyle: .alert)
     let layout = UIStackView()
-    let name = UIStackView()
     let name_edit = UITextField()
     let name_label = UILabel()
     let ispublic = UIStackView()
@@ -75,35 +74,26 @@ class DialogCreateMarker {
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         layout.axis = .vertical
-        layout.alignment = .leading
+        layout.alignment = .fill
         layout.distribution = .fill
         layout.spacing = 5
-
-        name.translatesAutoresizingMaskIntoConstraints = false
-        name.axis = .horizontal
-        name.alignment = .center
-        name.distribution = .fill
-        name.spacing = 5
 
         name_label.translatesAutoresizingMaskIntoConstraints = false
         name_label.adjustsFontSizeToFitWidth = false
         name_label.text = "name".localized
-        name.addArrangedSubview(name_label)
+        layout.addArrangedSubview(name_label)
 
         name_edit.translatesAutoresizingMaskIntoConstraints = false
         name_edit.text = title
         name_edit.backgroundColor = .white
         name_edit.layer.borderColor = UIColor.gray.cgColor
         name_edit.layer.borderWidth = 1
-        name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
         name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: name_edit, queue: OperationQueue.main) { (notification) in
             check()
         }
         check()
-        name.addArrangedSubview(name_edit)
-
-        layout.addArrangedSubview(name)
+        layout.addArrangedSubview(name_edit)
 
         ispublic.translatesAutoresizingMaskIntoConstraints = false
         ispublic.axis = .horizontal
@@ -136,7 +126,6 @@ class DialogCreateMarker {
         icon_picker.dataSource = pickerDelegate
         icon_picker.delegate = pickerDelegate
         icon_picker.showsSelectionIndicator = true
-        icon_picker.widthAnchor.constraint(equalToConstant: 75).isActive = true
         icon_picker.heightAnchor.constraint(equalToConstant: 162).isActive = true
         icon.addArrangedSubview(icon_picker)
 
@@ -145,6 +134,7 @@ class DialogCreateMarker {
         alert.contentView.addSubview(layout)
 
         layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.widthAnchor.constraint(equalTo: alert.contentView.widthAnchor).isActive = true
         layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 

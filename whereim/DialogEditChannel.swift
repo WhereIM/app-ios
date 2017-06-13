@@ -12,10 +12,8 @@ import UIKit
 class DialogEditChannel {
     let alert = AlertController(title: "edit_channel".localized, message: nil, preferredStyle: .alert)
     let layout = UIStackView()
-    let channel_name = UIStackView()
     let channel_name_label = UILabel()
     let channel_name_edit = UITextField()
-    let channel_alias = UIStackView()
     let channel_alias_label = UILabel()
     let channel_alias_edit = UITextField()
 
@@ -35,20 +33,14 @@ class DialogEditChannel {
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         layout.axis = .vertical
-        layout.alignment = .leading
+        layout.alignment = .fill
         layout.distribution = .fill
         layout.spacing = 5
-
-        channel_name.translatesAutoresizingMaskIntoConstraints = false
-        channel_name.axis = .horizontal
-        channel_name.alignment = .center
-        channel_name.distribution = .fill
-        channel_name.spacing = 5
 
         channel_name_label.translatesAutoresizingMaskIntoConstraints = false
         channel_name_label.adjustsFontSizeToFitWidth = false
         channel_name_label.text = "channel_name".localized
-        channel_name.addArrangedSubview(channel_name_label)
+        layout.addArrangedSubview(channel_name_label)
 
         channel_name_edit.text = channel.channel_name
         channel_name_edit.translatesAutoresizingMaskIntoConstraints = false
@@ -61,20 +53,12 @@ class DialogEditChannel {
             check()
         }
 
-        channel_name.addArrangedSubview(channel_name_edit)
-
-        layout.addArrangedSubview(channel_name)
-
-        channel_alias.translatesAutoresizingMaskIntoConstraints = false
-        channel_alias.axis = .horizontal
-        channel_alias.alignment = .center
-        channel_alias.distribution = .fill
-        channel_alias.spacing = 5
+        layout.addArrangedSubview(channel_name_edit)
 
         channel_alias_label.translatesAutoresizingMaskIntoConstraints = false
         channel_alias_label.adjustsFontSizeToFitWidth = false
         channel_alias_label.text = "channel_alias".localized
-        channel_alias.addArrangedSubview(channel_alias_label)
+        layout.addArrangedSubview(channel_alias_label)
 
         channel_alias_edit.text = channel.user_channel_name
         channel_alias_edit.translatesAutoresizingMaskIntoConstraints = false
@@ -87,15 +71,14 @@ class DialogEditChannel {
             check()
         }
 
-        channel_alias.addArrangedSubview(channel_alias_edit)
-
-        layout.addArrangedSubview(channel_alias)
+        layout.addArrangedSubview(channel_alias_edit)
 
         check()
 
         alert.contentView.addSubview(layout)
 
         layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.widthAnchor.constraint(equalTo: alert.contentView.widthAnchor).isActive = true
         layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 
