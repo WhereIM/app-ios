@@ -68,13 +68,63 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
         return numberOfSections
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+
+    func titleForHeaderInSection(_ section: Int) -> String? {
         switch section {
         case 0: return "self".localized
         case 1: return "public_enchantment".localized
         case 2: return "private_enchantment".localized
         default:
             return nil
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let v = UITableViewHeaderFooterView()
+
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = self.titleForHeaderInSection(section)
+        label.font = UIFont.boldSystemFont(ofSize: label.font.pointSize)
+        v.addSubview(label)
+        label.leftAnchor.constraint(equalTo: v.leftAnchor, constant: 15).isActive = true
+        label.centerYAnchor.constraint(equalTo: v.centerYAnchor).isActive = true
+
+        let info = UIImageView()
+        info.translatesAutoresizingMaskIntoConstraints = false
+        info.image = UIImage(named: "ic_info_outline_18pt")
+        v.addSubview(info)
+        info.leftAnchor.constraint(equalTo: label.rightAnchor, constant: 5).isActive = true
+        info.centerYAnchor.constraint(equalTo: v.centerYAnchor).isActive = true
+
+
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.tag = section
+        v.addSubview(btn)
+        v.bringSubview(toFront: btn)
+        btn.topAnchor.constraint(equalTo: v.topAnchor).isActive = true
+        btn.leftAnchor.constraint(equalTo: v.leftAnchor).isActive = true
+        btn.rightAnchor.constraint(equalTo: v.rightAnchor).isActive = true
+        btn.bottomAnchor.constraint(equalTo: v.bottomAnchor).isActive = true
+        btn.addTarget(self, action: #selector(infoCicked(sender:)), for: .touchUpInside)
+
+        return v
+    }
+
+    func infoCicked(sender: UIButton) {
+        switch sender.tag {
+        case 0:
+            _ = DialogMobileEnchantment(self.vc)
+        case 1:
+            _ = DialogFixedEnchantment(self.vc)
+        case 2:
+            _ = DialogFixedEnchantment(self.vc)
+        default:
+            break
         }
     }
 

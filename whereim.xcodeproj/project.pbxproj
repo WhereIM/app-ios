@@ -61,6 +61,9 @@
 		587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */; };
 		587F41E41EC16A6C00823E6C /* DialogNewChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41E31EC16A6C00823E6C /* DialogNewChannel.swift */; };
 		587F41E61EC2223F00823E6C /* ScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F41E51EC2223F00823E6C /* ScannerController.swift */; };
+		58934FD51EF04DD300FBF052 /* DialogMatesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58934FD41EF04DD300FBF052 /* DialogMatesInfo.swift */; };
+		5893BDD31EF0553600F908BE /* DialogMobileEnchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5893BDD21EF0553600F908BE /* DialogMobileEnchantment.swift */; };
+		5893BDD51EF0554300F908BE /* DialogFixedEnchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5893BDD41EF0554300F908BE /* DialogFixedEnchantment.swift */; };
 		58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */; };
 		58A6EB891E56F5CF00C29A49 /* ChannelListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */; };
 		58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB861E56F5CF00C29A49 /* Config.swift */; };
@@ -186,6 +189,9 @@
 		587F41E11EC15B4200823E6C /* DialogChannelInviteQrCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogChannelInviteQrCode.swift; sourceTree = "<group>"; };
 		587F41E31EC16A6C00823E6C /* DialogNewChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogNewChannel.swift; sourceTree = "<group>"; };
 		587F41E51EC2223F00823E6C /* ScannerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
+		58934FD41EF04DD300FBF052 /* DialogMatesInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogMatesInfo.swift; sourceTree = "<group>"; };
+		5893BDD21EF0553600F908BE /* DialogMobileEnchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogMobileEnchantment.swift; sourceTree = "<group>"; };
+		5893BDD41EF0554300F908BE /* DialogFixedEnchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogFixedEnchantment.swift; sourceTree = "<group>"; };
 		58A6EB841E56F5CF00C29A49 /* CaptchaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaController.swift; sourceTree = "<group>"; };
 		58A6EB851E56F5CF00C29A49 /* ChannelListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelListController.swift; sourceTree = "<group>"; };
 		58A6EB861E56F5CF00C29A49 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -294,6 +300,9 @@
 				583CA8F81EBCEF520043B171 /* DialogCreateMarker.swift */,
 				583CA8FA1EBCEF6A0043B171 /* DialogEditMarker.swift */,
 				583CA8FC1EBCEF800043B171 /* DialogDeleteMarker.swift */,
+				58934FD41EF04DD300FBF052 /* DialogMatesInfo.swift */,
+				5893BDD21EF0553600F908BE /* DialogMobileEnchantment.swift */,
+				5893BDD41EF0554300F908BE /* DialogFixedEnchantment.swift */,
 			);
 			name = dialogs;
 			sourceTree = "<group>";
@@ -756,6 +765,7 @@
 				583CA8DD1EBCEDF70043B171 /* DialogEditSelf.swift in Sources */,
 				58A6EB8B1E56F5CF00C29A49 /* CoreService.swift in Sources */,
 				58E347A71E5A18F00025211B /* Mate.swift in Sources */,
+				5893BDD31EF0553600F908BE /* DialogMobileEnchantment.swift in Sources */,
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
 				584599D81EC06BE1003C53A8 /* GooglePoiViewerController.swift in Sources */,
 				584068A01EABE0E600E4964D /* SettingsController.swift in Sources */,
@@ -764,6 +774,7 @@
 				583CA8F91EBCEF520043B171 /* DialogCreateMarker.swift in Sources */,
 				584599D21EC05E4F003C53A8 /* POI.swift in Sources */,
 				584068A41EB4D04900E4964D /* GoogleSearchController.swift in Sources */,
+				5893BDD51EF0554300F908BE /* DialogFixedEnchantment.swift in Sources */,
 				58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */,
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */,
@@ -777,6 +788,7 @@
 				584599D41EC05E8E003C53A8 /* GooglePOI.swift in Sources */,
 				58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */,
 				5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */,
+				58934FD51EF04DD300FBF052 /* DialogMatesInfo.swift in Sources */,
 				5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */,
 				583CA8F31EBCEF130043B171 /* DialogCreateEnchantment.swift in Sources */,
 				583CA8FB1EBCEF6A0043B171 /* DialogEditMarker.swift in Sources */,
