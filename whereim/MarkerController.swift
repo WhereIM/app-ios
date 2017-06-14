@@ -296,7 +296,7 @@ class ChannelMarkerAdapter: NSObject, UITableViewDataSource, UITableViewDelegate
                 tableView.setEditing(false, animated: true)
 
                 if let marker = self.getMarker(indexPath.section, indexPath.row) {
-                    _ = DialogEditMarker(self.vc, marker)
+                    _ = DialogEditMarker(self.channelController, marker)
                 }
             })
             let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
@@ -411,8 +411,7 @@ class MarkerController: UIViewController, Callback, FilterBarDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        adapter!.reload()
-        markerListView.reloadData()
+        onCallback()
         cbMatekey = service!.addMateListener(channel!, cbMatekey, self)
         cbMarkerkey = service!.addMarkerListener(channel!, cbMarkerkey, self)
     }

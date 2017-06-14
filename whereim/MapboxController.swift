@@ -159,7 +159,14 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
         if let m = annotation as? WimPointAnnotation {
             m.selected = true
-            mapController.tapMarker(m.userData)
+            if let obj = m.userData {
+                if pendingMarker != nil {
+                    mapView.removeAnnotation(pendingMarker!)
+                    pendingMarker = nil
+                }
+                mapController.clearActions(clearEditing: true)
+                mapController.tapMarker(obj)
+            }
         }
     }
 
@@ -168,23 +175,22 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             m.selected = false
             mapController.tapMarker(nil)
         }
-        clearActions()
+        mapController.clearActions(clearEditing: false)
     }
 
-    func clearActions() {
+    func mapDidTap(gesture: UITapGestureRecognizer) {
+        if mapController.editingType != nil {
+            return
+        }
         if pendingMarker != nil {
             mapView!.removeAnnotation(pendingMarker!)
             pendingMarker = nil
         }
-        mapController.clearActions()
-    }
-
-    func mapDidTap(gesture: UITapGestureRecognizer) {
-        clearActions()
+        mapController.clearActions(clearEditing: false)
     }
 
     func mapDidLongPress(gesture: UILongPressGestureRecognizer) {
-        mapController.clearActions()
+        mapController.clearActions(clearEditing: false)
         let p = gesture.location(in: mapView!)
         let coordinate: CLLocationCoordinate2D = mapView!.convert(p, toCoordinateFrom: mapView!)
         mapController.startEditing(coordinate, mapView!, p)
@@ -214,7 +220,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             if editingEnchantmentCircle != nil {
                 self.mapView!.removeAnnotation(editingEnchantmentCircle!)
             }
-            let cs = polygonCircleForCoordinate(coordinate: mapController.editingCoordinate, withMeterRadius: Double(Config.ENCHANTMENT_RADIUS[mapController.editingEnchantmentRadiusIndex]))
+            let cs = polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D(latitude: mapController.editingEnchantment.latitude!, longitude: mapController.editingEnchantment.longitude!), withMeterRadius: Double(mapController.editingEnchantment.radius!))
             let c = WimPolyline(coordinates: cs, count: UInt(cs.count))
             if mapController.editingEnchantment.isPublic == true {
                 c.strokeColor = .red
@@ -234,7 +240,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
                 self.mapView!.removeAnnotation(editingMarkerMarker!)
             }
             let m = WimPointAnnotation()
-            m.coordinate = mapController.editingCoordinate
+            m.coordinate = CLLocationCoordinate2D(latitude: mapController.editingMarker.latitude!, longitude: mapController.editingMarker.longitude!)
             m.icon = mapController.editingMarker.getIcon()
             m.zIndex = 100
             m.reuseId = mapController.editingMarker.getColor()
@@ -252,6 +258,9 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         if let c = self.enchantmentCircle[enchantment.id!] {
             self.mapView!.removeAnnotation(c)
             self.enchantmentCircle.removeValue(forKey: enchantment.id!)
+        }
+        if mapController.editingType == .enchantment && mapController.editingEnchantment.id == enchantment.id {
+            return
         }
         if enchantment.enabled == true || enchantment === focusEnchantment {
             let cs = polygonCircleForCoordinate(coordinate: CLLocationCoordinate2DMake(enchantment.latitude!, enchantment.longitude!), withMeterRadius: Double(enchantment.radius!))
@@ -271,6 +280,9 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
                 focus = true
             }
             self.mapView!.removeAnnotation(m)
+        }
+        if mapController.editingType == .marker && mapController.editingMarker.id == marker.id {
+            return
         }
         if marker.deleted {
             self.markerMarker.removeValue(forKey: marker.id!)
@@ -345,7 +357,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     }
 
     private var focusMarker: Marker?
-    func moveTo(marker: Marker?) {
+    func moveTo(marker: Marker?, focus: Bool) {
         let exFocusMarker = focusMarker
         focusMarker = marker
         if exFocusMarker != nil {
@@ -354,9 +366,11 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         if let m = marker {
             onMarkerData(m)
             mapView?.setCenter(CLLocationCoordinate2DMake(m.latitude!, m.longitude!), animated: false)
-            if let mm = markerMarker[m.id!] {
-                mapView!.selectAnnotation(mm, animated: false)
-                mapController.tapMarker(mm.userData)
+            if focus {
+                if let mm = markerMarker[m.id!] {
+                    mapView!.selectAnnotation(mm, animated: false)
+                    mapController.tapMarker(mm.userData)
+                }
             }
         }
     }

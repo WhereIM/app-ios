@@ -99,20 +99,30 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        mapController.tapMarker(marker.userData)
+        if let obj = marker.userData {
+            if pendingMarker != nil {
+                pendingMarker!.map = nil
+                pendingMarker = nil
+            }
+            mapController.clearActions(clearEditing: true)
+            mapController.tapMarker(obj)
+        }
         return false
     }
 
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        if mapController.editingType != nil {
+            return
+        }
         if pendingMarker != nil {
             pendingMarker!.map = nil
             pendingMarker = nil
         }
-        mapController.clearActions()
+        mapController.clearActions(clearEditing: false)
     }
 
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-        mapController.clearActions()
+        mapController.clearActions(clearEditing: false)
         let p = mapView.projection.point(for: coordinate)
         mapController.startEditing(coordinate, mapView, p)
     }
@@ -145,8 +155,8 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 editingEnchantmentCircle!.map = nil
             }
             let c = GMSCircle()
-            c.position = mapController.editingCoordinate
-            c.radius = CLLocationDistance(Config.ENCHANTMENT_RADIUS[mapController.editingEnchantmentRadiusIndex])
+            c.position = CLLocationCoordinate2D(latitude: mapController.editingEnchantment.latitude!, longitude: mapController.editingEnchantment.longitude!)
+            c.radius = Double(mapController.editingEnchantment.radius!)
             c.strokeWidth = 3
             if mapController.editingEnchantment.isPublic == true {
                 c.strokeColor = .red
@@ -166,7 +176,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 editingMarkerMarker!.map = nil
             }
             let m = GMSMarker()
-            m.position = mapController.editingCoordinate
+            m.position = CLLocationCoordinate2D(latitude: mapController.editingMarker.latitude!, longitude: mapController.editingMarker.longitude!)
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
             m.icon = mapController.editingMarker.getIcon()
             m.zIndex = 100
@@ -184,6 +194,9 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let c = self.enchantmentCircle[enchantment.id!] {
             c.map = nil
             self.enchantmentCircle.removeValue(forKey: enchantment.id!)
+        }
+        if mapController.editingType == .enchantment && mapController.editingEnchantment.id == enchantment.id {
+            return
         }
         if enchantment.enabled == true || enchantment === focusEnchantment {
             let c = GMSCircle()
@@ -205,6 +218,9 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
                 focus = true
             }
             m.map = nil
+        }
+        if mapController.editingType == .marker && mapController.editingMarker.id == marker.id {
+            return
         }
         if marker.deleted {
             self.markerMarker.removeValue(forKey: marker.id!)
@@ -280,7 +296,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     private var focusMarker: Marker?
-    func moveTo(marker: Marker?) {
+    func moveTo(marker: Marker?, focus: Bool) {
         let exFocusMarker = focusMarker
         focusMarker = marker
         if exFocusMarker != nil {
@@ -289,9 +305,11 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
         if let m = marker {
             onMarkerData(m)
             mapView!.animate(toLocation: CLLocationCoordinate2DMake(m.latitude!, m.longitude!))
-            if let mm = markerMarker[m.id!] {
-                mapView!.selectedMarker = mm
-                mapController.tapMarker(mm.userData)
+            if focus {
+                if let mm = markerMarker[m.id!] {
+                    mapView!.selectedMarker = mm
+                    mapController.tapMarker(mm.userData)
+                }
             }
         }
     }

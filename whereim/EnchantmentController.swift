@@ -188,7 +188,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
                 tableView.setEditing(false, animated: true)
 
                 if let enchantment = self.getEnchantment(indexPath.section, indexPath.row) {
-                    _ = DialogEditEnchantment(self.vc, enchantment)
+                    _ = DialogEditEnchantment(self.channelController, enchantment)
                 }
             })
             let delete = UITableViewRowAction(style: .destructive, title: "✖", handler: {(action, indexPath) -> Void in
@@ -287,6 +287,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        onCallback()
         cbkey = service!.addEnchantmentListener(channel!, cbkey, self)
         channelCbkey = service!.addChannelChangedListener(channel!, cbkey, self)
     }

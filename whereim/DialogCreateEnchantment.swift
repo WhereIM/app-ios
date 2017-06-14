@@ -20,9 +20,14 @@ class DialogCreateEnchantment {
     init(_ mapController: MapController, _ title: String?) {
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
+            mapController.editingType = .enchantment
+            mapController.editingEnchantment.id = nil
             mapController.editingEnchantment.name = self.name_edit.text
+            mapController.editingEnchantment.latitude = mapController.editingCoordinate.latitude
+            mapController.editingEnchantment.longitude = mapController.editingCoordinate.longitude
+            mapController.editingEnchantment.radius = Config.DEFAULT_ENCHANTMENT_RADIUS
             mapController.editingEnchantment.isPublic = self.ispublic_switch.isOn
-            mapController.refreshEditing(.enchantment)
+            mapController.refreshEditing()
         }
         alert.add(action)
 

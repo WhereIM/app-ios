@@ -643,18 +643,21 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return list
     }
 
-    func createEnchantment(name: String, channel_id: String, ispublic: Bool, latitude: Double, longitude: Double, radius: Int, enable: Bool) {
-        let data = [
-            Key.NAME: name,
-            Key.CHANNEL: channel_id,
-            Key.LATITUDE: latitude,
-            Key.LONGITUDE: longitude,
-            Key.RADIUS: radius,
-            Key.ENABLED: enable
-        ] as [String : Any]
+    func set(enchantment: Enchantment) {
+        var data = [String:Any]()
+        if enchantment.id == nil {
+            data[Key.CHANNEL] = enchantment.channel_id!
+            data[Key.ENABLED] = true
+        } else {
+            data[Key.ID] = enchantment.id!
+        }
+        data[Key.NAME] = enchantment.name!
+        data[Key.LATITUDE] = enchantment.latitude!
+        data[Key.LONGITUDE] = enchantment.longitude!
+        data[Key.RADIUS] = enchantment.radius!
 
-        if ispublic {
-            publish("channel/\(channel_id)/data/enchantment/put", data)
+        if enchantment.isPublic == true {
+            publish("channel/\(enchantment.channel_id!)/data/enchantment/put", data)
         } else {
             publish("client/\(clientId!)/enchantment/put", data)
         }
@@ -676,20 +679,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         notifyChannelEnchantmentListChangedListeners(enchantment.channel_id!)
-    }
-
-    func updateEnchantment(_ enchantment: Enchantment, _ changes: [String:Any]) {
-        var data = [String:Any]()
-        for k in changes.keys {
-            data[k] = changes[k]
-        }
-        data[Key.ID] = enchantment.id!
-
-        if enchantment.isPublic == true {
-            publish("channel/\(enchantment.channel_id!)/data/enchantment/put", data)
-        } else if enchantment.isPublic == false {
-            publish("client/\(clientId!)/enchantment/put", data)
-        }
     }
 
     func deleteEnchantment(_ enchantment: Enchantment) {
@@ -834,18 +823,21 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return list
     }
 
-    func createMarker(name: String, channel_id: String, ispublic: Bool, latitude: Double, longitude: Double, attr: [String: Any], enable: Bool) {
-        let data = [
-            Key.NAME: name,
-            Key.CHANNEL: channel_id,
-            Key.LATITUDE: latitude,
-            Key.LONGITUDE: longitude,
-            Key.ATTR: attr,
-            Key.ENABLED: enable
-        ] as [String: Any]
+    func set(marker: Marker) {
+        var data = [String:Any]()
+        if marker.id == nil {
+            data[Key.CHANNEL] = marker.channel_id!
+            data[Key.ENABLED] = true
+        } else {
+            data[Key.ID] = marker.id!
+        }
+        data[Key.NAME] = marker.name!
+        data[Key.LATITUDE] = marker.latitude!
+        data[Key.LONGITUDE] = marker.longitude!
+        data[Key.ATTR] = marker.attr!
 
-        if ispublic {
-            publish("channel/\(channel_id)/data/marker/put", data)
+        if marker.isPublic == true {
+            publish("channel/\(marker.channel_id!)/data/marker/put", data)
         } else {
             publish("client/\(clientId!)/marker/put", data)
         }
@@ -867,20 +859,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         notifyChannelMarkerListChangedListeners(marker.channel_id!)
-    }
-
-    func updateMarker(_ marker: Marker, _ changes: [String:Any]) {
-        var data = [String:Any]()
-        for k in changes.keys {
-            data[k] = changes[k]
-        }
-        data[Key.ID] = marker.id!
-
-        if marker.isPublic == true {
-            publish("channel/\(marker.channel_id!)/data/marker/put", data)
-        } else if marker.isPublic == false {
-            publish("client/\(clientId!)/marker/put", data)
-        }
     }
 
     func deleteMarker(_ marker: Marker) {

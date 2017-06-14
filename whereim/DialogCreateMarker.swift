@@ -10,42 +10,6 @@ import SDCAlertView
 import UIKit
 
 class DialogCreateMarker {
-    class PickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
-        let icon_list = Marker.getIconList()
-
-        func numberOfComponents(in pickerView: UIPickerView) -> Int {
-            return 1
-        }
-
-        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return icon_list.count
-        }
-
-        func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-            var cell: UIImageView?
-            if let v = view {
-                cell = v as? UIImageView
-            }
-            if cell == nil {
-                cell = UIImageView(frame: CGRect(x: 0, y: 0, width: 43, height: 43))
-            }
-            cell!.image = Marker.getIcon(icon_list[row])
-            return cell!
-        }
-
-        func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-            return 43
-        }
-
-        func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-            return 43
-        }
-
-        func getItem(_ row: Int) -> String {
-            return icon_list[row]
-        }
-    }
-
     let alert = AlertController(title: "create_marker".localized, message: nil, preferredStyle: .alert)
     let layout = UIStackView()
     let name_edit = UITextField()
@@ -61,10 +25,14 @@ class DialogCreateMarker {
     init(_ mapController: MapController, _ title: String?) {
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
+            mapController.editingType = .marker
+            mapController.editingMarker.id = nil
             mapController.editingMarker.name = self.name_edit.text
+            mapController.editingMarker.latitude = mapController.editingCoordinate.latitude
+            mapController.editingMarker.longitude = mapController.editingCoordinate.longitude
             mapController.editingMarker.isPublic = self.ispublic_switch.isOn
             mapController.editingMarker.attr = [Key.COLOR: self.pickerDelegate.getItem(self.icon_picker.selectedRow(inComponent: 0))]
-            mapController.refreshEditing(.marker)
+            mapController.refreshEditing()
         }
         alert.add(action)
 

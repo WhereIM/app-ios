@@ -21,7 +21,7 @@ protocol MapControllerInterface: MapDataReceiver {
     func updateSearchResults()
     func moveToSearchResult(at: Int)
     func moveTo(mate: Mate?)
-    func moveTo(marker: Marker?)
+    func moveTo(marker: Marker?, focus: Bool)
     func moveTo(enchantment: Enchantment?)
     func refreshEditing()
 }
@@ -274,8 +274,11 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
         markerActionsPanel.isHidden = false
     }
 
-    func clearActions() {
-        refreshEditing(nil)
+    func clearActions(clearEditing: Bool) {
+        if clearEditing {
+            editingType = nil
+            refreshEditing()
+        }
         markerActionsPanel.isHidden = true
         markerPanel.isHidden = true
         enchantmentPanel.isHidden = true
@@ -335,47 +338,84 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
         mapControllerImpl?.moveToSearchResult(at: at)
     }
 
-    func moveTo(mate: Mate?) {
+    func moveTo(mate: Mate?, focus: Bool) {
         mapControllerImpl?.moveTo(mate: mate)
     }
 
-    func moveTo(enchantment: Enchantment) {
+    func moveTo(enchantment: Enchantment, focus: Bool) {
         mapControllerImpl?.moveTo(enchantment: enchantment)
     }
 
-    func moveTo(marker: Marker) {
-        mapControllerImpl?.moveTo(marker: marker)
+    func moveTo(marker: Marker, focus: Bool) {
+        mapControllerImpl?.moveTo(marker: marker, focus: true)
+    }
+
+    func edit(enchantment: Enchantment, name: String, shared: Bool) {
+        clearActions(clearEditing: true)
+        editingEnchantmentOrig = enchantment
+        editingType = EditingType.enchantment
+        editingEnchantment.id = enchantment.id
+        editingEnchantment.name = name
+        editingEnchantment.latitude = enchantment.latitude
+        editingEnchantment.longitude = enchantment.longitude
+        editingEnchantment.radius = enchantment.radius!
+        editingEnchantment.isPublic = shared
+        mapControllerImpl!.moveTo(enchantment: editingEnchantment)
+        refreshEditing()
+    }
+
+    func edit(marker: Marker, name: String, attr: [String:Any], shared: Bool) {
+        clearActions(clearEditing: true)
+        editingMarkerOrig = marker
+        editingType = EditingType.marker
+        editingMarker.id = marker.id
+        editingMarker.name = name
+        editingMarker.latitude = marker.latitude
+        editingMarker.longitude = marker.longitude
+        editingMarker.attr = attr
+        editingMarker.isPublic = shared
+        mapControllerImpl!.moveTo(marker: editingMarker, focus: false)
+        refreshEditing()
     }
 
     func enchantment_reduce(sender: UIButton) {
-        editingEnchantmentRadiusIndex = max(0, editingEnchantmentRadiusIndex-1)
-        radiusLabel.text = String(format: "radius_m".localized, Config.ENCHANTMENT_RADIUS[editingEnchantmentRadiusIndex])
-        mapControllerImpl!.refreshEditing()
+        editingEnchantment.radius! -= Config.getStep(radius: editingEnchantment.radius!)
+        editingEnchantment.radius! = min(Config.ENCHANTMENT_RADIUS_MAX ,max(Config.ENCHANTMENT_RADIUS_MIN, editingEnchantment.radius!))
+        radiusLabel.text = String(format: "radius_m".localized, editingEnchantment.radius!)
+        refreshEditing()
     }
 
     func enchantment_enlarge(sender: UIButton) {
-        editingEnchantmentRadiusIndex = min(Config.ENCHANTMENT_RADIUS.count-1, editingEnchantmentRadiusIndex+1)
-        radiusLabel.text = String(format: "radius_m".localized, Config.ENCHANTMENT_RADIUS[editingEnchantmentRadiusIndex])
-        mapControllerImpl!.refreshEditing()
+        editingEnchantment.radius! += Config.getStep(radius: editingEnchantment.radius!)
+        editingEnchantment.radius! = min(Config.ENCHANTMENT_RADIUS_MAX ,max(Config.ENCHANTMENT_RADIUS_MIN, editingEnchantment.radius!))
+        radiusLabel.text = String(format: "radius_m".localized, editingEnchantment.radius!)
+        refreshEditing()
     }
 
     func enchantment_cancel(sender: UIButton) {
-        refreshEditing(nil)
+        editingType = nil
+        if let orig = editingEnchantmentOrig {
+            onEnchantmentData(orig)
+            editingEnchantmentOrig = nil
+        }
+        refreshEditing()
     }
 
     func enchantment_ok(sender: UIButton) {
-        service!.createEnchantment(name: editingEnchantment.name!, channel_id: channel!.id!, ispublic: editingEnchantment.isPublic!, latitude: editingCoordinate.latitude, longitude: editingCoordinate.longitude, radius: Config.ENCHANTMENT_RADIUS[editingEnchantmentRadiusIndex], enable: true)
-        refreshEditing(nil)
+        editingEnchantment.channel_id = channel!.id!
+        service!.set(enchantment: editingEnchantment)
+        editingType = nil
+        refreshEditing()
     }
 
     func marker_create_marker(sender: UIButton) {
-        clearActions()
+        clearActions(clearEditing: true)
         editingCoordinate = focusMarkerLocation!
         _ = DialogCreateMarker(self, focusMarkerTitle)
     }
 
     func marker_create_enchantment(sender: UIButton) {
-        clearActions()
+        clearActions(clearEditing: true)
         editingCoordinate = focusMarkerLocation!
         _ = DialogCreateEnchantment(self, focusMarkerTitle)
     }
@@ -389,12 +429,19 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     }
 
     func marker_cancel(sender: UIButton) {
-        refreshEditing(nil)
+        editingType = nil
+        if let orig = editingMarkerOrig {
+            onMarkerData(orig)
+            editingMarkerOrig = nil
+        }
+        refreshEditing()
     }
 
     func marker_ok(sender: UIButton) {
-        service!.createMarker(name: editingMarker.name!, channel_id: channel!.id!, ispublic: editingMarker.isPublic!, latitude: editingCoordinate.latitude, longitude: editingCoordinate.longitude, attr: editingMarker.attr!, enable: true)
-        refreshEditing(nil)
+        editingMarker.channel_id = channel!.id!
+        service!.set(marker: editingMarker)
+        editingType = nil
+        refreshEditing()
     }
 
     override func didReceiveMemoryWarning() {
@@ -402,31 +449,36 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
         super.didReceiveMemoryWarning()
     }
 
-    enum EditingType {
+    public enum EditingType {
         case marker
         case enchantment
     }
 
     var editingType: EditingType?
     var editingCoordinate = CLLocationCoordinate2D()
-    var editingEnchantmentRadiusIndex = Config.DEFAULT_ENCHANTMENT_RADIUS_INDEX
+    var editingEnchantmentOrig: Enchantment?
+    var editingMarkerOrig: Marker?
     var editingEnchantment = Enchantment()
     var editingMarker = Marker()
     func startEditing(_ coordinate: CLLocationCoordinate2D, _ mapView: UIView, _ touchPosition: CGPoint) {
         editingCoordinate = coordinate
         if editingType != nil {
-            mapControllerImpl!.refreshEditing()
+            switch editingType! {
+            case .enchantment:
+                editingEnchantment.latitude = editingCoordinate.latitude
+                editingEnchantment.longitude = editingCoordinate.longitude
+            case .marker:
+                editingMarker.latitude = editingCoordinate.latitude
+                editingMarker.longitude = editingCoordinate.longitude
+            }
+            refreshEditing()
             return
         }
 
         _ = DialogMapMenu(self, mapView, touchPosition)
     }
 
-    func refreshEditing(_ type: EditingType?) {
-        if editingType == nil {
-            editingEnchantmentRadiusIndex = Config.DEFAULT_ENCHANTMENT_RADIUS_INDEX
-        }
-        editingType = type
+    func refreshEditing() {
         if editingType == nil {
             enchantmentPanel.isHidden = true
             markerPanel.isHidden = true
@@ -435,7 +487,7 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
             case .enchantment:
                 enchantmentPanel.isHidden = false
                 markerPanel.isHidden = true
-                radiusLabel.text = String(format: "radius_m".localized, Config.ENCHANTMENT_RADIUS[editingEnchantmentRadiusIndex])
+                radiusLabel.text = String(format: "radius_m".localized, editingEnchantment.radius!)
             case .marker:
                 enchantmentPanel.isHidden = true
                 markerPanel.isHidden = false

@@ -14,14 +14,20 @@ class DialogEditMarker {
     let layout = UIStackView()
     let name_label = UILabel()
     let name_edit = UITextField()
+    let ispublic = UIStackView()
+    let ispublic_label = UILabel()
+    let ispublic_switch = UISwitch()
+    let icon = UIStackView()
+    let icon_label = UILabel()
+    let icon_picker = UIPickerView()
+    let pickerDelegate = PickerDelegate()
 
-    init(_ viewController: UIViewController, _ marker: Marker) {
+    init(_ viewController: ChannelController, _ marker: Marker) {
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
-            let service = CoreService.bind()
-            let name = (self.name_edit.text)!
-            service.updateMarker(marker, [Key.NAME: name])
+            viewController.edit(marker: marker, name: self.name_edit.text!, attr: [Key.COLOR: self.pickerDelegate.getItem(self.icon_picker.selectedRow(inComponent: 0))], shared: marker.isPublic! || self.ispublic_switch.isOn)
         }
+
         alert.add(action)
 
         func check(){
@@ -50,6 +56,47 @@ class DialogEditMarker {
         }
 
         layout.addArrangedSubview(name_edit)
+
+        ispublic.translatesAutoresizingMaskIntoConstraints = false
+        ispublic.axis = .horizontal
+        ispublic.alignment = .center
+        ispublic.distribution = .fill
+        ispublic.spacing = 5
+
+        ispublic_label.translatesAutoresizingMaskIntoConstraints = false
+        ispublic_label.adjustsFontSizeToFitWidth = false
+        ispublic_label.text = "is_public".localized
+        ispublic.addArrangedSubview(ispublic_label)
+
+        ispublic_switch.setOn(false, animated: false)
+        ispublic.addArrangedSubview(ispublic_switch)
+
+        layout.addArrangedSubview(ispublic)
+
+        if marker.isPublic == true {
+            ispublic.isHidden = true
+        }
+
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.axis = .horizontal
+        icon.alignment = .center
+        icon.distribution = .fill
+        icon.spacing = 5
+
+        icon_label.translatesAutoresizingMaskIntoConstraints = false
+        icon_label.adjustsFontSizeToFitWidth = false
+        icon_label.text = "icon".localized
+        icon.addArrangedSubview(icon_label)
+
+        icon_picker.translatesAutoresizingMaskIntoConstraints = false
+        icon_picker.dataSource = pickerDelegate
+        icon_picker.delegate = pickerDelegate
+        icon_picker.showsSelectionIndicator = true
+        icon_picker.heightAnchor.constraint(equalToConstant: 162).isActive = true
+        icon_picker.selectRow(pickerDelegate.icon_list.index(of: marker.getColor()) ?? 0, inComponent: 0, animated: false)
+        icon.addArrangedSubview(icon_picker)
+
+        layout.addArrangedSubview(icon)
 
         check()
 

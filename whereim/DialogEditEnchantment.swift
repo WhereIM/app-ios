@@ -14,13 +14,14 @@ class DialogEditEnchantment {
     let layout = UIStackView()
     let name_label = UILabel()
     let name_edit = UITextField()
+    let ispublic = UIStackView()
+    let ispublic_label = UILabel()
+    let ispublic_switch = UISwitch()
 
-    init(_ viewController: UIViewController, _ enchantment: Enchantment) {
+    init(_ viewController: ChannelController, _ enchantment: Enchantment) {
         alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
-            let service = CoreService.bind()
-            let name = (self.name_edit.text)!
-            service.updateEnchantment(enchantment, [Key.NAME: name])
+            viewController.edit(enchantment: enchantment, name: self.name_edit.text!, shared: enchantment.isPublic! || self.ispublic_switch.isOn)
         }
         alert.add(action)
 
@@ -50,6 +51,26 @@ class DialogEditEnchantment {
         }
 
         layout.addArrangedSubview(name_edit)
+
+        ispublic.translatesAutoresizingMaskIntoConstraints = false
+        ispublic.axis = .horizontal
+        ispublic.alignment = .center
+        ispublic.distribution = .fill
+        ispublic.spacing = 5
+
+        ispublic_label.translatesAutoresizingMaskIntoConstraints = false
+        ispublic_label.adjustsFontSizeToFitWidth = false
+        ispublic_label.text = "is_public".localized
+        ispublic.addArrangedSubview(ispublic_label)
+
+        ispublic_switch.setOn(false, animated: false)
+        ispublic.addArrangedSubview(ispublic_switch)
+
+        layout.addArrangedSubview(ispublic)
+
+        if enchantment.isPublic == true {
+            ispublic.isHidden = true
+        }
 
         check()
 

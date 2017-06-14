@@ -63,7 +63,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
     func moveTo(mate: Mate) {
         if let mc = mapController {
-            mc.moveTo(mate: mate)
+            mc.moveTo(mate: mate, focus: true)
             if mate.latitude != nil {
                 self.selectedIndex = 0
             }
@@ -72,14 +72,28 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
     func moveTo(enchantment: Enchantment) {
         if let mc = mapController {
-            mc.moveTo(enchantment: enchantment)
+            mc.moveTo(enchantment: enchantment, focus: true)
             self.selectedIndex = 0
         }
     }
 
     func moveTo(marker: Marker) {
         if let mc = mapController {
-            mc.moveTo(marker: marker)
+            mc.moveTo(marker: marker, focus: true)
+            self.selectedIndex = 0
+        }
+    }
+
+    func edit(enchantment: Enchantment, name: String, shared: Bool) {
+        if let mc = mapController {
+            mc.edit(enchantment: enchantment, name: name, shared: shared)
+            self.selectedIndex = 0
+        }
+    }
+
+    func edit(marker: Marker, name: String, attr: [String:Any], shared: Bool) {
+        if let mc = mapController {
+            mc.edit(marker: marker, name: name, attr: attr, shared: shared)
             self.selectedIndex = 0
         }
     }

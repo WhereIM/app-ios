@@ -10,6 +10,42 @@ import Foundation
 import GRDB
 import UIKit
 
+class PickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
+    let icon_list = Marker.getIconList()
+
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return icon_list.count
+    }
+
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var cell: UIImageView?
+        if let v = view {
+            cell = v as? UIImageView
+        }
+        if cell == nil {
+            cell = UIImageView(frame: CGRect(x: 0, y: 0, width: 43, height: 43))
+        }
+        cell!.image = Marker.getIcon(icon_list[row])
+        return cell!
+    }
+
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 43
+    }
+
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 43
+    }
+
+    func getItem(_ row: Int) -> String {
+        return icon_list[row]
+    }
+}
+
 class MarkerList {
     var public_list = [Marker]()
     var private_list = [Marker]()
