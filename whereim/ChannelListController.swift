@@ -10,12 +10,19 @@ import UIKit
 
 class ChannelCell: UITableViewCell {
     let titleLayout = UIStackView()
+    let indicator = UILabel()
     let title = UILabel()
     let subtitle = UILabel()
     let loadingSwitch = UILoadingSwitch()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.adjustsFontSizeToFitWidth = false
+        indicator.text = "•"
+        indicator.textColor = UIColor.red
+        indicator.isHidden = true
 
         titleLayout.axis = .vertical
         titleLayout.alignment = .leading
@@ -31,17 +38,18 @@ class ChannelCell: UITableViewCell {
         titleLayout.translatesAutoresizingMaskIntoConstraints = false
         loadingSwitch.translatesAutoresizingMaskIntoConstraints = false
 
+        self.contentView.addSubview(indicator)
         self.contentView.addSubview(titleLayout)
         self.contentView.addSubview(loadingSwitch)
 
-        NSLayoutConstraint.activate([
-            titleLayout.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:15),
-            titleLayout.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
-            ])
-        NSLayoutConstraint.activate([
-            loadingSwitch.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant:-15),
-            loadingSwitch.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
-            ])
+        self.contentView.leftAnchor.constraint(equalTo: indicator.leftAnchor, constant: -10).isActive = true
+        self.contentView.centerYAnchor.constraint(equalTo: indicator.centerYAnchor).isActive = true
+
+        indicator.rightAnchor.constraint(equalTo: titleLayout.leftAnchor, constant: -10).isActive = true
+        self.contentView.centerYAnchor.constraint(equalTo: titleLayout.centerYAnchor).isActive = true
+
+        self.contentView.rightAnchor.constraint(equalTo: loadingSwitch.rightAnchor, constant: 10).isActive = true
+        self.contentView.centerYAnchor.constraint(equalTo: loadingSwitch.centerYAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -70,6 +78,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "channel", for: indexPath) as! ChannelCell
+        cell.backgroundColor = UIColor.clear
 
         if indexPath.row >= channelList.count {
             cell.titleLayout.isHidden = true
@@ -83,9 +92,9 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let channel = getChannel(indexPath.row)
 
         if channel.enabled==true && channel.unread {
-            cell.backgroundColor = UIColor(red:0.93, green:0.95, blue:0.98, alpha:1.0)
+            cell.indicator.isHidden = false
         } else {
-            cell.backgroundColor = UIColor.clear
+            cell.indicator.isHidden = true
         }
 
         if channel.user_channel_name != nil && !channel.user_channel_name!.isEmpty {
@@ -341,6 +350,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         channelListView.register(ChannelCell.self, forCellReuseIdentifier: "channel")
         channelListView.dataSource = adapter
         channelListView.delegate = adapter
+        channelListView.backgroundColor = UIColor.clear
 
         listArea.addSubview(channelListView)
 
