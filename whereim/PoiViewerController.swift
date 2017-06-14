@@ -13,6 +13,7 @@ protocol PoiViewerControllerInterface {
     init(_ viewController: PoiViewerController)
     func viewDidLoad(_ viewContrller: PoiViewerController)
     func viewWillAppear(_ viewContrller: PoiViewerController)
+    func viewDidAppear()
     func viewWillDisappear(_ viewContrller: PoiViewerController)
     func didReceiveMemoryWarning()
 }
@@ -100,6 +101,10 @@ class PoiViewerController: UIViewController {
         super.viewWillAppear(animated)
 
         poiViewerControllerImpl!.viewWillAppear(self)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        poiViewerControllerImpl!.viewDidAppear()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

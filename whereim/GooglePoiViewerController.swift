@@ -45,6 +45,10 @@ class GooglePoiViewerController: NSObject, PoiViewerControllerInterface {
 
     }
 
+    func viewDidAppear() {
+
+    }
+
     func viewWillDisappear(_ viewContrller: PoiViewerController) {
 
     }

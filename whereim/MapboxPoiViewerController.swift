@@ -48,10 +48,6 @@ class MapboxPoiViewerController: NSObject, MGLMapViewDelegate, PoiViewerControll
 
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         if let m = annotation as? WimPointAnnotation {
-            DispatchQueue.main.async {
-                self.mapView!.selectAnnotation(self.marker!, animated: false)
-            }
-
             let icon = m.icon!.withAlignmentRectInsets(UIEdgeInsets(top: 0, left: 0, bottom: m.icon!.size.height/2, right: 0))
             return MGLAnnotationImage(image: icon, reuseIdentifier: "poi")
         }
@@ -60,6 +56,10 @@ class MapboxPoiViewerController: NSObject, MGLMapViewDelegate, PoiViewerControll
 
     func viewWillAppear(_ viewContrller: PoiViewerController) {
 
+    }
+
+    func viewDidAppear() {
+        self.mapView!.selectAnnotation(self.marker!, animated: false)
     }
 
     func viewWillDisappear(_ viewContrller: PoiViewerController) {
