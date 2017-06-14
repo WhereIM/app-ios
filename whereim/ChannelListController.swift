@@ -269,6 +269,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     var connectionStatusChangedCbKey: Int?
     let menu = UIButton()
 
+    let background = UIImageView()
     let layout = UIStackView()
     let listArea = UIView()
     let pendingArea = UIView()
@@ -296,6 +297,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         service = CoreService.bind()
 
         let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
 
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -352,6 +354,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         channelListView.delegate = adapter
         channelListView.backgroundColor = UIColor.clear
 
+        listArea.layer.backgroundColor = UIColor.white.withAlphaComponent(0.39).cgColor
         listArea.addSubview(channelListView)
 
         channelListView.widthAnchor.constraint(equalTo: listArea.widthAnchor).isActive = true
@@ -385,19 +388,31 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         layout.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         layout.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).isActive = true
 
-        let background = UIView()
         background.translatesAutoresizingMaskIntoConstraints = false
-        background.backgroundColor = UIColor(red: 0.6666666666666666, green: 0.7333333333333333, blue: 1, alpha: 1)
-        pendingArea.insertSubview(background, at: 0)
+        background.contentMode = .scaleAspectFill
+        background.image = UIImage(named: "background")
+        self.view.addSubview(background)
+
+        background.topAnchor.constraint(equalTo: listArea.topAnchor).isActive = true
+        background.leftAnchor.constraint(equalTo: listArea.leftAnchor).isActive = true
+        background.rightAnchor.constraint(equalTo: listArea.rightAnchor).isActive = true
+        background.bottomAnchor.constraint(equalTo: listArea.bottomAnchor).isActive = true
+
+        self.view.bringSubview(toFront: layout)
+
+        let pendingBackground = UIView()
+        pendingBackground.translatesAutoresizingMaskIntoConstraints = false
+        pendingBackground.backgroundColor = UIColor(red: 0.6666666666666666, green: 0.7333333333333333, blue: 1, alpha: 1)
+        pendingArea.insertSubview(pendingBackground, at: 0)
 
         layout.addArrangedSubview(pendingArea)
         pendingArea.widthAnchor.constraint(equalTo: layout.widthAnchor).isActive = true
         pendingArea.heightAnchor.constraint(equalToConstant: 64).isActive = true
 
-        background.topAnchor.constraint(equalTo: pendingArea.topAnchor).isActive = true
-        background.leftAnchor.constraint(equalTo: pendingArea.leftAnchor).isActive = true
-        background.rightAnchor.constraint(equalTo: pendingArea.rightAnchor).isActive = true
-        background.bottomAnchor.constraint(equalTo: pendingArea.bottomAnchor).isActive = true
+        pendingBackground.topAnchor.constraint(equalTo: pendingArea.topAnchor).isActive = true
+        pendingBackground.leftAnchor.constraint(equalTo: pendingArea.leftAnchor).isActive = true
+        pendingBackground.rightAnchor.constraint(equalTo: pendingArea.rightAnchor).isActive = true
+        pendingBackground.bottomAnchor.constraint(equalTo: pendingArea.bottomAnchor).isActive = true
 
         pendingPOILayout.translatesAutoresizingMaskIntoConstraints = false
 
