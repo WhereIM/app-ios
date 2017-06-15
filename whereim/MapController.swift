@@ -277,6 +277,14 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     func clearActions(clearEditing: Bool) {
         if clearEditing {
             editingType = nil
+            if let orig = editingMarkerOrig {
+                onMarkerData(orig)
+                editingMarkerOrig = nil
+            }
+            if let orig = editingEnchantmentOrig {
+                onEnchantmentData(orig)
+                editingEnchantmentOrig = nil
+            }
             refreshEditing()
         }
         markerActionsPanel.isHidden = true
@@ -393,12 +401,7 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     }
 
     func enchantment_cancel(sender: UIButton) {
-        editingType = nil
-        if let orig = editingEnchantmentOrig {
-            onEnchantmentData(orig)
-            editingEnchantmentOrig = nil
-        }
-        refreshEditing()
+        clearActions(clearEditing: true)
     }
 
     func enchantment_ok(sender: UIButton) {
@@ -429,12 +432,7 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     }
 
     func marker_cancel(sender: UIButton) {
-        editingType = nil
-        if let orig = editingMarkerOrig {
-            onMarkerData(orig)
-            editingMarkerOrig = nil
-        }
-        refreshEditing()
+        clearActions(clearEditing: true)
     }
 
     func marker_ok(sender: UIButton) {
