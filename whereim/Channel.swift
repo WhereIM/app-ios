@@ -21,6 +21,7 @@ class Channel: Record {
     static let COL_ENABLE_RADIUS = "enable_radius"
     static let COL_RADIUS = "radius"
     static let COL_UNREAD = "unread"
+    static let COL_PUBLIC = "public"
 
     var id: String?
     var channel_name: String?
@@ -32,6 +33,7 @@ class Channel: Record {
     var radius: Int?
     var deleted = false
     var unread = false
+    var is_public = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
@@ -59,6 +61,13 @@ class Channel: Record {
 
             version = 3
         }
+        if version < 4 {
+            var sql: String
+            sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COL_PUBLIC + " BOOLEAN NOT NULL DEFAULT 0"
+            try db.execute(sql)
+
+            version = 4
+        }
     }
 
     override class var databaseTableName: String {
@@ -75,6 +84,7 @@ class Channel: Record {
         enable_radius = row.value(named: Channel.COL_ENABLE_RADIUS)
         radius = row.value(named: Channel.COL_RADIUS)
         unread = row.value(named: Channel.COL_UNREAD)
+        is_public = row.value(named: Channel.COL_PUBLIC)
         super.init(row: row)
     }
 
@@ -92,6 +102,7 @@ class Channel: Record {
             Channel.COL_ENABLE: enabled,
             Channel.COL_ENABLE_RADIUS: enable_radius,
             Channel.COL_RADIUS: radius,
+            Channel.COL_PUBLIC: is_public,
             Channel.COL_UNREAD: unread
         ]
     }

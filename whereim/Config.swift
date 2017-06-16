@@ -16,7 +16,7 @@ enum MapProvider: String {
 class Config {
     static let LOGGING = false
 
-    static let DB_VERSION = 3
+    static let DB_VERSION = 4
 
     static let KEY_FILE = "whereim.key"
     static let CRT_FILE = "whereim.crt"

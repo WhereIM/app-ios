@@ -991,6 +991,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel!.radius = data[Key.RADIUS] as? Int ?? channel!.radius
         channel!.active = data[Key.ACTIVE] as? Bool ?? channel!.active
         channel!.enabled = data[Key.ENABLED] as? Bool ?? channel!.enabled
+        channel!.is_public = data[Key.PUBLIC] as? Bool ?? channel!.is_public
 
         if let ts = data[Key.TS] {
             setTS(ts as! UInt64)
