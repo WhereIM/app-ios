@@ -18,6 +18,8 @@ class ChannelCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.selectionStyle = .none
+
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.adjustsFontSizeToFitWidth = false
         indicator.text = "•"
@@ -50,6 +52,15 @@ class ChannelCell: UITableViewCell {
 
         self.contentView.rightAnchor.constraint(equalTo: loadingSwitch.rightAnchor, constant: 10).isActive = true
         self.contentView.centerYAnchor.constraint(equalTo: loadingSwitch.centerYAnchor).isActive = true
+    }
+
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        if highlighted {
+            self.layer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        } else {
+            self.layer.backgroundColor = UIColor.clear.cgColor
+
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
