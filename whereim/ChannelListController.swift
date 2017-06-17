@@ -69,6 +69,7 @@ class ChannelCell: UITableViewCell {
 }
 
 class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
+    static let PADDING_ROWS = 2
     var channelList: [Channel]
     let service: CoreService
     let vc: ChannelListController
@@ -84,7 +85,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return channelList.count + 2
+        return channelList.count + ChannelListAdapter.PADDING_ROWS
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -504,7 +505,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
             return
         }
 
-        let hasChannel = adapter!.tableView(channelListView, numberOfRowsInSection: 0) > 0
+        let hasChannel = adapter!.tableView(channelListView, numberOfRowsInSection: 0) > ChannelListAdapter.PADDING_ROWS
 
         if hasChannel && UserDefaults.standard.bool(forKey: Key.TIP_TOGGLE_CHANNEL) != true {
             toggleChannelPointer.isHidden = false
