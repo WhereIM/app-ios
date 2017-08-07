@@ -25,6 +25,7 @@ target 'whereim' do
   pod 'OpenSSL-Universal', '~> 1.0.1.18'
 
   pod 'GoogleMaps'
+  pod 'Google/SignIn'
 
   pod 'SDCAlertView', '~> 7.1'
 
