@@ -11,13 +11,14 @@ import Firebase
 import GRDB
 import UIKit
 import FBSDKCoreKit
+import Google
 import GoogleMaps
+import GoogleSignIn
 import Mapbox
 import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-
     var window: UIWindow?
 
     let DB_FILE = "whereim.sqlite"
@@ -25,6 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var dbConn: DatabaseQueue?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError)")
+
         GMSServices.provideAPIKey(Config.GOOGLE_MAP_KEY)
         MGLAccountManager.setAccessToken(Config.MAPBOX_KEY)
 
@@ -182,12 +187,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return FBSDKApplicationDelegate.sharedInstance().application(
+        var ret = false
+        ret = FBSDKApplicationDelegate.sharedInstance().application(
             app,
             open: url as URL!,
             sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String,
             annotation: options[UIApplicationOpenURLOptionsKey.annotation]
         )
+        if !ret {
+            ret = GIDSignIn.sharedInstance().handle(url,
+                sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                annotation: options[UIApplicationOpenURLOptionsKey.annotation]
+            )
+        }
+        return ret
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

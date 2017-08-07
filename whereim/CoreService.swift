@@ -1164,7 +1164,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         print(authId)
         print(authToken)
         print(name)
-        var data = ["auth_provider":authProvider, "auth_token": authToken, "auth_id":authId]
+        var data = ["auth_provider":authProvider, "auth_token": authToken, "auth_id":authId, "platform":"ios"]
         if otp != nil {
             data["otp"] = otp!
         }

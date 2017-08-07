@@ -9,27 +9,47 @@
 import UIKit
 import FacebookLogin
 import FBSDKLoginKit
+import GoogleSignIn
 
-
-class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCallback {
+class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCallback, GIDSignInDelegate, GIDSignInUIDelegate {
     var service: CoreService?
-    var loginButton: LoginButton?
+    var facebookLoginButton: LoginButton?
+    var googleLoginButton: GIDSignInButton?
+    let loginButtonLayout = UIStackView()
     var retryButton: UIButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().signOut()
+        GIDSignIn.sharedInstance().disconnect()
+
         service = CoreService.bind()
 
-        loginButton = LoginButton(readPermissions: [ .publicProfile ])
-        loginButton!.delegate = self
-        loginButton!.isHidden = true
-        loginButton?.translatesAutoresizingMaskIntoConstraints = false
+        loginButtonLayout.translatesAutoresizingMaskIntoConstraints = false
+        loginButtonLayout.axis = .vertical
+        loginButtonLayout.alignment = .center
+        loginButtonLayout.distribution = .fill
+        loginButtonLayout.spacing = 10
+        loginButtonLayout.isHidden = true
 
-        view.addSubview(loginButton!)
+        facebookLoginButton = LoginButton(readPermissions: [ .publicProfile ])
+        facebookLoginButton!.delegate = self
+        facebookLoginButton?.translatesAutoresizingMaskIntoConstraints = false
 
-        loginButton!.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginButton!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
+        loginButtonLayout.addArrangedSubview(facebookLoginButton!)
+
+        googleLoginButton = GIDSignInButton()
+        googleLoginButton?.translatesAutoresizingMaskIntoConstraints = false
+
+        loginButtonLayout.addArrangedSubview(googleLoginButton!)
+
+        view.addSubview(loginButtonLayout)
+
+        loginButtonLayout.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginButtonLayout.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
 
         retryButton = UIButton()
         retryButton!.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8)
@@ -80,7 +100,7 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         case .success(_, _, let token):
             profileChecked = false
             tried = true
-            loginButton.isHidden = true
+            loginButtonLayout.isHidden = true
             auth_provider = Key.FACEBOOK
             auth_id = token.userId
             auth_token = token.authenticationToken
@@ -102,6 +122,22 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
             auth_name = profile!.name
             register_client()
         }
+    }
+
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if (error == nil) {
+            auth_provider = Key.GOOGLE
+            auth_id = user.userID
+            auth_token = user.authentication.idToken
+            auth_name = user.profile.name
+            register_client()
+        } else {
+            print("\(error.localizedDescription)")
+        }
+    }
+
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        // noop
     }
 
     var auth_id: String?
@@ -152,9 +188,9 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
 
             if auth_id == nil {
                 retryButton!.isHidden = true
-                loginButton!.isHidden = false
+                loginButtonLayout.isHidden = false
             } else {
-                loginButton!.isHidden = true
+                loginButtonLayout.isHidden = true
                 if !tried {
                     tried = true
                     register_client()

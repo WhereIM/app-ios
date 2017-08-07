@@ -29,6 +29,7 @@ class Key {
 
     static let FACEBOOK = "facebook"
 
+    static let GOOGLE = "google"
     static let GOOGLE_SEARCH = "google_search"
 
     static let ID = "id"
