@@ -1026,7 +1026,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         } else {
             if channel.enabled == true {
-                subscribe("channel/\(channel_id)/data/+/get")
+                if channel.is_public {
+                    subscribe("channel/\(channel_id)/data/+/get")
+                } else {
+                    unsubscribe("channel/\(channel_id)/data/+/get")
+                }
 
                 syncChannelData(channel_id)
                 syncChannelMessage(channel_id)
