@@ -1017,6 +1017,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             if let idx = channelList.index(where: { $0.id! == channel.id! }) {
                 channelList.remove(at: idx)
             }
+            clearTS(channel.id!)
             appDelegate.dbConn!.inDatabase { db in
                 do {
                     try channel.delete(db)
@@ -1466,6 +1467,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     func getTS(_ channel_id: String) -> UInt64 {
         return UInt64(UserDefaults.standard.object(forKey: "\(Key.TS)/\(channel_id)") as? NSNumber ?? 0)
+    }
+
+    func clearTS(_ channel_id: String) {
+        UserDefaults.standard.removeObject(forKey: "\(Key.TS)/\(channel_id)")
     }
 
     var apiKeyCallback = [String:[ApiKeyCallback]]()
