@@ -173,17 +173,21 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
             _ = DialogEditChannel(self.vc, channel)
         })
-        let archive = UITableViewRowAction(style: .normal, title: nil, handler: {(action, indexPath) -> Void in
-            tableView.setEditing(false, animated: true)
-
-            self.service.toggleChannelEnabled(channel)
-        })
-        if channel.enabled == true {
-            archive.title = "🔒"
-        } else {
-            archive.title = "🔓"
-        }
-        return [leave, archive, edit]
+//        let archive = UITableViewRowAction(style: .normal, title: nil, handler: {(action, indexPath) -> Void in
+//            tableView.setEditing(false, animated: true)
+//
+//            self.service.toggleChannelEnabled(channel)
+//        })
+//        if channel.enabled == true {
+//            archive.title = "🔒"
+//        } else {
+//            archive.title = "🔓"
+//        }
+        return [
+            leave,
+//            archive,
+            edit
+        ]
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
