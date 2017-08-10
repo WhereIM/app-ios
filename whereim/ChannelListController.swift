@@ -95,10 +95,12 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         if indexPath.row >= channelList.count {
             cell.titleLayout.isHidden = true
             cell.loadingSwitch.isHidden = true
+            cell.indicator.isHidden = true
             return cell
         } else {
             cell.titleLayout.isHidden = false
             cell.loadingSwitch.isHidden = false
+            cell.indicator.isHidden = false
         }
 
         let channel = getChannel(indexPath.row)
