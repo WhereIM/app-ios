@@ -26,12 +26,14 @@ class UIPlaceHolderCell: UITableViewCell {
         label.font = label.font.withSize(12)
         label.textColor = .gray
         label.adjustsFontSizeToFitWidth = false
+        label.numberOfLines = 0
 
         self.contentView.addSubview(label)
 
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            label.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            label.widthAnchor.constraint(lessThanOrEqualTo: self.contentView.widthAnchor, multiplier: 1, constant: -10)
             ])
     }
 
