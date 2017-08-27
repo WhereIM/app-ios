@@ -81,7 +81,6 @@ class MapboxSearchAgent: ApiKeyCallback {
         }
         let params = [
             "access_token": key,
-            "autocomplete": "false",
             "proximity": String(format: "%f,%f", center.longitude, center.latitude),
             ]
         DispatchQueue.global(qos: .background).async {
