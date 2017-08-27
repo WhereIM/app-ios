@@ -12,7 +12,6 @@ import UIKit
 
 class DialogShareLocation {
     let layout = UIStackView()
-    let name = UIStackView()
     let name_label = UILabel()
     let name_edit = UITextField()
 
@@ -42,16 +41,15 @@ class DialogShareLocation {
         }
         alert.add(action)
 
-        name.translatesAutoresizingMaskIntoConstraints = false
-        name.axis = .horizontal
-        name.alignment = .center
-        name.distribution = .fill
-        name.spacing = 5
+        layout.translatesAutoresizingMaskIntoConstraints = false
+        layout.axis = .vertical
+        layout.alignment = .fill
+        layout.distribution = .fill
 
         name_label.translatesAutoresizingMaskIntoConstraints = false
         name_label.adjustsFontSizeToFitWidth = false
         name_label.text = "name".localized
-        name.addArrangedSubview(name_label)
+        layout.addArrangedSubview(name_label)
 
         name_edit.translatesAutoresizingMaskIntoConstraints = false
         name_edit.text = title
@@ -60,13 +58,14 @@ class DialogShareLocation {
         name_edit.layer.borderWidth = 1
         name_edit.widthAnchor.constraint(equalToConstant: 100).isActive = true
         name_edit.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        name.addArrangedSubview(name_edit)
+        layout.addArrangedSubview(name_edit)
 
-        alert.contentView.addSubview(name)
+        alert.contentView.addSubview(layout)
 
-        name.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
-        name.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
-        alert.contentView.bottomAnchor.constraint(equalTo: name.bottomAnchor).isActive = true
+        layout.centerXAnchor.constraint(equalTo: alert.contentView.centerXAnchor).isActive = true
+        layout.widthAnchor.constraint(equalTo: alert.contentView.widthAnchor).isActive = true
+        layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
+        alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 
         viewController.present(alert, animated: true, completion: nil)
     }
