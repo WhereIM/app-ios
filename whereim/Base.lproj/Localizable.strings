@@ -9,6 +9,8 @@
 "power_saving" = "Power Saving";
 "reset_tips" = "Show tips again";
 "service_provider" = "Service Provider (Map & Search)";
+"map_service_provider" = "Map Service Provider";
+"search_service_provider" = "Search Service Provider";
 "misc" = "Miscellaneous";
 "got_it" = "GOT IT";
 "tip_new_channel" = "Tap here to create new channel or join with QR code.";

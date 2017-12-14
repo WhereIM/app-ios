@@ -13,6 +13,12 @@ enum MapProvider: String {
     case MAPBOX = "mapbox"
 }
 
+enum SearchProvider: String {
+    case GOOGLE = "google"
+    case MAPBOX = "mapbox"
+    case MAPZEN = "mapzen"
+}
+
 class Config {
     static let LOGGING = false
 
@@ -64,10 +70,18 @@ class Config {
     static let GENERIC_LOCATION_UPDATE_MIN_DISTANCE = 5.0 // m
 
     static func getMapProvider() -> MapProvider {
-        return MapProvider.init(rawValue: UserDefaults.standard.string(forKey: Key.SERVICE_PROVIDER) ?? MapProvider.GOOGLE.rawValue) ?? MapProvider.GOOGLE
+        return MapProvider.init(rawValue: UserDefaults.standard.string(forKey: Key.MAP_PROVIDER) ?? MapProvider.GOOGLE.rawValue) ?? MapProvider.GOOGLE
     }
 
     static func setMapProvider(_ provider: MapProvider) {
-        UserDefaults.standard.set(provider.rawValue, forKey: Key.SERVICE_PROVIDER)
+        UserDefaults.standard.set(provider.rawValue, forKey: Key.MAP_PROVIDER)
+    }
+
+    static func getSearchProvider() -> SearchProvider {
+        return SearchProvider.init(rawValue: UserDefaults.standard.string(forKey: Key.SEARCH_PROVIDER) ?? SearchProvider.GOOGLE.rawValue) ?? SearchProvider.GOOGLE
+    }
+
+    static func setSearchProvider(_ provider: SearchProvider) {
+        UserDefaults.standard.set(provider.rawValue, forKey: Key.SEARCH_PROVIDER)
     }
 }

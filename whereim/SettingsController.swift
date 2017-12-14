@@ -104,7 +104,7 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3;
+        return 4;
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -113,7 +113,9 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             return 1
         case 1: // map provider
             return 2
-        case 2: // misc
+        case 2: // search provider
+            return 3
+        case 3: // misc
             return 1
         default:
             return 0
@@ -123,8 +125,9 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "settings".localized
-        case 1: return "service_provider".localized
-        case 2: return "misc".localized
+        case 1: return "map_service_provider".localized
+        case 2: return "search_service_provider".localized
+        case 3: return "misc".localized
         default:
             return nil
         }
@@ -159,6 +162,22 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             }
             return cell
         case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "selectable", for: indexPath) as! SelectableSettingCell
+            switch indexPath.row {
+            case 0:
+                cell.title.text = "Google"
+                cell.checked.isHidden = !(Config.getSearchProvider()==SearchProvider.GOOGLE)
+            case 1:
+                cell.title.text = "Mapbox"
+                cell.checked.isHidden = !(Config.getSearchProvider()==SearchProvider.MAPBOX)
+            case 2:
+                cell.title.text = "Mapzen"
+                cell.checked.isHidden = !(Config.getSearchProvider()==SearchProvider.MAPZEN)
+            default:
+                break
+            }
+            return cell
+        case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "text", for: indexPath) as! TextSettingCell
             switch indexPath.row {
             case 0:
@@ -188,11 +207,27 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 tableView.reloadData()
             case 1:
                 Config.setMapProvider(.MAPBOX)
+                Config.setSearchProvider(.MAPZEN)
                 tableView.reloadData()
             default:
                 break
             }
-        case 2:
+        case 2: // search provider
+            switch indexPath.row {
+            case 0:
+                Config.setSearchProvider(.GOOGLE)
+                Config.setMapProvider(.GOOGLE)
+                tableView.reloadData()
+            case 1:
+                Config.setSearchProvider(.MAPBOX)
+                tableView.reloadData()
+            case 2:
+                Config.setSearchProvider(.MAPZEN)
+                tableView.reloadData()
+            default:
+                break
+            }
+        case 3:
             switch indexPath.row {
             case 0:
                 UserDefaults.standard.removeObject(forKey: Key.TIP_ENTER_CHANNEL)

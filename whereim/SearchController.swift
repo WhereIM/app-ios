@@ -105,11 +105,13 @@ class SearchController: UIViewController, UITextFieldDelegate {
     }
 
     func _init() {
-        switch Config.getMapProvider() {
+        switch Config.getSearchProvider() {
         case .GOOGLE:
             searchControllerImpl = GoogleSearchController(self)
         case .MAPBOX:
             searchControllerImpl = MapboxSearchController(self)
+        case .MAPZEN:
+            searchControllerImpl = MapzenSearchController(self)
         }
     }
 
