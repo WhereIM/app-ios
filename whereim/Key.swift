@@ -41,6 +41,8 @@ class Key {
     static let LEVEL = "lvl"
     static let LONGITUDE = "lng"
 
+    static let MAPZEN = "mapzen"
+
     static let MATE = "mate"
     static let MATE_NAME = "mate_name"
     static let MESSAGE = "msg"
