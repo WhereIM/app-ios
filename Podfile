@@ -13,7 +13,6 @@ target 'whereim' do
 
   pod 'Firebase/Core'
   pod 'Firebase/Crash'
-  pod 'Firebase/AdMob'
 
   pod 'GRDB.swift'
 

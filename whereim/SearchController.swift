@@ -7,7 +7,6 @@
 //
 
 import CoreLocation
-import GoogleMobileAds
 import UIKit
 
 protocol SearchControllerInterface {
@@ -88,8 +87,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
     var textAttributionHidden: NSLayoutConstraint?
     let contentArea = UIView()
     let loading = UIActivityIndicatorView()
-    let adView = GADNativeExpressAdView()
-    let adViewRequest = GADRequest()
     var history = [String]()
 
     var searchControllerImpl: SearchControllerInterface?
@@ -144,7 +141,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
         clearAttribution()
         if keyword.isEmpty {
             setSearchResults([])
-            adView.isHidden = false
             return
         }
         if let i = history.index(of: keyword) {
@@ -156,7 +152,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
         }
         UserDefaults.standard.set(history, forKey: Key.SEARCH_HISTORY)
 
-        adView.isHidden = true
         listView.isHidden = true
         loading.startAnimating()
         searchControllerImpl!.search(keyword)
@@ -182,7 +177,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
         listView.dataSource = autoCompletesDataSource
         listView.delegate = autoCompletesDelegate
         listView.reloadData()
-        adView.isHidden = true
         loading.stopAnimating()
         listView.isHidden = false
     }
@@ -313,16 +307,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
         loading.centerYAnchor.constraint(equalTo: contentArea.centerYAnchor).isActive = true
         loading.stopAnimating()
 
-        adView.translatesAutoresizingMaskIntoConstraints = false
-        adView.rootViewController = self
-        self.view.addSubview(adView)
-        adView.centerXAnchor.constraint(equalTo: contentArea.centerXAnchor).isActive = true
-        adView.centerYAnchor.constraint(equalTo: contentArea.centerYAnchor).isActive = true
-        adWidth = adView.widthAnchor.constraint(equalTo: contentArea.widthAnchor, multiplier: 1)
-        adHeight = adView.heightAnchor.constraint(equalTo: contentArea.heightAnchor, multiplier: 1)
-        adMaxWidth = adView.widthAnchor.constraint(equalToConstant: 1200)
-        adMaxHeight = adView.heightAnchor.constraint(equalToConstant: 1200)
-
         self.view.sendSubview(toBack: contentArea)
 
         searchResultsDataSource = searchControllerImpl!.getSearchResultsDataSource()
@@ -339,49 +323,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
-    }
-
-    var adWidth: NSLayoutConstraint?
-    var adHeight: NSLayoutConstraint?
-    var adMaxWidth: NSLayoutConstraint?
-    var adMaxHeight: NSLayoutConstraint?
-    var requestedSize = CGSize(width: -1, height: -1)
-    override func viewDidLayoutSubviews() {
-        let size = contentArea.bounds.size
-        if size.width == requestedSize.width && size.height == requestedSize.height {
-            return
-        }
-        requestedSize = size
-        if size.width > 1200 {
-            adWidth?.isActive = false
-            adMaxWidth?.isActive = true
-        } else {
-            adMaxWidth?.isActive = false
-            adWidth?.isActive = true
-        }
-        if size.height > 1200 {
-            adHeight?.isActive = false
-            adMaxHeight?.isActive = true
-        } else {
-            adMaxHeight?.isActive = false
-            adHeight?.isActive = true
-        }
-        if size.width >= 280 && size.height >= 250 {
-            adView.adUnitID = "ca-app-pub-5449795846702141/8341425315"
-            adView.load(adViewRequest)
-            return
-        }
-        if size.width >= 280 && size.height >= 132 {
-            adView.adUnitID = "ca-app-pub-5449795846702141/5174306118"
-            adView.load(adViewRequest)
-            return
-        }
-        if size.width >= 280 && size.height >= 80 {
-            adView.adUnitID = "ca-app-pub-5449795846702141/3557972113"
-            adView.load(adViewRequest)
-            return
-        }
-        adView.isHidden = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -401,7 +342,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
             listView.dataSource = searchHistoryDataSource
             listView.delegate = searchHistoryDelegate
             listView.reloadData()
-            adView.isHidden = true
             loading.stopAnimating()
             listView.isHidden = false
         }
@@ -416,7 +356,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
         keyword.text = ""
         keyword.resignFirstResponder()
         search("")
-        adView.isHidden = false
         listView.isHidden = true
         btn_clear.isHidden = true
         btn_search.isHidden = false
