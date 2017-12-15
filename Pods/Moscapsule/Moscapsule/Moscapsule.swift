@@ -249,6 +249,10 @@ public struct MQTTMessage {
     }
     
     public var payloadString: String? {
+        guard let payload = payload else {
+            return nil
+        }
+        
         let encodingsToTry: [String.Encoding] = [
             .utf8, .ascii, .utf16, .utf16BigEndian,
             .utf16LittleEndian, .utf32, .utf32BigEndian,
@@ -260,14 +264,19 @@ public struct MQTTMessage {
         ]
         
         for encoding in encodingsToTry {
-            if let payload = payload,
-                let string = String(data: payload, encoding: encoding) {
+            if let string = String(data: payload, encoding: encoding) {
                 return string
             }
         }
         
-        return nil
+        let hexString = (payload as Data).map { String(format: "%02.2hhx", $0) }.joined()
+        return hexString
     }
+}
+
+public enum MQTTProtocol: Int32 {
+  case v3_1 = 0
+  case v3_1_1 = 1
 }
 
 public final class MQTTConfig {
@@ -275,6 +284,7 @@ public final class MQTTConfig {
     public let host: String
     public let port: Int32
     public let keepAlive: Int32
+    public let protocolVersion: MQTTProtocol
     public var cleanSession: Bool
     public var mqttReconnOpts: MQTTReconnOpts?
     public var mqttWillOpts: MQTTWillOpts?
@@ -292,26 +302,27 @@ public final class MQTTConfig {
     public var onSubscribeCallback: ((_ messageId: Int, _ grantedQos: Array<Int32>) -> ())!
     public var onUnsubscribeCallback: ((_ messageId: Int) -> ())!
     
-    public init(clientId: String, host: String, port: Int32, keepAlive: Int32) {
+    public init(clientId: String, host: String, port: Int32, keepAlive: Int32, protocolVersion: MQTTProtocol = .v3_1) {
         self.clientId = clientId
         self.host = host
         self.port = port
         self.keepAlive = keepAlive
+        self.protocolVersion = protocolVersion
         self.cleanSession = true
         mqttReconnOpts = MQTTReconnOpts(delay: 1, max: 60 * 30, exponentialBackoff: true)
     }
 }
 
 public final class __MosquittoContext : NSObject {
-    public var mosquittoHandler: OpaquePointer? = nil
-    public var isConnected: Bool = false
-    public var onConnectCallback: ((_ returnCode: Int) -> ())!
-    public var onDisconnectCallback: ((_ reasonCode: Int) -> ())!
-    public var onPublishCallback: ((_ messageId: Int) -> ())!
-    public var onMessageCallback: ((_ message: UnsafePointer<mosquitto_message>) -> ())!
-    public var onSubscribeCallback: ((_ messageId: Int, _ qosCount: Int, _ grantedQos: UnsafePointer<Int32>) -> ())!
-    public var onUnsubscribeCallback: ((_ messageId: Int) -> ())!
-    public var keyfile_passwd: String = ""
+    @objc public var mosquittoHandler: OpaquePointer? = nil
+    @objc public var isConnected: Bool = false
+    @objc public var onConnectCallback: ((_ returnCode: Int) -> ())!
+    @objc public var onDisconnectCallback: ((_ reasonCode: Int) -> ())!
+    @objc public var onPublishCallback: ((_ messageId: Int) -> ())!
+    @objc public var onMessageCallback: ((_ message: UnsafePointer<mosquitto_message>) -> ())!
+    @objc public var onSubscribeCallback: ((_ messageId: Int, _ qosCount: Int, _ grantedQos: UnsafePointer<Int32>) -> ())!
+    @objc public var onUnsubscribeCallback: ((_ messageId: Int) -> ())!
+    @objc public var keyfile_passwd: String = ""
     internal override init(){}
 }
 
@@ -324,10 +335,17 @@ public final class MQTT {
         mosquittoContext.onMessageCallback = onMessageAdapter(mqttConfig.onMessageCallback)
         mosquittoContext.onSubscribeCallback = onSubscribeAdapter(mqttConfig.onSubscribeCallback)
         mosquittoContext.onUnsubscribeCallback = mqttConfig.onUnsubscribeCallback
-        
+
+        let protocolVersion: Int32
+        switch mqttConfig.protocolVersion {
+        case .v3_1:
+            protocolVersion = MQTT_PROTOCOL_V31
+        case .v3_1_1:
+            protocolVersion = MQTT_PROTOCOL_V311
+        }
+
         // setup mosquittoHandler
-        mosquitto_context_setup(mqttConfig.clientId.cCharArray, mqttConfig.cleanSession, mosquittoContext)
-        
+        mosquitto_context_setup(mqttConfig.clientId.cCharArray, mqttConfig.cleanSession, mosquittoContext, protocolVersion)
         // set MQTT Reconnection Options
 		if let options = mqttConfig.mqttReconnOpts {
 			mosquitto_reconnect_delay_set(mosquittoContext.mosquittoHandler,
@@ -340,9 +358,9 @@ public final class MQTT {
 		
         // set MQTT Will Options
         if let mqttWillOpts = mqttConfig.mqttWillOpts {
-            mqttWillOpts.payload.withUnsafeBytes {
+            mqttWillOpts.payload.withUnsafeBytes { p -> Void in
                 mosquitto_will_set(mosquittoContext.mosquittoHandler, mqttWillOpts.topic.cCharArray,
-                                   Int32(mqttWillOpts.payload.count), $0,
+                                   Int32(mqttWillOpts.payload.count), p,
                                    mqttWillOpts.qos, mqttWillOpts.retain)
             }
         }
@@ -403,7 +421,7 @@ public final class MQTT {
             let message = rawMessage.pointee
             // If there are issues with topic string, drop message on the floor
             let topic = String(cString: message.topic)
-            let payload = message.payload != nil ?
+            let payload: Data? = message.payload != nil ?
                 Data(bytes: message.payload, count: Int(message.payloadlen)) : nil
             let mqttMessage = MQTTMessage(messageId: Int(message.mid), topic: topic, payload: payload, qos: message.qos, retain: message.retain)
             callback(mqttMessage)
@@ -507,8 +525,8 @@ public final class MQTTClient {
     }
     
     public func disconnect(_ requestCompletion: ((MosqResult) -> ())? = nil) {
-		guard isRunning == true
-			else { requestCompletion?(.mosq_success); return }
+        guard isRunning == true
+            else { requestCompletion?(.mosq_success); return }
         
         self.isRunning = false
         addRequestToQueue { mosqContext in

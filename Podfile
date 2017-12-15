@@ -6,15 +6,16 @@ target 'whereim' do
 
   pod 'Alamofire', '~> 4.3'
 
-  pod 'Branch'
+  pod 'Branch', '0.13.5'
 
   pod 'FacebookCore'
   pod 'FacebookLogin'
 
-  pod 'Firebase/Core'
+  pod 'Firebase'
+  pod 'Firebase/Auth'
   pod 'Firebase/Crash'
 
-  pod 'GRDB.swift'
+  pod 'GRDB.swift', '0.102.0'
 
   pod 'JSQMessagesViewController'
 
@@ -24,7 +25,7 @@ target 'whereim' do
   pod 'OpenSSL-Universal', '~> 1.0.1.18'
 
   pod 'GoogleMaps'
-  pod 'Google/SignIn'
+  pod 'GoogleSignIn'
 
   pod 'SDCAlertView', '~> 7.1'
 
@@ -46,6 +47,11 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+    end
+  end
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['SWIFT_VERSION'] = '3.2'
     end
   end
 end

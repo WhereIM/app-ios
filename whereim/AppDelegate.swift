@@ -11,7 +11,6 @@ import Firebase
 import GRDB
 import UIKit
 import FBSDKCoreKit
-import Google
 import GoogleMaps
 import GoogleSignIn
 import Mapbox
@@ -26,14 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var dbConn: DatabaseQueue?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        var configureError: NSError?
-        GGLContext.sharedInstance().configureWithError(&configureError)
-        assert(configureError == nil, "Error configuring Google services: \(configureError)")
-
+        FirebaseApp.configure()
+        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         GMSServices.provideAPIKey(Config.GOOGLE_MAP_KEY)
         MGLAccountManager.setAccessToken(Config.MAPBOX_KEY)
-
-        FIRApp.configure()
 
         UserDefaults.standard.register(defaults: [Key.POWER_SAVING: true])
 
@@ -229,6 +224,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
     }
-    
 }
 

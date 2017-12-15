@@ -1,19 +1,19 @@
 {
   "name": "Moscapsule",
-  "version": "0.5.2",
+  "version": "0.6.2",
   "summary": "MQTT Client for iOS written in Swift",
   "description": "MQTT Client for iOS written in Swift.\nThis framework is implemented as a wrapper of Mosquitto library\nand covers almost all mosquitto features.",
   "homepage": "https://github.com/flightonary/Moscapsule",
   "license": "MIT",
   "authors": {
-    "tonary": "jetBeaver@gmail.com"
+    "tonary": "nekomelife@gmail.com"
   },
   "platforms": {
     "ios": "8.0"
   },
   "source": {
     "git": "https://github.com/flightonary/Moscapsule.git",
-    "tag": "0.5.2"
+    "tag": "0.6.2"
   },
   "source_files": [
     "Moscapsule/*.{h,m,swift}",
@@ -30,6 +30,7 @@
   ],
   "requires_arc": true,
   "xcconfig": {
+    "SWIFT_VERSION": "4.0",
     "OTHER_CFLAGS": "-DWITH_THREADING -DWITH_TLS -DWITH_TLS_PSK",
     "LIBRARY_SEARCH_PATHS": "\"$(PODS_ROOT)/OpenSSL-Universal/lib-ios\""
   }

@@ -272,7 +272,7 @@ int _mosquitto_try_connect(struct mosquitto *mosq, const char *host, uint16_t po
 {
 	struct addrinfo hints;
 	struct addrinfo *ainfo, *rp;
-	struct addrinfo *ainfo_bind, *rp_bind;
+	struct addrinfo *ainfo_bind = NULL, *rp_bind;
 	int s;
 	int rc = MOSQ_ERR_SUCCESS;
 #ifdef WIN32
@@ -486,7 +486,9 @@ int _mosquitto_socket_connect(struct mosquitto *mosq, const char *host, uint16_t
 
 			if(mosq->tls_pw_callback){
 				SSL_CTX_set_default_passwd_cb(mosq->ssl_ctx, mosq->tls_pw_callback);
-				SSL_CTX_set_default_passwd_cb_userdata(mosq->ssl_ctx, mosq);
+				if(mosq->userdata) {
+				  SSL_CTX_set_default_passwd_cb_userdata(mosq->ssl_ctx, mosq->userdata);
+				}
 			}
 
 			if(mosq->tls_certfile){
@@ -656,7 +658,7 @@ ssize_t _mosquitto_net_read(struct mosquitto *mosq, void *buf, size_t count)
 	errno = 0;
 #ifdef WITH_TLS
 	if(mosq->ssl){
-		ret = SSL_read(mosq->ssl, buf, count);
+		ret = SSL_read(mosq->ssl, buf, (int)count);
 		if(ret <= 0){
 			err = SSL_get_error(mosq->ssl, ret);
 			if(err == SSL_ERROR_WANT_READ){
