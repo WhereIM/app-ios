@@ -216,6 +216,7 @@ class Message: RowConvertible, Persistable {
                         \(Columns.mate.name),
                         \(Columns.type.name),
                         \(Columns.message.name),
+                        \(Columns.time.name),
                         \(Columns.type.name)
                     FROM \(TABLE_NAME)
                     WHERE
