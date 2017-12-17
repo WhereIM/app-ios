@@ -199,7 +199,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         return false
     }
 
-    func switchClicked(sender: UISwitch) {
+    @objc func switchClicked(sender: UISwitch) {
         let channel = channelList[sender.tag]
         service.toggleChannelActive(channel)
     }
@@ -528,15 +528,15 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         }
     }
 
-    func openLogController(recognizer: UITapGestureRecognizer) {
+    @objc func openLogController(recognizer: UITapGestureRecognizer) {
         performSegue(withIdentifier: "log", sender: nil)
     }
 
-    func open_menu(sender: Any) {
+    @objc func open_menu(sender: Any) {
         _ = DialogAppMenu(self, menu)
     }
 
-    func new_channel(sender: UIButton) {
+    @objc func new_channel(sender: UIButton) {
         _ = DialogNewChannel(self, sender)
     }
 

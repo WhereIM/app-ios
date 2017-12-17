@@ -14,17 +14,19 @@ class EnchantmentList {
     var private_list = [Enchantment]()
 }
 
-class Enchantment: Record {
+class Enchantment: RowConvertible, Persistable {
     static let TABLE_NAME = "enchantment"
 
-    static let COL_ID = "_id"
-    static let COL_CHANNEL_ID = "channel_id"
-    static let COL_NAME = "name"
-    static let COL_LATITUDE = "latitude"
-    static let COL_LONGITUDE = "longitude"
-    static let COL_RADIUS = "radius"
-    static let COL_PUBLIC = "public"
-    static let COL_ENABLED = "enabled"
+    enum Columns {
+        static let id = Column("_id")
+        static let channel_id = Column("channel_id")
+        static let name = Column("name")
+        static let latitude = Column("latitude")
+        static let longitude = Column("longitude")
+        static let radius = Column("radius")
+        static let is_public = Column("public")
+        static let enabled = Column("enabled")
+    }
 
     var id: String?
     var channel_id: String?
@@ -41,55 +43,52 @@ class Enchantment: Record {
 
         if version < 1 {
             var sql: String
-            sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                COL_ID + " TEXT PRIMARY KEY, " +
-                COL_CHANNEL_ID + " TEXT, " +
-                COL_NAME + " TEXT, " +
-                COL_LATITUDE + " DOUBLE PRECISION, " +
-                COL_LONGITUDE + " DOUBLE PRECISION, " +
-                COL_RADIUS + " INTEGER, " +
-                COL_PUBLIC + " BOOLEAN, " +
-                COL_ENABLED + " BOOLEAN)";
+            sql = """
+            CREATE TABLE \(TABLE_NAME) (
+                \(Columns.id.name) TEXT PRIMARY KEY,
+                \(Columns.channel_id.name) TEXT,
+                \(Columns.name.name) TEXT,
+                \(Columns.latitude.name) DOUBLE PRECISION,
+                \(Columns.longitude.name) DOUBLE PRECISION,
+                \(Columns.radius.name) INTEGER,
+                \(Columns.is_public.name) BOOLEAN,
+                \(Columns.enabled.name) BOOLEAN
+            )
+            """
             try db.execute(sql)
 
-            sql = "CREATE INDEX enchantment_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"
+            sql = "CREATE INDEX enchantment_index ON \(TABLE_NAME) (\(Columns.channel_id.name))"
             try db.execute(sql)
 
             version = 1
         }
     }
 
-    override class var databaseTableName: String {
-        return TABLE_NAME
+    static let databaseTableName = TABLE_NAME
+
+    init(){
+        // noop
     }
 
     required init(row: Row) {
-        id = row.value(named: Enchantment.COL_ID)
-        channel_id = row.value(named: Enchantment.COL_CHANNEL_ID)
-        name = row.value(named: Enchantment.COL_NAME)
-        latitude = row.value(named: Enchantment.COL_LATITUDE)
-        longitude = row.value(named: Enchantment.COL_LONGITUDE)
-        radius = row.value(named: Enchantment.COL_RADIUS)
-        isPublic = row.value(named: Enchantment.COL_PUBLIC)
-        enabled = row.value(named: Enchantment.COL_ENABLED)
-        super.init(row: row)
+        id = row[Columns.id]
+        channel_id = row[Columns.channel_id]
+        name = row[Columns.name]
+        latitude = row[Columns.latitude]
+        longitude = row[Columns.longitude]
+        radius = row[Columns.radius]
+        isPublic = row[Columns.is_public]
+        enabled = row[Columns.enabled]
     }
 
-    override init() {
-        super.init()
-    }
-
-    override var persistentDictionary: [String: DatabaseValueConvertible?] {
-        return [
-            Enchantment.COL_ID: id,
-            Enchantment.COL_CHANNEL_ID: channel_id,
-            Enchantment.COL_NAME: name,
-            Enchantment.COL_LATITUDE: latitude,
-            Enchantment.COL_LONGITUDE: longitude,
-            Enchantment.COL_RADIUS: radius,
-            Enchantment.COL_PUBLIC: isPublic,
-            Enchantment.COL_ENABLED: enabled
-        ]
+    func encode(to container: inout PersistenceContainer) {
+        container[Columns.id] = id
+        container[Columns.name] = name
+        container[Columns.latitude] = latitude
+        container[Columns.longitude] = longitude
+        container[Columns.radius] = radius
+        container[Columns.is_public] = isPublic
+        container[Columns.enabled] = enabled
     }
 
     static func getAll() -> [Enchantment] {
@@ -97,14 +96,14 @@ class Enchantment: Record {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                let enchantments = try Enchantment.fetchAll(db, "SELECT * FROM "+TABLE_NAME+" ORDER BY "+COL_NAME+" ASC")
+                let enchantments = try Enchantment.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.name.name) ASC")
 
                 for e in enchantments {
                     ret.append(e)
                 }
             }
         } catch {
-            print("Error checking out enchantments")
+            print("Error checking out enchantments \(error)")
         }
         return ret
     }

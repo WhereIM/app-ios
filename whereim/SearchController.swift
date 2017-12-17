@@ -261,7 +261,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
         googleAttribution.contentMode = .center
         googleAttribution.clipsToBounds = true
         let h = googleAttribution.heightAnchor.constraint(equalToConstant: googleAttribution.intrinsicContentSize.height + 10)
-        h.priority = 900
+        h.priority = UILayoutPriority(rawValue: 900)
         h.isActive = true
         self.view.addSubview(googleAttribution)
         googleAttribution.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -329,7 +329,7 @@ class SearchController: UIViewController, UITextFieldDelegate {
         history = UserDefaults.standard.stringArray(forKey: Key.SEARCH_HISTORY) ?? [String]()
     }
 
-    func keyword_changed(sender: Any) {
+    @objc func keyword_changed(sender: Any) {
         btn_clear.isHidden = true
         btn_search.isHidden = false
         history_or_autocomplete()
@@ -347,12 +347,12 @@ class SearchController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    func search_clicked(sender: Any) {
+    @objc func search_clicked(sender: Any) {
         keyword.resignFirstResponder()
         search(keyword.text!)
     }
 
-    func clear_clicked(sender: Any) {
+    @objc func clear_clicked(sender: Any) {
         keyword.text = ""
         keyword.resignFirstResponder()
         search("")
@@ -366,13 +366,13 @@ class SearchController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func keyboardShown(_ n:NSNotification) {
+    @objc func keyboardShown(_ n:NSNotification) {
         let d = n.userInfo!
         let r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         bottomConstraint?.constant = -(r.size.height - self.tabBarController!.tabBar.frame.size.height)
     }
 
-    func keyboardHide(_ n:NSNotification) {
+    @objc func keyboardHide(_ n:NSNotification) {
         bottomConstraint?.constant = 0
     }
 

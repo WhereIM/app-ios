@@ -51,17 +51,19 @@ class MarkerList {
     var private_list = [Marker]()
 }
 
-class Marker: Record {
+class Marker: RowConvertible, Persistable {
     static let TABLE_NAME = "marker"
 
-    static let COL_ID = "_id"
-    static let COL_CHANNEL_ID = "channel_id"
-    static let COL_NAME = "name"
-    static let COL_LATITUDE = "latitude"
-    static let COL_LONGITUDE = "longitude"
-    static let COL_ATTR = "attr"
-    static let COL_PUBLIC = "public"
-    static let COL_ENABLED = "enabled"
+    enum Columns {
+        static let id = Column("_id")
+        static let channel_id = Column("channel_id")
+        static let name = Column("name")
+        static let latitude = Column("latitude")
+        static let longitude = Column("longitude")
+        static let attr = Column("attr")
+        static let is_public = Column("public")
+        static let enabled = Column("enabled")
+    }
 
     var id: String?
     var channel_id: String?
@@ -78,65 +80,61 @@ class Marker: Record {
 
         if version < 1 {
             var sql: String
-            sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                COL_ID + " TEXT PRIMARY KEY, " +
-                COL_CHANNEL_ID + " TEXT, " +
-                COL_NAME + " TEXT, " +
-                COL_LATITUDE + " DOUBLE PRECISION, " +
-                COL_LONGITUDE + " DOUBLE PRECISION, " +
-                COL_ATTR + " TEXT, " +
-                COL_PUBLIC + " BOOLEAN, " +
-                COL_ENABLED + " BOOLEAN)"
+            sql = """
+            CREATE TABLE \(TABLE_NAME) (
+                \(Columns.id.name) TEXT PRIMARY KEY,
+                \(Columns.channel_id.name) TEXT,
+                \(Columns.name.name) TEXT,
+                \(Columns.latitude.name) DOUBLE PRECISION,
+                \(Columns.longitude.name) DOUBLE PRECISION,
+                \(Columns.attr.name) TEXT,
+                \(Columns.is_public.name) BOOLEAN,
+                \(Columns.enabled.name) BOOLEAN
+            )
+            """
             try db.execute(sql)
 
-            sql = "CREATE INDEX marker_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"
+            sql = "CREATE INDEX marker_index ON \(TABLE_NAME) (\(Columns.channel_id.name)"
             try db.execute(sql)
 
             version = 1
         }
     }
 
-    override class var databaseTableName: String {
-        return TABLE_NAME
+    static let databaseTableName = TABLE_NAME
+
+    init(){
+        // noop
     }
 
     required init(row: Row) {
         do {
-            id = row.value(named: Marker.COL_ID)
-            channel_id = row.value(named: Marker.COL_CHANNEL_ID)
-            name = row.value(named: Marker.COL_NAME)
-            latitude = row.value(named: Marker.COL_LATITUDE)
-            longitude = row.value(named: Marker.COL_LONGITUDE)
-            let attr_string = row.value(named: Marker.COL_ATTR) as! String
+            id = row[Columns.id]
+            channel_id = row[Columns.channel_id]
+            name = row[Columns.name]
+            latitude = row[Columns.latitude]
+            longitude = row[Columns.longitude]
+            let attr_string = row[Columns.attr] as! String
             attr = try JSONSerialization.jsonObject(with: attr_string.data(using: .utf8)!, options: []) as? [String: Any]
-            isPublic = row.value(named: Marker.COL_PUBLIC)
-            enabled = row.value(named: Marker.COL_ENABLED)
+            isPublic = row[Columns.is_public]
+            enabled = row[Columns.enabled]
         } catch {
             print("Error in decoding marker.attr")
         }
-        super.init(row: row)
     }
 
-    override init() {
-        super.init()
-    }
-
-    override var persistentDictionary: [String: DatabaseValueConvertible?] {
+    func encode(to container: inout PersistenceContainer) {
         do {
             let json = try JSONSerialization.data(withJSONObject: attr ?? [], options: [])
-            return [
-                Marker.COL_ID: id,
-                Marker.COL_CHANNEL_ID: channel_id,
-                Marker.COL_NAME: name,
-                Marker.COL_LATITUDE: latitude,
-                Marker.COL_LONGITUDE: longitude,
-                Marker.COL_ATTR: String(data: json, encoding: .utf8)!,
-                Marker.COL_PUBLIC: isPublic,
-                Marker.COL_ENABLED: enabled
-            ]
+            container[Columns.id] = id
+            container[Columns.name] = name
+            container[Columns.latitude] = latitude
+            container[Columns.longitude] = longitude
+            container[Columns.attr] = String(data: json, encoding: .utf8)!
+            container[Columns.is_public] = isPublic
+            container[Columns.enabled] = enabled
         } catch {
             print("Error encoding marker.attr")
-            return [:]
         }
     }
 
@@ -145,14 +143,14 @@ class Marker: Record {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                let markers = try Marker.fetchAll(db, "SELECT * FROM "+TABLE_NAME+" ORDER BY "+COL_NAME+" ASC")
+                let markers = try Marker.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.name.name) ASC")
 
                 for m in markers {
                     ret.append(m)
                 }
             }
         } catch {
-            print("Error checking out markers")
+            print("Error checking out markers \(error)")
         }
         return ret
     }

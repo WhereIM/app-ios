@@ -23,7 +23,7 @@ class DialogCreateMarker {
     let pickerDelegate = PickerDelegate()
 
     init(_ mapController: MapController, _ title: String?) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             mapController.editingType = .marker
             mapController.editingMarker.id = nil
@@ -34,7 +34,7 @@ class DialogCreateMarker {
             mapController.editingMarker.attr = [Key.COLOR: self.pickerDelegate.getItem(self.icon_picker.selectedRow(inComponent: 0))]
             mapController.refreshEditing()
         }
-        alert.add(action)
+        alert.addAction(action)
 
         func check() {
             action.isEnabled = !name_edit.text!.isEmpty

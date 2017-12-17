@@ -18,13 +18,13 @@ class DialogEditMate {
     let user_mate_name_edit = UITextField()
 
     init(_ viewController: UIViewController, _ mate: Mate) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let service = CoreService.bind()
             let user_mate_name = (self.user_mate_name_edit.text)!
             service.editMate(mate, user_mate_name)
         }
-        alert.add(action)
+        alert.addAction(action)
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         layout.axis = .vertical

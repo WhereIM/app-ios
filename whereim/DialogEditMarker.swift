@@ -23,12 +23,12 @@ class DialogEditMarker {
     let pickerDelegate = PickerDelegate()
 
     init(_ viewController: ChannelController, _ marker: Marker) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             viewController.edit(marker: marker, name: self.name_edit.text!, attr: [Key.COLOR: self.pickerDelegate.getItem(self.icon_picker.selectedRow(inComponent: 0))], shared: marker.isPublic! || self.ispublic_switch.isOn)
         }
 
-        alert.add(action)
+        alert.addAction(action)
 
         func check(){
             action.isEnabled = !name_edit.text!.isEmpty

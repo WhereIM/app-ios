@@ -115,7 +115,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
         return v
     }
 
-    func infoCicked(sender: UIButton) {
+    @objc func infoCicked(sender: UIButton) {
         switch sender.tag {
         case 0:
             _ = DialogMobileEnchantment(self.vc)
@@ -203,7 +203,7 @@ class ChannelEnchantmentAdapter: NSObject, UITableViewDataSource, UITableViewDel
         }
     }
 
-    func switchClicked(sender: UISwitch) {
+    @objc func switchClicked(sender: UISwitch) {
         let row = sender.tag / numberOfSections
         let section = sender.tag % numberOfSections
         if section == 0 {
@@ -280,7 +280,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener,
         super.viewDidLoad()
     }
 
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 
@@ -320,7 +320,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener,
         // Dispose of any resources that can be recreated.
     }
 
-    func keyboardShown(_ n:NSNotification) {
+    @objc func keyboardShown(_ n:NSNotification) {
         let d = n.userInfo!
         var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         r = self.enchantmentListView.convert(r, from:nil)
@@ -328,7 +328,7 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener,
         self.enchantmentListView.scrollIndicatorInsets.bottom = r.size.height
     }
 
-    func keyboardHide(_ n:NSNotification) {
+    @objc func keyboardHide(_ n:NSNotification) {
         self.enchantmentListView.contentInset.bottom = 0
         self.enchantmentListView.scrollIndicatorInsets.bottom = 0
     }

@@ -17,7 +17,7 @@ class DialogShareLocation {
 
     init(_ viewController: UIViewController, _ location: CLLocationCoordinate2D, _ title: String?, _ view: UIView, _ touchPosition: CGPoint?) {
         let alert = AlertController(title: "share".localized, message: nil, preferredStyle: .alert)
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             var surl = "here/\(location.latitude)/\(location.longitude)"
             var name = self.name_edit.text
@@ -39,7 +39,7 @@ class DialogShareLocation {
             }
 
         }
-        alert.add(action)
+        alert.addAction(action)
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         layout.axis = .vertical

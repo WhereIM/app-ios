@@ -18,14 +18,14 @@ class DialogCreateChannel {
     let display_name_edit = UITextField()
 
     init(_ viewController: UIViewController) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let service = CoreService.bind()
             let _channel_name = (self.channel_name_edit.text)!
             let _mate_name = (self.display_name_edit.text)!
             service.createChannel(channel_name: _channel_name, mate_name: _mate_name)
         }
-        alert.add(action)
+        alert.addAction(action)
 
         func check() {
             action.isEnabled = !channel_name_edit.text!.isEmpty && !display_name_edit.text!.isEmpty

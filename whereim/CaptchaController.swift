@@ -33,7 +33,7 @@ class CaptchaController: UIViewController, UIWebViewDelegate {
         let url = request.url!.absoluteString
         let prefix = Config.CAPTCHA_PREFIX
         if(url.hasPrefix(prefix)){
-            let otp = url.substring(from: prefix.index(prefix.startIndex, offsetBy: prefix.characters.count))
+            let otp = url.substring(from: prefix.index(prefix.startIndex, offsetBy: prefix.count))
             service!.setOTP(otp: otp)
 
             let vc = storyboard?.instantiateViewController(withIdentifier: "login")

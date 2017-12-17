@@ -27,11 +27,11 @@ class DialogChannelInviteQrCode {
 
         let scaleX = e / ciImg.extent.size.width
         let scaleY = e / ciImg.extent.size.height
-        let transformedImage = ciImg.applying(CGAffineTransform(scaleX: scaleX, y: scaleY))
+        let transformedImage = ciImg.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
         qrcode.image = UIImage(ciImage: transformedImage)
 
         alert.title = channel.channel_name
-        alert.add(AlertAction(title: "close".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "close".localized, style: .normal, handler: nil))
 
         qrcode.translatesAutoresizingMaskIntoConstraints = false
         alert.contentView.addSubview(qrcode)

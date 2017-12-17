@@ -81,7 +81,7 @@ class UIHintDialog: UIStackView {
         close.addTarget(self, action: #selector(closed(sender:)), for: .touchUpInside)
     }
 
-    func closed(sender: Any) {
+    @objc func closed(sender: Any) {
         UserDefaults.standard.set(true, forKey: _key!)
         if let c = callback {
             c()

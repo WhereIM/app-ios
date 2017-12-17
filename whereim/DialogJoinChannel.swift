@@ -16,13 +16,13 @@ class DialogJoinChannel {
     let display_name_edit = UITextField()
 
     init(_ viewController: UIViewController, _ channel_id: String) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let service = CoreService.bind()
             let mate_name = (self.display_name_edit.text)!
             service.joinChannel(channel_id: channel_id, channel_alias: "", mate_name: mate_name)
         }
-        alert.add(action)
+        alert.addAction(action)
 
         func check(){
             action.isEnabled = !display_name_edit.text!.isEmpty

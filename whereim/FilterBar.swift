@@ -62,7 +62,7 @@ class FilterBar: UIStackView {
         btn_clear.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
 
-    func keyword_changed(sender: Any) {
+    @objc func keyword_changed(sender: Any) {
         if keyword.text != nil && !keyword.text!.isEmpty {
             if let d = delegate {
                 d.onFilter(keyword: keyword.text)
@@ -76,7 +76,7 @@ class FilterBar: UIStackView {
         }
     }
 
-    func clear_clicked(sender: Any) {
+    @objc func clear_clicked(sender: Any) {
         btn_clear.isHidden = true
         keyword.text = ""
         keyword.resignFirstResponder()

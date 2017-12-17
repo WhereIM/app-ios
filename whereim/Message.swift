@@ -42,7 +42,7 @@ class BundledMessages {
     }
 }
 
-class Message: Record {
+class Message: RowConvertible, Persistable {
     let service = CoreService.bind()
 
     var jsqMessage: JSQMessage?
@@ -66,14 +66,16 @@ class Message: Record {
 
     static let TABLE_NAME = "message";
 
-    static let COL_ID = "_id"
-    static let COL_SN = "sn"
-    static let COL_CHANNEL = "channel"
-    static let COL_PUBLIC = "public"
-    static let COL_MATE = "mate"
-    static let COL_TYPE = "type"
-    static let COL_MESSAGE = "message"
-    static let COL_TIME = "time"
+    enum Columns {
+        static let id = Column("_id")
+        static let sn = Column("sn")
+        static let channel = Column("channel")
+        static let is_public = Column("public")
+        static let mate = Column("mate")
+        static let type = Column("type")
+        static let message = Column("message")
+        static let time = Column("time")
+    }
 
     var id: Int64?
     var sn: Int64?
@@ -90,18 +92,21 @@ class Message: Record {
         
         if version < 1 {
             var sql: String
-            sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                COL_ID + " INTEGER PRIMARY KEY, " +
-                COL_SN + " INTEGER, " +
-                COL_CHANNEL + " TEXT NULL, " +
-                COL_PUBLIC + " BOOLEAN, " +
-                COL_MATE + " TEXT, " +
-                COL_TYPE + " TEXT, " +
-                COL_MESSAGE + " TEXT, " +
-                COL_TIME + " INTEGER)"
+            sql = """
+            CREATE TABLE \(TABLE_NAME) (
+                \(Columns.id.name) INTEGER PRIMARY KEY,
+                \(Columns.sn.name) INTEGER,
+                \(Columns.channel.name) TEXT NULL,
+                \(Columns.is_public.name) BOOLEAN,
+                \(Columns.mate.name) TEXT,
+                \(Columns.type.name) TEXT,
+                \(Columns.message.name) TEXT,
+                \(Columns.time.name) INTEGER
+            )
+            """
             try db.execute(sql)
 
-            sql = "CREATE INDEX message_index ON "+TABLE_NAME+" ("+COL_CHANNEL+")"
+            sql = "CREATE INDEX message_index ON \(TABLE_NAME) (\(Columns.channel.name))"
             try db.execute(sql)
 
             version = 1
@@ -146,20 +151,17 @@ class Message: Record {
         }
     }
 
-    override class var databaseTableName: String {
-        return TABLE_NAME
-    }
+    static let databaseTableName = TABLE_NAME
 
     required init(row: Row) {
-        id = row.value(named: Message.COL_ID)
-        sn = row.value(named: Message.COL_SN)
-        channel_id = row.value(named: Message.COL_CHANNEL)
-        mate_id = row.value(named: Message.COL_MATE)
-        type = row.value(named: Message.COL_TYPE)
-        message = row.value(named: Message.COL_MESSAGE)
-        time = row.value(named: Message.COL_TIME)
-        isPublic = row.value(named: Message.COL_PUBLIC)
-        super.init(row: row)
+        id = row[Columns.id]
+        sn = row[Columns.sn]
+        channel_id = row[Columns.channel]
+        mate_id = row[Columns.mate]
+        type = row[Columns.type]
+        message = row[Columns.message]
+        time = row[Columns.time]
+        isPublic = row[Columns.is_public]
     }
 
     init(_ data: [String: Any]) {
@@ -172,20 +174,17 @@ class Message: Record {
         isPublic = data[Key.PUBLIC] as? Bool
         time = data["time"] as! Int64?
         notify = data["notify"] as? Int
-        super.init()
     }
 
-    override var persistentDictionary: [String: DatabaseValueConvertible?] {
-        return [
-            Message.COL_ID: id,
-            Message.COL_SN: sn,
-            Message.COL_CHANNEL: channel_id,
-            Message.COL_MATE: mate_id,
-            Message.COL_TYPE: type,
-            Message.COL_MESSAGE: message,
-            Message.COL_TIME: time,
-            Message.COL_PUBLIC: isPublic!
-        ]
+    func encode(to container: inout PersistenceContainer) {
+        container[Columns.id] = id
+        container[Columns.sn] = sn
+        container[Columns.channel] = channel_id
+        container[Columns.mate] = mate_id
+        container[Columns.type] = type
+        container[Columns.message] = message
+        container[Columns.time] = time
+        container[Columns.is_public] = isPublic!
     }
 
     static func getMessages(_ channel_id: String) -> BundledMessages {
@@ -206,7 +205,27 @@ class Message: Record {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                let cursor = try Message.fetchCursor(db, "SELECT "+COL_ID+","+COL_SN+","+COL_PUBLIC+","+COL_CHANNEL+","+COL_MATE+","+COL_TYPE+","+COL_MESSAGE+","+COL_TIME+" FROM "+TABLE_NAME+" WHERE "+COL_CHANNEL+"=? OR "+COL_CHANNEL+" IS NULL ORDER BY "+COL_ID+" DESC", arguments: [channel_id])
+                let cursor = try Message.fetchCursor(
+                    db,
+                    """
+                    SELECT
+                        \(Columns.id.name),
+                        \(Columns.sn.name),
+                        \(Columns.is_public.name),
+                        \(Columns.channel.name),
+                        \(Columns.mate.name),
+                        \(Columns.type.name),
+                        \(Columns.message.name),
+                        \(Columns.type.name)
+                    FROM \(TABLE_NAME)
+                    WHERE
+                        \(Columns.channel.name)=?
+                        OR
+                        \(Columns.channel.name) IS NULL
+                    ORDER BY \(Columns.id.name) DESC
+                    """,
+                    arguments: [channel_id]
+                )
 
                 while let m = try cursor.next() {
                     messages.insert(m, at: 0)

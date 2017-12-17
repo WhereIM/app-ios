@@ -44,14 +44,14 @@ class DialogEditRadius {
         }
         r_list.sort()
         pickerDelegate.radius_list = r_list
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let r = r_list[self.picker.selectedRow(inComponent: 0)]
 
             let service = CoreService.bind()
             service.setSelfRadius(channel, r)
         }
-        alert.add(action)
+        alert.addAction(action)
 
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.dataSource = pickerDelegate

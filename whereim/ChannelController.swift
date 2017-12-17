@@ -146,7 +146,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         self.navigationItem.titleView = navigator
 
         let appearance = UITabBarItem.appearance()
-        let attributes: [String: AnyObject] = [NSFontAttributeName:UIFont(name: "Apple Color Emoji", size: 18)!, NSForegroundColorAttributeName: UIColor.orange]
+        let attributes: [NSAttributedStringKey: AnyObject] = [NSAttributedStringKey.font:UIFont(name: "Apple Color Emoji", size: 18)!, NSAttributedStringKey.foregroundColor: UIColor.orange]
         appearance.setTitleTextAttributes(attributes, for: .normal)
         appearance.titlePositionAdjustment = UIOffsetMake(0, -10)
 
@@ -223,7 +223,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         }
     }
 
-    func invite_join(sender: UIButton) {
+    @objc func invite_join(sender: UIButton) {
         _ = DialogChannelInvite(self, sender, channel!)
     }
 
@@ -278,7 +278,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         }
     }
 
-    func switchClicked(sender: UISwitch) {
+    @objc func switchClicked(sender: UISwitch) {
         service.toggleChannelActive(channel!)
     }
 

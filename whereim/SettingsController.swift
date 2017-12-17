@@ -244,7 +244,7 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func switchClicked(sender: UISwitch) {
+    @objc func switchClicked(sender: UISwitch) {
         switch sender.tag {
         case SETTING_POWER_SAVING:
             let service = CoreService.bind()

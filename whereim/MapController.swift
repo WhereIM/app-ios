@@ -386,56 +386,56 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
         refreshEditing()
     }
 
-    func enchantment_reduce(sender: UIButton) {
+    @objc func enchantment_reduce(sender: UIButton) {
         editingEnchantment.radius! -= Config.getStep(radius: editingEnchantment.radius!)
         editingEnchantment.radius! = min(Config.ENCHANTMENT_RADIUS_MAX ,max(Config.ENCHANTMENT_RADIUS_MIN, editingEnchantment.radius!))
         radiusLabel.text = String(format: "radius_m".localized, editingEnchantment.radius!)
         refreshEditing()
     }
 
-    func enchantment_enlarge(sender: UIButton) {
+    @objc func enchantment_enlarge(sender: UIButton) {
         editingEnchantment.radius! += Config.getStep(radius: editingEnchantment.radius!)
         editingEnchantment.radius! = min(Config.ENCHANTMENT_RADIUS_MAX ,max(Config.ENCHANTMENT_RADIUS_MIN, editingEnchantment.radius!))
         radiusLabel.text = String(format: "radius_m".localized, editingEnchantment.radius!)
         refreshEditing()
     }
 
-    func enchantment_cancel(sender: UIButton) {
+    @objc func enchantment_cancel(sender: UIButton) {
         clearActions(clearEditing: true)
     }
 
-    func enchantment_ok(sender: UIButton) {
+    @objc func enchantment_ok(sender: UIButton) {
         editingEnchantment.channel_id = channel!.id!
         service!.set(enchantment: editingEnchantment)
         editingType = nil
         refreshEditing()
     }
 
-    func marker_create_marker(sender: UIButton) {
+    @objc func marker_create_marker(sender: UIButton) {
         clearActions(clearEditing: true)
         editingCoordinate = focusMarkerLocation!
         _ = DialogCreateMarker(self, focusMarkerTitle)
     }
 
-    func marker_create_enchantment(sender: UIButton) {
+    @objc func marker_create_enchantment(sender: UIButton) {
         clearActions(clearEditing: true)
         editingCoordinate = focusMarkerLocation!
         _ = DialogCreateEnchantment(self, focusMarkerTitle)
     }
 
-    func marker_share(sender: UIButton) {
+    @objc func marker_share(sender: UIButton) {
         _ = DialogShareLocation(self, focusMarkerLocation!, focusMarkerTitle, sender, nil)
     }
 
-    func marker_openin(sender: UIButton) {
+    @objc func marker_openin(sender: UIButton) {
         _ = DialogOpenIn(self, focusMarkerLocation!, focusMarkerTitle, sender, nil)
     }
 
-    func marker_cancel(sender: UIButton) {
+    @objc func marker_cancel(sender: UIButton) {
         clearActions(clearEditing: true)
     }
 
-    func marker_ok(sender: UIButton) {
+    @objc func marker_ok(sender: UIButton) {
         editingMarker.channel_id = channel!.id!
         service!.set(marker: editingMarker)
         editingType = nil

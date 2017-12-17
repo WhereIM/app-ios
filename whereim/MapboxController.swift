@@ -111,7 +111,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     func viewWillDisappear(_ viewContrller: UIViewController) {
     }
 
-    func moveToMyLocation(sender: Any) {
+    @objc func moveToMyLocation(sender: Any) {
         if let ll = self.mapView?.userLocation?.coordinate {
             mapCenter = ll
             mapView!.setCenter(ll, zoomLevel: mapView!.zoomLevel, animated: true)
@@ -178,7 +178,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         mapController.clearActions(clearEditing: false)
     }
 
-    func mapDidTap(gesture: UITapGestureRecognizer) {
+    @objc func mapDidTap(gesture: UITapGestureRecognizer) {
         if mapController.editingType != nil {
             return
         }
@@ -189,7 +189,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         mapController.clearActions(clearEditing: false)
     }
 
-    func mapDidLongPress(gesture: UILongPressGestureRecognizer) {
+    @objc func mapDidLongPress(gesture: UILongPressGestureRecognizer) {
         mapController.clearActions(clearEditing: false)
         let p = gesture.location(in: mapView!)
         let coordinate: CLLocationCoordinate2D = mapView!.convert(p, toCoordinateFrom: mapView!)

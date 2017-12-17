@@ -58,7 +58,7 @@ class LogController: UITableViewController {
         logs = Log.getAll()
     }
 
-    func clearLogs() {
+    @objc func clearLogs() {
         Log.clear()
         logs = Log.getAll()
         self.tableView!.reloadData()

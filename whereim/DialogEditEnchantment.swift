@@ -19,11 +19,11 @@ class DialogEditEnchantment {
     let ispublic_switch = UISwitch()
 
     init(_ viewController: ChannelController, _ enchantment: Enchantment) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             viewController.edit(enchantment: enchantment, name: self.name_edit.text!, shared: enchantment.isPublic! || self.ispublic_switch.isOn)
         }
-        alert.add(action)
+        alert.addAction(action)
 
         func check(){
             action.isEnabled = !name_edit.text!.isEmpty

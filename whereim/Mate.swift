@@ -9,14 +9,16 @@
 import UIKit
 import GRDB
 
-class Mate: Record {
+class Mate: RowConvertible, Persistable {
     static let TABLE_NAME = "mate"
 
-    static let COL_ID = "_id"
-    static let COL_CHANNEL_ID = "channel_id"
-    static let COL_MATE_NAME = "mate_name"
-    static let COL_USER_MATE_NAME = "user_mate_name"
-    static let COL_DELETED = "deleted"
+    enum Columns {
+        static let id = Column("_id")
+        static let channel_id = Column("channel_id")
+        static let mate_name = Column("mate_name")
+        static let user_mate_name = Column("user_mate_name")
+        static let deleted = Column("deleted")
+    }
 
     var id: String?
     var channel_id: String?
@@ -38,52 +40,50 @@ class Mate: Record {
 
         if version < 1 {
             var sql: String
-            sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                COL_ID + " TEXT PRIMARY KEY, " +
-                COL_CHANNEL_ID + " TEXT, " +
-                COL_MATE_NAME + " TEXT, " +
-                COL_USER_MATE_NAME + " TEXT)"
+            sql = """
+            CREATE TABLE \(TABLE_NAME) (
+                \(Columns.id.name) TEXT PRIMARY KEY,
+                \(Columns.channel_id.name) TEXT,
+                \(Columns.mate_name.name) TEXT,
+                \(Columns.user_mate_name.name) TEXT
+            )
+            """
             try db.execute(sql)
 
-            sql = "CREATE INDEX mate_index ON "+TABLE_NAME+" ("+COL_CHANNEL_ID+")"
+            sql = "CREATE INDEX mate_index ON \(TABLE_NAME) (\(Columns.channel_id.name))"
             try db.execute(sql)
 
             version = 1
         }
         if version < 2 {
             var sql: String
-            sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COL_DELETED + " BOOLEAN NOT NULL DEFAULT 0"
+            sql = "ALTER TABLE \(TABLE_NAME) ADD COLUMN \(Columns.deleted.name) BOOLEAN NOT NULL DEFAULT 0"
             try db.execute(sql)
 
             version = 2
         }
     }
 
-    override class var databaseTableName: String {
-        return TABLE_NAME
+    static let databaseTableName = TABLE_NAME
+
+    init() {
+        // noop
     }
 
     required init(row: Row) {
-        id = row.value(named: Mate.COL_ID)
-        channel_id = row.value(named: Mate.COL_CHANNEL_ID)
-        mate_name = row.value(named: Mate.COL_MATE_NAME)
-        user_mate_name = row.value(named: Mate.COL_USER_MATE_NAME)
-        deleted = row.value(named: Mate.COL_DELETED)
-        super.init(row: row)
+        id = row[Columns.id]
+        channel_id = row[Columns.channel_id]
+        mate_name = row[Columns.mate_name]
+        user_mate_name = row[Columns.user_mate_name]
+        deleted = row[Columns.deleted]
     }
 
-    override init() {
-        super.init()
-    }
-
-    override var persistentDictionary: [String: DatabaseValueConvertible?] {
-        return [
-            Mate.COL_ID: id,
-            Mate.COL_CHANNEL_ID: channel_id,
-            Mate.COL_MATE_NAME: mate_name,
-            Mate.COL_USER_MATE_NAME: user_mate_name,
-            Mate.COL_DELETED: deleted
-        ]
+    func encode(to container: inout PersistenceContainer) {
+        container[Columns.id] = id
+        container[Columns.channel_id] = channel_id
+        container[Columns.mate_name] = mate_name
+        container[Columns.user_mate_name] = user_mate_name
+        container[Columns.deleted] = deleted
     }
 
     static func getAll() -> [Mate] {
@@ -91,7 +91,7 @@ class Mate: Record {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                let mates = try Mate.fetchAll(db, "SELECT * FROM "+TABLE_NAME)
+                let mates = try Mate.fetchAll(db, "SELECT * FROM \(TABLE_NAME)")
 
                 for m in mates {
                     ret.append(m)

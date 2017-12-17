@@ -72,12 +72,12 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         NotificationCenter.default.addObserver(self, selector: #selector(onProfileUpdated(notification:)), name:NSNotification.Name.FBSDKProfileDidChange, object: nil)
     }
 
-    func onProfileUpdated(notification: NSNotification) {
+    @objc func onProfileUpdated(notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.FBSDKProfileDidChange, object: nil)
         self.checkProfile()
     }
 
-    func retry(sender: Any) {
+    @objc func retry(sender: Any) {
         register_client()
     }
 

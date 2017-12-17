@@ -9,50 +9,49 @@
 import GRDB
 import UIKit
 
-class Log: Record {
+class Log: RowConvertible, Persistable {
     static let TABLE_NAME = "syslog"
 
-    static let COL_ID = "_id"
-    static let COL_TIME = "time"
-    static let COL_MESSAGE = "message"
+    enum Columns {
+        static let id = Column("_id")
+        static let time = Column("time")
+        static let message = Column("message")
+    }
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
 
         if version < 1 {
             var sql: String
-            sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_TIME + " DATETIME, " +
-                COL_MESSAGE + " TEXT)"
+            sql = """
+            CREATE TABLE \(TABLE_NAME) (
+                \(Columns.id.name) INTEGER PRIMARY KEY AUTOINCREMENT,
+                \(Columns.time.name) DATETIME,
+                \(Columns.message.name) TEXT
+            )
+            """
             try db.execute(sql)
 
             version = 1
         }
     }
 
-    override class var databaseTableName: String {
-        return TABLE_NAME
-    }
+    static let databaseTableName = TABLE_NAME
 
     required init(row: Row) {
-        id = row.value(named: Log.COL_ID)
-        time = row.value(named: Log.COL_TIME)
-        message = row.value(named: Log.COL_MESSAGE)
-        super.init(row: row)
+        id = row[Columns.id]
+        time = row[Columns.time]
+        message = row[Columns.message]
     }
 
     init(_ log: String) {
         time = Date()
         message = log
-        super.init()
     }
 
-    override var persistentDictionary: [String: DatabaseValueConvertible?] {
-        return [
-            Log.COL_TIME: time,
-            Log.COL_MESSAGE: message
-        ]
+    func encode(to container: inout PersistenceContainer) {
+        container[Columns.time] = time
+        container[Columns.message] = message
     }
 
     var id: Int?
@@ -70,7 +69,7 @@ class Log: Record {
                 try Log(message).save(db)
             }
         } catch {
-            print("Error checking out logs")
+            print("Error saving logs \(error)")
         }
 
         print("log: \(message)")
@@ -88,14 +87,14 @@ class Log: Record {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                let logs = try Log.fetchAll(db, "SELECT * FROM "+TABLE_NAME+" ORDER BY "+COL_TIME+" ASC")
+                let logs = try Log.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.time.name) ASC")
 
                 for l in logs {
                     ret.append(l)
                 }
             }
         } catch {
-            print("Error checking out logs")
+            print("Error checking out logs \(error)")
         }
         return ret
     }

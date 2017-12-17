@@ -18,7 +18,7 @@ class DialogCreateEnchantment {
     let ispublic_switch = UISwitch()
 
     init(_ mapController: MapController, _ title: String?) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             mapController.editingType = .enchantment
             mapController.editingEnchantment.id = nil
@@ -29,7 +29,7 @@ class DialogCreateEnchantment {
             mapController.editingEnchantment.isPublic = self.ispublic_switch.isOn
             mapController.refreshEditing()
         }
-        alert.add(action)
+        alert.addAction(action)
 
         func check() {
             action.isEnabled = !name_edit.text!.isEmpty

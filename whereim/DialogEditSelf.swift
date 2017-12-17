@@ -16,13 +16,13 @@ class DialogEditSelf {
     let mate_name_edit = UITextField()
 
     init(_ viewController: UIViewController, _ mate: Mate) {
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "ok".localized, style: .preferred){ _ in
             let service = CoreService.bind()
             let name = (self.mate_name_edit.text)!
             service.editSelf(mate, name)
         }
-        alert.add(action)
+        alert.addAction(action)
 
         func check(){
             action.isEnabled = !mate_name_edit.text!.isEmpty

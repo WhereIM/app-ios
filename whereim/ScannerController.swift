@@ -35,8 +35,8 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
     }
 
     func checkCamera() {
-        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != AVAuthorizationStatus.authorized {
-            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { response in
+        if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != AVAuthorizationStatus.authorized {
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
                 if !response {
                     self.alertNoPermission()
                 }
@@ -46,11 +46,11 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
 
     func alertNoPermission() {
         let alert = AlertController(title: "scan_qr_code".localized, message: "NSCameraUsageDescription".localized, preferredStyle: .alert)
-        alert.add(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
         let action = AlertAction(title: "action_settings".localized, style: .preferred){ _ in
             UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
         }
-        alert.add(action)
+        alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
 
@@ -61,12 +61,12 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
     var captureSession: AVCaptureSession?
 
     func setupCamera() {
-        videoCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-        device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        videoCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video)
+        device = AVCaptureDevice.default(for: AVMediaType.video)
         output = AVCaptureMetadataOutput()
         captureSession = AVCaptureSession()
 
-        let input = try? AVCaptureDeviceInput(device: videoCaptureDevice)
+        let input = try? AVCaptureDeviceInput(device: videoCaptureDevice!)
 
         if self.captureSession!.canAddInput(input!) {
             self.captureSession!.addInput(input!)
@@ -75,7 +75,7 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
         self.previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
 
         if let videoPreviewLayer = self.previewLayer {
-            videoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            videoPreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
 
             videoPreviewLayer.frame = CGRect(x: 0, y: 0, width: viewWindowSize!, height: viewWindowSize!)
             cameraview.layer.addSublayer(videoPreviewLayer)
@@ -86,7 +86,7 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
             self.captureSession!.addOutput(metadataOutput)
 
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            metadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode, AVMetadataObjectTypeEAN13Code]
+            metadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr, AVMetadataObject.ObjectType.ean13]
         } else {
             print("Could not add metadata output")
         }
@@ -113,7 +113,7 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
     }
 
     var matched = false
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if matched {
             return
         }
@@ -129,7 +129,7 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
                             return
                         }
                         matched = true
-                        let sublink = nslink.substring(with: match.rangeAt(1))
+                        let sublink = nslink.substring(with: match.range(at: 1))
                         let service = CoreService.bind()
                         service.processLink(sublink)
                     }

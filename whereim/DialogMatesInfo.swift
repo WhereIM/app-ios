@@ -42,13 +42,13 @@ class DialogMatesInfo {
         not_avail_ic.translatesAutoresizingMaskIntoConstraints = false
         not_avail_ic.text = "•"
         not_avail_ic.textColor = UIColor(red:0.50, green:0.50, blue:0.50, alpha:1.0)
-        not_avail_ic.setContentHuggingPriority(1000, for: .horizontal)
+        not_avail_ic.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         not_avail.addArrangedSubview(not_avail_ic)
 
         not_avail_desc.translatesAutoresizingMaskIntoConstraints = false
         not_avail_desc.text = "location_status_not_avail".localized
         not_avail_desc.numberOfLines = 0
-        not_avail_desc.setContentHuggingPriority(0, for: .horizontal)
+        not_avail_desc.setContentHuggingPriority(UILayoutPriority(rawValue: 0), for: .horizontal)
         not_avail.addArrangedSubview(not_avail_desc)
 
         stale.translatesAutoresizingMaskIntoConstraints = false
@@ -61,13 +61,13 @@ class DialogMatesInfo {
         stale_ic.translatesAutoresizingMaskIntoConstraints = false
         stale_ic.text = "•"
         stale_ic.textColor = UIColor(red:1.00, green:0.50, blue:0.00, alpha:1.0)
-        stale_ic.setContentHuggingPriority(1000, for: .horizontal)
+        stale_ic.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         stale.addArrangedSubview(stale_ic)
 
         stale_desc.translatesAutoresizingMaskIntoConstraints = false
         stale_desc.text = "location_status_stale".localized
         stale_desc.numberOfLines = 0
-        stale_desc.setContentHuggingPriority(0, for: .horizontal)
+        stale_desc.setContentHuggingPriority(UILayoutPriority(rawValue: 0), for: .horizontal)
         stale.addArrangedSubview(stale_desc)
 
         fresh.translatesAutoresizingMaskIntoConstraints = false
@@ -80,13 +80,13 @@ class DialogMatesInfo {
         fresh_ic.translatesAutoresizingMaskIntoConstraints = false
         fresh_ic.text = "•"
         fresh_ic.textColor = UIColor(red:0.00, green:1.00, blue:0.00, alpha:1.0)
-        fresh_ic.setContentHuggingPriority(1000, for: .horizontal)
+        fresh_ic.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         fresh.addArrangedSubview(fresh_ic)
 
         fresh_desc.translatesAutoresizingMaskIntoConstraints = false
         fresh_desc.text = "location_status_fresh".localized
         fresh_desc.numberOfLines = 0
-        fresh_desc.setContentHuggingPriority(0, for: .horizontal)
+        fresh_desc.setContentHuggingPriority(UILayoutPriority(rawValue: 0), for: .horizontal)
         fresh.addArrangedSubview(fresh_desc)
 
         alert.contentView.addSubview(layout)
@@ -96,7 +96,7 @@ class DialogMatesInfo {
         layout.widthAnchor.constraint(equalTo: alert.contentView.widthAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 
-        alert.add(AlertAction(title: "close".localized, style: .normal, handler: nil))
+        alert.addAction(AlertAction(title: "close".localized, style: .normal, handler: nil))
         viewController.present(alert, animated: true, completion: nil)
     }
 }

@@ -9,19 +9,21 @@
 import UIKit
 import GRDB
 
-class Channel: Record {
+class Channel: RowConvertible, Persistable {
     static let TABLE_NAME = "channel"
 
-    static let COL_ID = "_id"
-    static let COL_CHANNEL_NAME = "channel_name"
-    static let COL_USER_CHANNEL_NAME = "user_channel_name"
-    static let COL_MATE = "mate"
-    static let COL_ACTIVE = "active"
-    static let COL_ENABLE = "enabled"
-    static let COL_ENABLE_RADIUS = "enable_radius"
-    static let COL_RADIUS = "radius"
-    static let COL_UNREAD = "unread"
-    static let COL_PUBLIC = "public"
+    enum Columns {
+        static let id = Column("_id")
+        static let channel_name = Column("channel_name")
+        static let user_channel_name = Column("user_channel_name")
+        static let mate = Column("mate")
+        static let active = Column("active")
+        static let enabled = Column("enabled")
+        static let enable_radius = Column("enable_radius")
+        static let radius = Column("radius")
+        static let unread = Column("unread")
+        static let is_public = Column("public")
+    }
 
     var id: String?
     var channel_name: String?
@@ -40,71 +42,68 @@ class Channel: Record {
 
         if version < 1 {
             var sql: String
-            sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                COL_ID + " TEXT PRIMARY KEY, " +
-                COL_CHANNEL_NAME + " TEXT, " +
-                COL_USER_CHANNEL_NAME + " TEXT, " +
-                COL_MATE + " TEXT, " +
-                COL_ACTIVE + " BOOLEAN, " +
-                COL_ENABLE + " BOOLEAN, " +
-                COL_ENABLE_RADIUS + " BOOLEAN, " +
-                COL_RADIUS + " INTEGER" +
-            ")";
+            sql = """
+            CREATE TABLE \(TABLE_NAME) (
+                \(Columns.id.name) TEXT PRIMARY KEY,
+                \(Columns.channel_name.name) TEXT,
+                \(Columns.user_channel_name.name) TEXT,
+                \(Columns.mate.name) TEXT,
+                \(Columns.active.name) BOOLEAN,
+                \(Columns.enabled.name) BOOLEAN,
+                \(Columns.enable_radius.name) BOOLEAN,
+                \(Columns.radius.name) INTEGER
+            )
+            """
             try db.execute(sql)
 
             version = 1
         }
         if version < 3 {
             var sql: String
-            sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COL_UNREAD + " BOOLEAN NOT NULL DEFAULT 0"
+            sql = "ALTER TABLE \(TABLE_NAME) ADD COLUMN \(Columns.unread.name) BOOLEAN NOT NULL DEFAULT 0"
             try db.execute(sql)
 
             version = 3
         }
         if version < 4 {
             var sql: String
-            sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COL_PUBLIC + " BOOLEAN NOT NULL DEFAULT 0"
+            sql = "ALTER TABLE \(TABLE_NAME) ADD COLUMN \(Columns.is_public.name) BOOLEAN NOT NULL DEFAULT 0"
             try db.execute(sql)
 
             version = 4
         }
     }
 
-    override class var databaseTableName: String {
-        return TABLE_NAME
+    static let databaseTableName = TABLE_NAME
+
+    init() {
+        // noop
     }
 
     required init(row: Row) {
-        id = row.value(named: Channel.COL_ID)
-        channel_name = row.value(named: Channel.COL_CHANNEL_NAME)
-        user_channel_name = row.value(named: Channel.COL_USER_CHANNEL_NAME)
-        mate_id = row.value(named: Channel.COL_MATE)
-        enabled = row.value(named: Channel.COL_ENABLE)
-        active = row.value(named: Channel.COL_ACTIVE)
-        enable_radius = row.value(named: Channel.COL_ENABLE_RADIUS)
-        radius = row.value(named: Channel.COL_RADIUS)
-        unread = row.value(named: Channel.COL_UNREAD)
-        is_public = row.value(named: Channel.COL_PUBLIC)
-        super.init(row: row)
+        id = row[Columns.id]
+        channel_name = row[Columns.channel_name]
+        user_channel_name = row[Columns.user_channel_name]
+        mate_id = row[Columns.mate]
+        enabled = row[Columns.enabled]
+        active = row[Columns.active]
+        enable_radius = row[Columns.enable_radius]
+        radius = row[Columns.radius]
+        unread = row[Columns.unread]
+        is_public = row[Columns.is_public]
     }
 
-    override init() {
-        super.init()
-    }
-
-    override var persistentDictionary: [String: DatabaseValueConvertible?] {
-        return [
-            Channel.COL_ID: id,
-            Channel.COL_CHANNEL_NAME: channel_name,
-            Channel.COL_USER_CHANNEL_NAME: user_channel_name,
-            Channel.COL_MATE: mate_id,
-            Channel.COL_ACTIVE: active ?? false,
-            Channel.COL_ENABLE: enabled ?? true,
-            Channel.COL_ENABLE_RADIUS: enable_radius,
-            Channel.COL_RADIUS: radius,
-            Channel.COL_PUBLIC: is_public,
-            Channel.COL_UNREAD: unread
-        ]
+    func encode(to container: inout PersistenceContainer) {
+        container[Columns.id] = id
+        container[Columns.channel_name] = channel_name
+        container[Columns.user_channel_name] = user_channel_name
+        container[Columns.mate] = mate_id
+        container[Columns.active] = active ?? false
+        container[Columns.enabled] = enabled ?? true
+        container[Columns.enable_radius] = enable_radius ?? true
+        container[Columns.radius] = radius
+        container[Columns.is_public] = is_public
+        container[Columns.unread] = unread
     }
 
     static func getAll() -> [Channel] {
@@ -112,14 +111,14 @@ class Channel: Record {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try appDelegate.dbConn!.inDatabase { db in
-                let channels = try Channel.fetchAll(db, "SELECT * FROM "+TABLE_NAME+" ORDER BY COALESCE("+COL_USER_CHANNEL_NAME+","+COL_CHANNEL_NAME+")")
+                let channels = try Channel.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY COALESCE(\(Columns.user_channel_name.name),\(Columns.channel_name.name))")
 
                 for c in channels {
                     ret.append(c)
                 }
             }
         } catch {
-            print("Error checking out channels")
+            print("Error checking out channels \(error)")
         }
         return ret
     }

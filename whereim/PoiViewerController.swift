@@ -81,13 +81,13 @@ class PoiViewerController: UIViewController {
         super.viewDidLoad()
     }
 
-    func close(sender: Any) {
+    @objc func close(sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let startupVC = sb.instantiateViewController(withIdentifier: "startup") as! UINavigationController
         UIApplication.shared.delegate!.window!!.rootViewController = startupVC;
     }
 
-    func open_in_channel(sender: Any) {
+    @objc func open_in_channel(sender: Any) {
         var title: String?
         if let t = poi?.name {
             title = "/\(t)"
