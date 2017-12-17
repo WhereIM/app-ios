@@ -136,28 +136,36 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 c.isActive = false
             }
             self.vc.toggleChannelPointerRight = self.vc.toggleChannelPointer.rightAnchor.constraint(equalTo: cell.loadingSwitch.leftAnchor)
-            self.vc.toggleChannelPointerRight!.isActive = true
 
             if let c = self.vc.toggleChannelPointerTop {
                 c.isActive = false
             }
             self.vc.toggleChannelPointerTop = self.vc.toggleChannelPointer.topAnchor.constraint(equalTo: cell.loadingSwitch.bottomAnchor)
-            self.vc.toggleChannelPointerTop!.isActive = true
 
             if let c = self.vc.enterChannelPointerTop {
                 c.isActive = false
             }
             self.vc.enterChannelPointerTop = self.vc.enterChannelPointer.topAnchor.constraint(equalTo: cell.loadingSwitch.bottomAnchor, constant: -5)
-            self.vc.enterChannelPointerTop!.isActive = true
 
             if let c = self.vc.enterChannelPointerCenter {
                 c.isActive = false
             }
             self.vc.enterChannelPointerCenter = self.vc.enterChannelPointer.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
-            self.vc.enterChannelPointerCenter!.isActive = true
 
             DispatchQueue.main.async {
                 self.vc.checkTips()
+                if let c = self.vc.toggleChannelPointerRight {
+                    c.isActive = true
+                }
+                if let c = self.vc.toggleChannelPointerTop {
+                    c.isActive = true
+                }
+                if let c = self.vc.enterChannelPointerTop {
+                    c.isActive = true
+                }
+                if let c = self.vc.enterChannelPointerCenter {
+                    c.isActive = true
+                }
             }
         }
 
