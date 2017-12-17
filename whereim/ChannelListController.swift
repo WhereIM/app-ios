@@ -377,6 +377,8 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
 
         channelListView.widthAnchor.constraint(equalTo: listArea.widthAnchor).isActive = true
         channelListView.heightAnchor.constraint(equalTo: listArea.heightAnchor).isActive = true
+        channelListView.centerXAnchor.constraint(equalTo: listArea.centerXAnchor).isActive = true
+        channelListView.centerYAnchor.constraint(equalTo: listArea.centerYAnchor).isActive = true
 
         fab.translatesAutoresizingMaskIntoConstraints = false
         fab.setTitle("+", for: .normal)
