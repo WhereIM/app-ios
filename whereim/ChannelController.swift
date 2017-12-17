@@ -99,7 +99,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     override func viewDidLoad() {
-        let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
+        let navigator = UINavigatorTitleView(frame: (self.navigationController?.navigationBar.bounds)!)
 
         layout.axis = .horizontal
         layout.alignment = .center
@@ -138,11 +138,10 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
         layout.translatesAutoresizingMaskIntoConstraints = false
         connectionStatusIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([layout.leftAnchor.constraint(equalTo: navigator.leftAnchor, constant: -30), layout.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
+        NSLayoutConstraint.activate([layout.leftAnchor.constraint(equalTo: navigator.leftAnchor, constant: 0), layout.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
         NSLayoutConstraint.activate([shareButton.rightAnchor.constraint(equalTo: navigator.rightAnchor), shareButton.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
         NSLayoutConstraint.activate([connectionStatusIndicator.rightAnchor.constraint(equalTo: shareButton.leftAnchor, constant: -5), connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)])
 
-        navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
 
         let appearance = UITabBarItem.appearance()

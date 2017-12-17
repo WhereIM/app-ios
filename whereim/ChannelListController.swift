@@ -322,7 +322,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
 
         service = CoreService.bind()
 
-        let navigator = UIView(frame: (self.navigationController?.navigationBar.bounds)!)
+        let navigator = UINavigatorTitleView(frame: (self.navigationController?.navigationBar.bounds)!)
         self.navigationController?.navigationBar.barTintColor = UIColor.white
 
         let title = UILabel()
@@ -365,7 +365,6 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
             connectionStatusIndicator.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)
             ])
 
-        navigator.autoresizingMask = .flexibleWidth
         self.navigationItem.titleView = navigator
 
         layout.translatesAutoresizingMaskIntoConstraints = false
