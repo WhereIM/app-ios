@@ -4,9 +4,9 @@ platform :ios, '9.0'
 target 'whereim' do
   use_frameworks!
 
-  pod 'Alamofire', '~> 4.3'
+  pod 'Alamofire'
 
-  pod 'Branch', '0.13.5'
+  pod 'Branch'
 
   pod 'FacebookCore'
   pod 'FacebookLogin'
@@ -15,21 +15,21 @@ target 'whereim' do
   pod 'Firebase/Auth'
   pod 'Firebase/Crash'
 
-  pod 'GRDB.swift', '0.102.0'
+  pod 'GRDB.swift'
 
   pod 'JSQMessagesViewController'
 
-  pod 'Mapbox-iOS-SDK', '~> 3.5.2'
+  pod 'Mapbox-iOS-SDK'
 
   pod 'Moscapsule', :git => 'https://github.com/flightonary/Moscapsule.git'
-  pod 'OpenSSL-Universal', '~> 1.0.1.18'
+  pod 'OpenSSL-Universal'
 
   pod 'GoogleMaps'
   pod 'GoogleSignIn'
 
-  pod 'SDCAlertView', '~> 7.1'
+  pod 'SDCAlertView'
 
-  pod 'Toast-Swift', '~> 2.0.0'
+  pod 'Toast-Swift'
 
   target 'whereimTests' do
     inherit! :search_paths
@@ -47,11 +47,6 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
-    end
-  end
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['SWIFT_VERSION'] = '3.2'
     end
   end
 end
