@@ -131,45 +131,38 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             cell.loadingSwitch.isHidden = true
         }
 
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
+            let _cell = cell as! ChannelCell
             if let c = self.vc.toggleChannelPointerRight {
                 c.isActive = false
             }
-            self.vc.toggleChannelPointerRight = self.vc.toggleChannelPointer.rightAnchor.constraint(equalTo: cell.loadingSwitch.leftAnchor)
+            self.vc.toggleChannelPointerRight = self.vc.toggleChannelPointer.rightAnchor.constraint(equalTo: _cell.loadingSwitch.leftAnchor)
+            self.vc.toggleChannelPointerRight!.isActive = true
 
             if let c = self.vc.toggleChannelPointerTop {
                 c.isActive = false
             }
-            self.vc.toggleChannelPointerTop = self.vc.toggleChannelPointer.topAnchor.constraint(equalTo: cell.loadingSwitch.bottomAnchor)
+            self.vc.toggleChannelPointerTop = self.vc.toggleChannelPointer.topAnchor.constraint(equalTo: _cell.loadingSwitch.bottomAnchor)
+            self.vc.toggleChannelPointerTop!.isActive = true
 
             if let c = self.vc.enterChannelPointerTop {
                 c.isActive = false
             }
-            self.vc.enterChannelPointerTop = self.vc.enterChannelPointer.topAnchor.constraint(equalTo: cell.loadingSwitch.bottomAnchor, constant: -5)
+            self.vc.enterChannelPointerTop = self.vc.enterChannelPointer.topAnchor.constraint(equalTo: _cell.loadingSwitch.bottomAnchor, constant: -5)
+            self.vc.enterChannelPointerTop!.isActive = true
 
             if let c = self.vc.enterChannelPointerCenter {
                 c.isActive = false
             }
             self.vc.enterChannelPointerCenter = self.vc.enterChannelPointer.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
+            self.vc.enterChannelPointerCenter!.isActive = true
 
-            DispatchQueue.main.async {
-                self.vc.checkTips()
-                if let c = self.vc.toggleChannelPointerRight {
-                    c.isActive = true
-                }
-                if let c = self.vc.toggleChannelPointerTop {
-                    c.isActive = true
-                }
-                if let c = self.vc.enterChannelPointerTop {
-                    c.isActive = true
-                }
-                if let c = self.vc.enterChannelPointerCenter {
-                    c.isActive = true
-                }
-            }
+            self.vc.checkTips()
         }
-
-        return cell
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
