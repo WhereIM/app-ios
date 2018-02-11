@@ -94,7 +94,7 @@ class Marker: RowConvertible, Persistable {
             """
             try db.execute(sql)
 
-            sql = "CREATE INDEX marker_index ON \(TABLE_NAME) (\(Columns.channel_id.name)"
+            sql = "CREATE INDEX marker_index ON \(TABLE_NAME) (\(Columns.channel_id.name))"
             try db.execute(sql)
 
             version = 1

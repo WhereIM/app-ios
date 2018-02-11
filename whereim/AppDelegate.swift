@@ -46,12 +46,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 print("db_version", db_version)
 
                 try Channel.migrate(db, db_version)
+                print("Channel db migration finished")
+
                 try Mate.migrate(db, db_version)
+                print("Mate db migration finished")
+
                 try Marker.migrate(db, db_version)
+                print("Marker db migration finished")
+
                 try Enchantment.migrate(db, db_version)
+                print("Enchantment db migration finished")
+
                 try Message.migrate(db, db_version)
+                print("Message db migration finished")
+
                 try Log.migrate(db, db_version)
-                print("db migration finished")
+                print("Log migration finished")
+
+                print("All migration finished")
 
                 try db.execute("PRAGMA user_version = \(Config.DB_VERSION)")
             }
