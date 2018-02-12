@@ -127,6 +127,7 @@ class Marker: RowConvertible, Persistable {
         do {
             let json = try JSONSerialization.data(withJSONObject: attr ?? [], options: [])
             container[Columns.id] = id
+            container[Columns.channel_id] = channel_id
             container[Columns.name] = name
             container[Columns.latitude] = latitude
             container[Columns.longitude] = longitude
