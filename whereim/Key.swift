@@ -66,6 +66,7 @@ class Key {
     static let TIME = "time"
     static let TOKEN = "token"
     static let TS = "ts"
+    static let TYPE = "type"
 
     static let TIP_ENTER_CHANNEL = "tip_enter_channel"
     static let TIP_INVITE = "tip_invite"

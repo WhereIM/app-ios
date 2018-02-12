@@ -63,12 +63,14 @@
 "public_marker" = "共用圖釘";
 "private_marker" = "個人圖釘";
 "error_exhausted" = "可註冊數量已滿，請稍後再試。";
+"begin_sharing" = "通知其他人你開始分享定位了";
 "message_enchantment_create" = "%1$@ 地界已設立";
 "message_enchantment_emerge" = "出現在 %1$@ 地界";
 "message_enchantment_in" = "進入 %1$@ 地界";
 "message_enchantment_out" = "離開 %1$@ 地界";
 "message_marker_create" = "放了 %1$@ 圖釘";
 "message_radius_report" = "圈內/外：%1$@ / %2$@ (%3$@ m)";
+"apn_begin_sharing" = "%1$@\n%2$@開始與你分享定位！";
 "apn_text" = "%1$@\n%2$@：%3$@";
 "apn_enchantment_create" = "%1$@\n%2$@：%3$@ 地界已設立";
 "apn_enchantment_emerge" = "%1$@\n%2$@：出現在 %3$@ 地界";

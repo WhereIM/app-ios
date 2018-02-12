@@ -278,7 +278,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     @objc func switchClicked(sender: UISwitch) {
-        service.toggleChannelActive(channel!)
+        service.toggleChannelActive(self, channel!)
     }
 
     func onMateData(_ mate: Mate) {

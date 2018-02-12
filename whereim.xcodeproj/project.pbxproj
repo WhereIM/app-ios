@@ -11,6 +11,7 @@
 		5801156E1EE5C0AB00DB8F2A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5801156D1EE5C0AB00DB8F2A /* Utils.swift */; };
 		580DEA531FE7297100C4B877 /* UINavigatorTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580DEA521FE7297100C4B877 /* UINavigatorTitleView.swift */; };
 		580E01E91E59CC2A00E1C3FE /* GoogleMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */; };
+		580F8A902032037C000F9022 /* DialogSendSharingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580F8A8F2032037C000F9022 /* DialogSendSharingNotification.swift */; };
 		581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */; };
 		58202AB61E743B6A00BC7FCD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 58202AB41E743B6A00BC7FCD /* Localizable.strings */; };
 		58202AC11E74434400BC7FCD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 58202ABF1E74434400BC7FCD /* InfoPlist.strings */; };
@@ -116,6 +117,7 @@
 		5801156D1EE5C0AB00DB8F2A /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		580DEA521FE7297100C4B877 /* UINavigatorTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigatorTitleView.swift; sourceTree = "<group>"; };
 		580E01E81E59CC2A00E1C3FE /* GoogleMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleMapController.swift; sourceTree = "<group>"; };
+		580F8A8F2032037C000F9022 /* DialogSendSharingNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogSendSharingNotification.swift; sourceTree = "<group>"; };
 		581508B91E5E0C48003DDA80 /* UILoadingSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILoadingSwitch.swift; sourceTree = "<group>"; };
 		58202AB51E743B6A00BC7FCD /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = whereim/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		58202AB91E743C9200BC7FCD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "whereim/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				58934FD41EF04DD300FBF052 /* DialogMatesInfo.swift */,
 				5893BDD21EF0553600F908BE /* DialogMobileEnchantment.swift */,
 				5893BDD41EF0554300F908BE /* DialogFixedEnchantment.swift */,
+				580F8A8F2032037C000F9022 /* DialogSendSharingNotification.swift */,
 			);
 			name = dialogs;
 			sourceTree = "<group>";
@@ -810,6 +813,7 @@
 				58FA16181EE854BD0094A610 /* MapboxUtils.swift in Sources */,
 				587F41E61EC2223F00823E6C /* ScannerController.swift in Sources */,
 				583CA8EB1EBCEEAA0043B171 /* DialogEditRadius.swift in Sources */,
+				580F8A902032037C000F9022 /* DialogSendSharingNotification.swift in Sources */,
 				583CA8DF1EBCEE150043B171 /* DialogEditMate.swift in Sources */,
 				580DEA531FE7297100C4B877 /* UINavigatorTitleView.swift in Sources */,
 				58230E111E6EEB7400AF4087 /* MessengerController.swift in Sources */,

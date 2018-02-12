@@ -931,6 +931,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         publish("channel/\(channel_id)/data/message/put", [Key.MESSAGE: text])
     }
 
+    func sendNotification(_ channel_id: String, _ type: String) {
+        publish("channel/\(channel_id)/data/message/put", [Key.TYPE: type])
+    }
+
     var messageListener = [String:[Int:Callback]]()
     func addMessageListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
         if messageListener[channel.id!] == nil {
@@ -1276,13 +1280,19 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return channelMap[id]
     }
 
-    func toggleChannelActive(_ channel: Channel) {
+    func toggleChannelActive(_ vc: UIViewController, _ channel: Channel) {
         if channel.active == nil {
             return
         }
 
+        var wasActive = channel.active!
+
         publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ACTIVE: !channel.active!])
         channel.active = nil
+
+        if wasActive == false {
+            _ = DialogSendSharingNotification(vc, channel.id!)
+        }
 
         notifyChannelListChangedListeners()
     }

@@ -202,7 +202,7 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     @objc func switchClicked(sender: UISwitch) {
         let channel = channelList[sender.tag]
-        service.toggleChannelActive(channel)
+        service.toggleChannelActive(self.vc, channel)
     }
 
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
