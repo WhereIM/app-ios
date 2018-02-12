@@ -82,15 +82,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         })
 
-        if #available(iOS 10, *) {
-            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
-            application.registerForRemoteNotifications()
-        }
-        else if #available(iOS 9, *) {
-            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
-            UIApplication.shared.registerForRemoteNotifications()
-        }
-
         return true
     }
 

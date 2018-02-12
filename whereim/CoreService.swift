@@ -6,6 +6,7 @@
 //  Copyright © 2017 Where.IM. All rights reserved.
 //
 
+import UserNotifications
 import Alamofire
 import CoreLocation
 import Moscapsule
@@ -153,6 +154,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func onAuthed() {
+        if #available(iOS 10, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+        else if #available(iOS 9, *) {
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+
         subscribe("client/\(clientId!)/+/get")
 
         resetMQTT()
