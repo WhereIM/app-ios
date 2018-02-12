@@ -83,6 +83,7 @@ class Enchantment: RowConvertible, Persistable {
 
     func encode(to container: inout PersistenceContainer) {
         container[Columns.id] = id
+        container[Columns.channel_id] = channel_id
         container[Columns.name] = name
         container[Columns.latitude] = latitude
         container[Columns.longitude] = longitude
