@@ -1459,12 +1459,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
-    func forgeLocation(channel: Channel, location: CLLocationCoordinate2D) {
+    func forgeLocation(_ vc: UIViewController, channel: Channel, location: CLLocationCoordinate2D) {
         var payload = [Key.CHANNEL:channel.id!, Key.LATITUDE: location.latitude, Key.LONGITUDE: location.longitude] as [String:Any]
         if channel.active != false {
             payload[Key.ACTIVE] = false
         }
         publish("client/\(clientId!)/channel/put", payload)
+        _ = DialogSendSharingNotification(vc, channel.id!)
     }
 
     func setTS(_ ts: UInt64) {

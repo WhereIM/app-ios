@@ -32,7 +32,7 @@ class DialogMapMenu {
 
         let action_forge = UIAlertAction(title: "forge_location".localized + " 😈", style: .default) { (alert: UIAlertAction!) -> Void in
             let service = CoreService.bind()
-            service.forgeLocation(channel: mapController.channel!, location: mapController.editingCoordinate)
+            service.forgeLocation(mapController, channel: mapController.channel!, location: mapController.editingCoordinate)
         }
 
         alert.addAction(action_openin)
