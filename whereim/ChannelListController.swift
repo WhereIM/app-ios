@@ -535,7 +535,8 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
     }
 
     @objc func open_menu(sender: Any) {
-        _ = DialogAppMenu(self, menu)
+        navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "settings".localized, style: .plain, target: nil, action: nil)
+        performSegue(withIdentifier: "settings", sender: nil)
     }
 
     @objc func new_channel(sender: UIButton) {

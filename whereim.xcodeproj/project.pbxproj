@@ -21,7 +21,6 @@
 		5831E33D1E5CC96500A7EB0E /* Enchantment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33C1E5CC96500A7EB0E /* Enchantment.swift */; };
 		5831E33F1E5D5BAE00A7EB0E /* EnchantmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */; };
 		5831E3411E5D632900A7EB0E /* MarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5831E3401E5D632900A7EB0E /* MarkerController.swift */; };
-		583CA8DB1EBCEDCA0043B171 /* DialogAppMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583CA8DA1EBCEDCA0043B171 /* DialogAppMenu.swift */; };
 		583CA8DD1EBCEDF70043B171 /* DialogEditSelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583CA8DC1EBCEDF70043B171 /* DialogEditSelf.swift */; };
 		583CA8DF1EBCEE150043B171 /* DialogEditMate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583CA8DE1EBCEE150043B171 /* DialogEditMate.swift */; };
 		583CA8E11EBCEE300043B171 /* DialogRequestActiveDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583CA8E01EBCEE300043B171 /* DialogRequestActiveDevice.swift */; };
@@ -129,7 +128,6 @@
 		5831E33C1E5CC96500A7EB0E /* Enchantment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enchantment.swift; sourceTree = "<group>"; };
 		5831E33E1E5D5BAE00A7EB0E /* EnchantmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnchantmentController.swift; sourceTree = "<group>"; };
 		5831E3401E5D632900A7EB0E /* MarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerController.swift; sourceTree = "<group>"; };
-		583CA8DA1EBCEDCA0043B171 /* DialogAppMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogAppMenu.swift; sourceTree = "<group>"; };
 		583CA8DC1EBCEDF70043B171 /* DialogEditSelf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogEditSelf.swift; sourceTree = "<group>"; };
 		583CA8DE1EBCEE150043B171 /* DialogEditMate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogEditMate.swift; sourceTree = "<group>"; };
 		583CA8E01EBCEE300043B171 /* DialogRequestActiveDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogRequestActiveDevice.swift; sourceTree = "<group>"; };
@@ -286,7 +284,6 @@
 		583CA8D91EBCED850043B171 /* dialogs */ = {
 			isa = PBXGroup;
 			children = (
-				583CA8DA1EBCEDCA0043B171 /* DialogAppMenu.swift */,
 				583CA8E01EBCEE300043B171 /* DialogRequestActiveDevice.swift */,
 				587F41E31EC16A6C00823E6C /* DialogNewChannel.swift */,
 				583CA8E41EBCEE5A0043B171 /* DialogCreateChannel.swift */,
@@ -848,7 +845,6 @@
 				58A6EB8A1E56F5CF00C29A49 /* Config.swift in Sources */,
 				587F41E21EC15B4200823E6C /* DialogChannelInviteQrCode.swift in Sources */,
 				58FA161A1EE9DB1E0094A610 /* UIHintDialog.swift in Sources */,
-				583CA8DB1EBCEDCA0043B171 /* DialogAppMenu.swift in Sources */,
 				587F41E41EC16A6C00823E6C /* DialogNewChannel.swift in Sources */,
 				581508BA1E5E0C48003DDA80 /* UILoadingSwitch.swift in Sources */,
 				584599D61EC06BC0003C53A8 /* PoiViewerController.swift in Sources */,

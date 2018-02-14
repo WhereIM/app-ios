@@ -26,7 +26,6 @@
                     <navigationItem key="navigationItem" id="CDE-g2-IiB"/>
                     <connections>
                         <segue destination="SdD-qD-DU8" kind="show" identifier="enter_channel" id="uwM-Lx-JIw"/>
-                        <segue destination="BnQ-ya-KXx" kind="show" identifier="about" id="KY8-f3-fq4"/>
                         <segue destination="1aX-Xk-dxn" kind="show" identifier="scanner" id="Jz9-MJ-EaB"/>
                         <segue destination="tyM-kU-Xjq" kind="show" identifier="log" id="hdG-ud-8k9"/>
                         <segue destination="Y8i-ie-LC7" kind="show" identifier="settings" id="O4X-9f-9Qc"/>
@@ -67,7 +66,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yqa-pB-iv9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-857" y="1782"/>
+            <point key="canvasLocation" x="1847" y="2544"/>
         </scene>
         <!--Log Controller-->
         <scene sceneID="IJk-mb-Vth">
@@ -189,6 +188,7 @@
                     </view>
                     <connections>
                         <outlet property="settings" destination="rdx-Sw-lT6" id="PK2-Er-923"/>
+                        <segue destination="BnQ-ya-KXx" kind="show" identifier="about" id="buT-wZ-gho"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvp-hU-d4y" userLabel="First Responder" sceneMemberID="firstResponder"/>

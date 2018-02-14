@@ -98,8 +98,10 @@ class TextSettingCell: UITableViewCell {
 class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     let SETTING_POWER_SAVING = 0
     let tableView: UITableView
+    let vc: UIViewController
 
-    init(_ tableView: UITableView) {
+    init(_ vc: UIViewController, _ tableView: UITableView) {
+        self.vc = vc
         self.tableView = tableView
     }
 
@@ -116,7 +118,7 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         case 2: // search provider
             return 3
         case 3: // misc
-            return 1
+            return 2
         default:
             return 0
         }
@@ -189,6 +191,8 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_TOGGLE_CHANNEL) == true
                 resettable = resettable || UserDefaults.standard.bool(forKey: Key.TIP_TOGGLE_CHANNEL_2) == true
                 cell.title.textColor = resettable ? UIColor.black : UIColor.lightGray
+            case 1:
+                cell.title.text = "about".localized
             default:
                 break
             }
@@ -236,6 +240,9 @@ class SettingsAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 UserDefaults.standard.removeObject(forKey: Key.TIP_TOGGLE_CHANNEL)
                 UserDefaults.standard.removeObject(forKey: Key.TIP_TOGGLE_CHANNEL_2)
                 tableView.reloadData()
+            case 1:
+                vc.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "about".localized, style: .plain, target: nil, action: nil)
+                vc.performSegue(withIdentifier: "about", sender: nil)
             default:
                 break
             }
@@ -263,7 +270,7 @@ class SettingsController: UIViewController {
 
     override func viewDidLoad() {
 
-        adapter = SettingsAdapter(settings)
+        adapter = SettingsAdapter(self, settings)
         settings.register(SelectableSettingCell.self, forCellReuseIdentifier: "selectable")
         settings.register(SwitchSettingCell.self, forCellReuseIdentifier: "switch")
         settings.register(TextSettingCell.self, forCellReuseIdentifier: "text")
