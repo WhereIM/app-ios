@@ -107,8 +107,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
             searchControllerImpl = GoogleSearchController(self)
         case .MAPBOX:
             searchControllerImpl = MapboxSearchController(self)
-        case .MAPZEN:
-            searchControllerImpl = MapzenSearchController(self)
         }
     }
 

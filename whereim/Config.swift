@@ -16,7 +16,6 @@ enum MapProvider: String {
 enum SearchProvider: String {
     case GOOGLE = "google"
     case MAPBOX = "mapbox"
-    case MAPZEN = "mapzen"
 }
 
 class Config {
