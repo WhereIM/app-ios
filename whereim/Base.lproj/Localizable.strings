@@ -7,6 +7,8 @@
 "active_client" = "Client not active";
 "active_client_message" = "This client is not active, take over from your other client?";
 "power_saving" = "Power Saving";
+"account" = "Account";
+"logout" = "Logout";
 "reset_tips" = "Show tips again";
 "service_provider" = "Service Provider (Map & Search)";
 "map_service_provider" = "Map Service Provider";

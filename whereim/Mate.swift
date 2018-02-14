@@ -90,7 +90,7 @@ class Mate: RowConvertible, Persistable {
         var ret = [Mate]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 let mates = try Mate.fetchAll(db, "SELECT * FROM \(TABLE_NAME)")
 
                 for m in mates {

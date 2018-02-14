@@ -204,7 +204,7 @@ class Message: RowConvertible, Persistable {
         var messages = [Message]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 let cursor = try Message.fetchCursor(
                     db,
                     """

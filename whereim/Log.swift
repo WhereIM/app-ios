@@ -65,7 +65,7 @@ class Log: RowConvertible, Persistable {
 
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 try Log(message).save(db)
             }
         } catch {
@@ -86,7 +86,7 @@ class Log: RowConvertible, Persistable {
         var ret = [Log]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 let logs = try Log.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.time.name) ASC")
 
                 for l in logs {
@@ -102,7 +102,7 @@ class Log: RowConvertible, Persistable {
     static func clear() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 try db.execute("DELETE FROM "+TABLE_NAME)
             }
         } catch {

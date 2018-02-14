@@ -6,6 +6,8 @@
 "active_client" = "此裝置不是主要裝置";
 "active_client_message" = "取代您的其他裝置成為主要裝置？";
 "power_saving" = "省電模式";
+"account" = "帳戶";
+"logout" = "登出";
 "reset_tips" = "再次顯示使用提示";
 "service_provider" = "資料來源 (地圖與搜尋)";
 "map_service_provider" = "地圖資料來源";

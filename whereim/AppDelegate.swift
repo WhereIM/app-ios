@@ -8,7 +8,6 @@
 
 import Branch
 import Firebase
-import GRDB
 import UIKit
 import FBSDKCoreKit
 import GoogleMaps
@@ -20,9 +19,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
 
-    let DB_FILE = "whereim.sqlite"
     var service: CoreService?
-    var dbConn: DatabaseQueue?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
@@ -34,41 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
-        }
-
-        do {
-            let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let db_file = folder.appendingPathComponent(DB_FILE).path
-            dbConn = try DatabaseQueue(path: db_file)
-
-            try dbConn!.inDatabase { db in
-                let db_version = try Int.fetchOne(db, "PRAGMA user_version")!
-                print("db_version", db_version)
-
-                try Channel.migrate(db, db_version)
-                print("Channel db migration finished")
-
-                try Mate.migrate(db, db_version)
-                print("Mate db migration finished")
-
-                try Marker.migrate(db, db_version)
-                print("Marker db migration finished")
-
-                try Enchantment.migrate(db, db_version)
-                print("Enchantment db migration finished")
-
-                try Message.migrate(db, db_version)
-                print("Message db migration finished")
-
-                try Log.migrate(db, db_version)
-                print("Log migration finished")
-
-                print("All migration finished")
-
-                try db.execute("PRAGMA user_version = \(Config.DB_VERSION)")
-            }
-        } catch {
-            print("Error opening db \(error)")
         }
 
         service = CoreService.bind()

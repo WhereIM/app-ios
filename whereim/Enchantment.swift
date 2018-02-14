@@ -96,7 +96,7 @@ class Enchantment: RowConvertible, Persistable {
         var ret = [Enchantment]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 let enchantments = try Enchantment.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.name.name) ASC")
 
                 for e in enchantments {

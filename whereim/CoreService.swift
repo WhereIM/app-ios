@@ -9,6 +9,7 @@
 import UserNotifications
 import Alamofire
 import CoreLocation
+import GRDB
 import Moscapsule
 import Toast_Swift
 
@@ -96,8 +97,6 @@ class MQTTSession {
 
         let certFile = Bundle(for: type(of: self)).bundleURL.appendingPathComponent("aws.bundle").appendingPathComponent("rootCA.pem").path
         mqttConfig.mqttServerCert = MQTTServerCert(cafile: certFile, capath: nil)
-
-
         mqttConfig.mqttReconnOpts = nil
         mqttConfig.mqttTlsOpts = MQTTTlsOpts(tls_insecure: false, cert_reqs: .ssl_verify_peer, tls_version: "tlsv1.2", ciphers: nil)
 
@@ -127,18 +126,118 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     private var otp: String?
     private var clientId: String?
 
+    let DB_FILE = "whereim.sqlite"
+    var dbConn: DatabaseQueue?
+
+    var subscribedTopics = [String]()
+    var channelMessageSync = [String:Bool]()
+    var channelChannelSync = false
+    var channelDataSync = [String:Bool]()
+    var channelMap = [String:Channel]()
+    var channelList = [Channel]()
+    var channelMarker = [String:[String:Marker]]()
+    var channelEnchantment = [String:[String:Enchantment]]()
+
+    private var loaded = false
+
     func initialize(){
+        if !loaded {
+            loaded = true
+
+            lm.requestAlwaysAuthorization()
+            lm.delegate = self
+            lm.allowsBackgroundLocationUpdates = true
+
+            moscapsule_init()
+        }
+        subscribedTopics = [String]()
+        channelMessageSync = [String:Bool]()
+        channelChannelSync = false
+        channelDataSync = [String:Bool]()
+        channelMap = [String:Channel]()
+        channelList = [Channel]()
+        channelMarker = [String:[String:Marker]]()
+        channelEnchantment = [String:[String:Enchantment]]()
+
+        do {
+            let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let db_file = folder.appendingPathComponent(DB_FILE).path
+            dbConn = try DatabaseQueue(path: db_file)
+
+            try dbConn!.inDatabase { db in
+                let db_version = try Int.fetchOne(db, "PRAGMA user_version")!
+                print("db_version", db_version)
+
+                try Channel.migrate(db, db_version)
+                print("Channel db migration finished")
+
+                try Mate.migrate(db, db_version)
+                print("Mate db migration finished")
+
+                try Marker.migrate(db, db_version)
+                print("Marker db migration finished")
+
+                try Enchantment.migrate(db, db_version)
+                print("Enchantment db migration finished")
+
+                try Message.migrate(db, db_version)
+                print("Message db migration finished")
+
+                try Log.migrate(db, db_version)
+                print("Log migration finished")
+
+                print("All migration finished")
+
+                try db.execute("PRAGMA user_version = \(Config.DB_VERSION)")
+            }
+        } catch {
+            print("Error opening db \(error)")
+        }
+
         clientId = UserDefaults.standard.string(forKey: Key.CLIENT_ID)
 
-        lm.requestAlwaysAuthorization()
-        lm.delegate = self
-        lm.allowsBackgroundLocationUpdates = true
-
-        moscapsule_init()
-        
         if clientId != nil {
             onAuthed()
         }
+    }
+
+    func logout() {
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+
+        if let t = timer {
+            t.invalidate()
+            timer = nil
+        }
+        if let session = mqttSession {
+            session.destroy()
+        }
+        mqttSession = nil
+
+        let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let db_file = folder.appendingPathComponent(DB_FILE).path
+        let key_file = folder.appendingPathComponent(Config.KEY_FILE).path
+        let crt_file = folder.appendingPathComponent(Config.CRT_FILE).path
+        do {
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: db_file) {
+                try fileManager.removeItem(atPath: db_file)
+            }
+            if fileManager.fileExists(atPath: key_file) {
+                try fileManager.removeItem(atPath: key_file)
+            }
+            if fileManager.fileExists(atPath: crt_file) {
+                try fileManager.removeItem(atPath: crt_file)
+            }
+        }
+        catch let error as NSError {
+            print("An error took place: \(error)")
+        }
+
+        initialize()
     }
 
     var timer: Timer?
@@ -478,7 +577,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             setTS(channel_id, ts as! UInt64)
         }
 
-        appDelegate.dbConn!.inDatabase { db in
+        dbConn!.inDatabase { db in
             do {
                 try mate.save(db)
             } catch {
@@ -542,7 +641,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     func mqttChannelMessageHandler(_ channel_id: String, _ data: [String: Any]) {
         let m = Message(data)
 
-        appDelegate.dbConn!.inDatabase { db in
+        dbConn!.inDatabase { db in
             do {
                 try m.save(db)
             } catch {
@@ -565,7 +664,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelChangedListeners(channel.id!)
     }
 
-    var channelEnchantment = [String:[String:Enchantment]]()
     func mqttChannelEnchantmentHandler(_ data: [String:Any]) {
         let enchantment_id = data[Key.ID] as! String
         let channel_id = data[Key.CHANNEL] as! String
@@ -593,7 +691,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             setTS(channel_id, ts as! UInt64)
         }
 
-        appDelegate.dbConn!.inDatabase { db in
+        dbConn!.inDatabase { db in
             do {
                 try enchantment.save(db)
             } catch {
@@ -615,7 +713,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         if enchantment.deleted {
             channelEnchantment[enchantment.channel_id!]!.removeValue(forKey: enchantment.id!)
-            appDelegate.dbConn!.inDatabase { db in
+            dbConn!.inDatabase { db in
                 do {
                     try enchantment.delete(db)
                 } catch {
@@ -743,7 +841,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
-    var channelMarker = [String:[String:Marker]]()
     func mqttChannelMarkerHandler(_ data: [String:Any]) {
         let marker_id = data[Key.ID] as! String
         let channel_id = data[Key.CHANNEL] as! String
@@ -773,7 +870,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             setTS(channel_id, ts as! UInt64)
         }
 
-        appDelegate.dbConn!.inDatabase { db in
+        dbConn!.inDatabase { db in
             do {
                 try marker.save(db)
             } catch {
@@ -795,7 +892,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
         if marker.deleted {
             channelMarker[marker.channel_id!]!.removeValue(forKey: marker.id!)
-            appDelegate.dbConn!.inDatabase { db in
+            dbConn!.inDatabase { db in
                 do {
                     try marker.delete(db)
                 } catch {
@@ -983,11 +1080,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
-    var channelMessageSync = [String:Bool]()
-    var channelChannelSync = false
-    var channelDataSync = [String:Bool]()
-    var channelMap = [String:Channel]()
-    var channelList = [Channel]()
     func mqttClientChannelHandler(_ data: [String:Any]) {
         let channel_id = data[Key.CHANNEL] as! String
         var channel = channelMap[channel_id]
@@ -1011,7 +1103,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             setTS(ts as! UInt64)
         }
 
-        appDelegate.dbConn!.inDatabase { db in
+        dbConn!.inDatabase { db in
             do {
                 try channel!.save(db)
             } catch {
@@ -1032,7 +1124,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 channelList.remove(at: idx)
             }
             clearTS(channel.id!)
-            appDelegate.dbConn!.inDatabase { db in
+            dbConn!.inDatabase { db in
                 do {
                     try channel.delete(db)
                 } catch {
@@ -1063,7 +1155,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     func set(channel_id: String, unread: Bool) {
         if let channel = channelMap[channel_id] {
             channel.unread = unread
-            appDelegate.dbConn!.inDatabase { db in
+            dbConn!.inDatabase { db in
                 do {
                     try channel.save(db)
                 } catch {
@@ -1285,7 +1377,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             return
         }
 
-        var wasActive = channel.active!
+        let wasActive = channel.active!
 
         publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ACTIVE: !channel.active!])
         channel.active = nil
@@ -1576,7 +1668,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
     }
 
-    var subscribedTopics = [String]()
     func subscribe(_ topic: String) {
         if subscribedTopics.contains(topic) {
             return

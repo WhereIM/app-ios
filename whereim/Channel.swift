@@ -110,7 +110,7 @@ class Channel: RowConvertible, Persistable {
         var ret = [Channel]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 let channels = try Channel.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY COALESCE(\(Columns.user_channel_name.name),\(Columns.channel_name.name))")
 
                 for c in channels {

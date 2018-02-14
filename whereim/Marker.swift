@@ -143,7 +143,7 @@ class Marker: RowConvertible, Persistable {
         var ret = [Marker]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
-            try appDelegate.dbConn!.inDatabase { db in
+            try CoreService.bind().dbConn!.inDatabase { db in
                 let markers = try Marker.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.name.name) ASC")
 
                 for m in markers {
