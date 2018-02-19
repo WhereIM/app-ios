@@ -67,6 +67,7 @@
 "private_marker" = "Personal Marker";
 "error_exhausted" = "Client capacity is exhausted, please try later.";
 "begin_sharing" = "Notify others you have begun sharing location";
+"message_not_implemented" = "Require new version to display this message";
 "message_enchantment_create" = "Geofence %1$@ is created.";
 "message_enchantment_emerge" = "Emerged in geofence %1$@.";
 "message_enchantment_in" = "Entered geofence %1$@.";

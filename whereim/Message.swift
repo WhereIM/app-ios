@@ -118,9 +118,11 @@ class Message: RowConvertible, Persistable {
             return message!
         } else {
             do {
-                let attr = try JSONSerialization.jsonObject(with: message!.data(using: .utf8)!, options: []) as? [String: Any]
-                if attr==nil || attr!.count==0 {
-                    return ""
+                let attr: [String: Any]?
+                do {
+                    attr = try JSONSerialization.jsonObject(with: message!.data(using: .utf8)!, options: []) as? [String: Any]
+                } catch {
+                    attr = nil
                 }
                 switch type! {
                 case "enchantment_create":
@@ -142,7 +144,7 @@ class Message: RowConvertible, Persistable {
                     let s = String(format: "message_radius_report".localized, attr!["in"] as? String ?? "", attr!["out"] as? String ?? "", attr![Key.RADIUS] as? String ?? "")
                     return s
                 default:
-                    return type!+": "+message!
+                    return "message_not_implemented".localized
                 }
             } catch {
                 print("Error decoding message attr")
