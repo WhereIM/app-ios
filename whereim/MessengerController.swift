@@ -25,8 +25,6 @@ class MessengerController: JSQMessagesViewController, Callback {
 
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
 
-        self.inputToolbar?.contentView?.leftBarButtonItem = nil
-
         // This is how you remove Avatars from the messagesView
         collectionView?.collectionViewLayout.incomingAvatarViewSize = .zero
         collectionView?.collectionViewLayout.outgoingAvatarViewSize = .zero
@@ -51,6 +49,8 @@ class MessengerController: JSQMessagesViewController, Callback {
         self.collectionView?.layoutIfNeeded()
 
         super.viewDidLoad()
+
+        self.inputToolbar?.contentView?.leftBarButtonItem = nil
     }
 
     func onCallback() {
