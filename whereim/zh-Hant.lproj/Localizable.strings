@@ -10,8 +10,6 @@
 "logout" = "登出";
 "reset_tips" = "再次顯示使用提示";
 "service_provider" = "資料來源 (地圖與搜尋)";
-"map_service_provider" = "地圖資料來源";
-"search_service_provider" = "搜尋資料來源";
 "misc" = "其他";
 "got_it" = "知道了";
 "tip_new_channel" = "點這裡建立或用QR Code加入群組。";
@@ -65,6 +63,10 @@
 "public_marker" = "共用圖釘";
 "private_marker" = "個人圖釘";
 "error_exhausted" = "可註冊數量已滿，請稍後再試。";
+"guest_view" = "訪客檢視";
+"access_settings" = "存取設定";
+"messages" = "訊息";
+"unread" = "未讀訊息";
 "begin_sharing" = "通知其他人你開始分享定位了";
 "message_not_implemented" = "需要更新版本才能讀取此則訊息";
 "message_enchantment_create" = "%1$@ 地界已設立";
@@ -73,7 +75,7 @@
 "message_enchantment_out" = "離開 %1$@ 地界";
 "message_marker_create" = "放了 %1$@ 圖釘";
 "message_radius_report" = "圈內/外：%1$@ / %2$@ (%3$@ m)";
-"apn_begin_sharing" = "%1$@\n%2$@開始與你分享定位！";
+"apn_begin_sharing" = "%1$@\n%2$@ 開始與你分享定位！";
 "apn_text" = "%1$@\n%2$@：%3$@";
 "apn_enchantment_create" = "%1$@\n%2$@：%3$@ 地界已設立";
 "apn_enchantment_emerge" = "%1$@\n%2$@：出現在 %3$@ 地界";

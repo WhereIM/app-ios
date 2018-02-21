@@ -11,8 +11,6 @@
 "logout" = "Logout";
 "reset_tips" = "Show tips again";
 "service_provider" = "Service Provider (Map & Search)";
-"map_service_provider" = "Map Service Provider";
-"search_service_provider" = "Search Service Provider";
 "misc" = "Miscellaneous";
 "got_it" = "GOT IT";
 "tip_new_channel" = "Tap here to create new channel or join with QR code.";
@@ -66,6 +64,10 @@
 "public_marker" = "Shared Marker";
 "private_marker" = "Personal Marker";
 "error_exhausted" = "Client capacity is exhausted, please try later.";
+"guest_view" = "Guest View";
+"access_settings" = "Access Settings";
+"messages" = "Messages";
+"unread" = "Unread";
 "begin_sharing" = "Notify others you have begun sharing location";
 "message_not_implemented" = "Require new version to display this message";
 "message_enchantment_create" = "Geofence %1$@ is created.";
