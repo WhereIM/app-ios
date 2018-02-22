@@ -94,7 +94,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             self.pendingMarker = WimPointAnnotation()
             self.pendingMarker!.coordinate = poi.location!
             self.pendingMarker!.title = poi.name!
-            self.pendingMarker!.reuseId = "poi"
+            self.pendingMarker!.reuseId = "pending_poi"
             self.pendingMarker!.icon = UIImage(named: "search_marker")?.centerBottom()
             self.pendingMarker!.userData = poi
             self.mapView!.addAnnotation(self.pendingMarker!)
@@ -160,7 +160,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         if let m = annotation as? WimPointAnnotation {
             m.selected = true
             if let obj = m.userData {
-                if pendingMarker != nil {
+                if pendingMarker != nil && m.reuseId != "pending_poi" {
                     mapView.removeAnnotation(pendingMarker!)
                     pendingMarker = nil
                 }
