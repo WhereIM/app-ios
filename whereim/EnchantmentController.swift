@@ -324,8 +324,8 @@ class EnchantmentController: UIViewController, Callback, ChannelChangedListener,
         let d = n.userInfo!
         var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         r = self.enchantmentListView.convert(r, from:nil)
-        self.enchantmentListView.contentInset.bottom = r.size.height
-        self.enchantmentListView.scrollIndicatorInsets.bottom = r.size.height
+        self.enchantmentListView.contentInset.bottom = r.size.height - self.tabBarController!.tabBar.frame.size.height
+        self.enchantmentListView.scrollIndicatorInsets.bottom = r.size.height - self.tabBarController!.tabBar.frame.size.height
     }
 
     @objc func keyboardHide(_ n:NSNotification) {

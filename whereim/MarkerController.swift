@@ -444,8 +444,8 @@ class MarkerController: UIViewController, Callback, FilterBarDelegate {
         let d = n.userInfo!
         var r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         r = self.markerListView.convert(r, from:nil)
-        self.markerListView.contentInset.bottom = r.size.height
-        self.markerListView.scrollIndicatorInsets.bottom = r.size.height
+        self.markerListView.contentInset.bottom = r.size.height - self.tabBarController!.tabBar.frame.size.height
+        self.markerListView.scrollIndicatorInsets.bottom = r.size.height - self.tabBarController!.tabBar.frame.size.height
     }
 
     @objc func keyboardHide(_ n:NSNotification) {
