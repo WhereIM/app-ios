@@ -17,8 +17,6 @@ target 'whereim' do
 
   pod 'GRDB.swift'
 
-  pod 'JSQMessagesViewController'
-
   pod 'Mapbox-iOS-SDK'
 
   pod 'Moscapsule', :git => 'https://github.com/flightonary/Moscapsule.git'
