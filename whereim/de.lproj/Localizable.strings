@@ -66,6 +66,7 @@
 "guest_view" = "Besucheransicht";
 "access_settings" = "Auf Einstellungen zugreifen";
 "messages" = "Nachrichten";
+"send" = "Senden";
 "unread" = "Ungelesen";
 "begin_sharing" = "Andere benachrichtigen, dass Sie begonnen haben, Ihren Standort zu teilen.";
 "message_not_implemented" = "Neue Version erforderlich, um diese Nachricht anzuzeigen";

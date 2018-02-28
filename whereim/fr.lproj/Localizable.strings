@@ -66,6 +66,7 @@
 "guest_view" = "Vue des Visiteurs";
 "access_settings" = "Paramètres d'Accès";
 "messages" = "Messages";
+"send" = "Envoyer";
 "unread" = "Non lu";
 "begin_sharing" = "Avertissez les autres utilisateurs que vous avez commencé le partage de position";
 "message_not_implemented" = "Nouvelle version requise pour afficher ce message";

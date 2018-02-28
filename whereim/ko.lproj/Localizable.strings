@@ -66,6 +66,7 @@
 "guest_view" = "게스트 보기";
 "access_settings" = "액세스 설정";
 "messages" = "메시지";
+"send" = "전송";
 "unread" = "읽지 않음";
 "begin_sharing" = "위치 공유 시작을 다른 사용자에게 알림";
 "message_not_implemented" = "이 메시지를 표시하려면 새 버전 필요";

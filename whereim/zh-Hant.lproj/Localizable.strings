@@ -66,6 +66,7 @@
 "guest_view" = "訪客檢視";
 "access_settings" = "存取設定";
 "messages" = "訊息";
+"send" = "傳送";
 "unread" = "未讀訊息";
 "begin_sharing" = "通知其他人你開始分享定位了";
 "message_not_implemented" = "需要更新版本才能讀取此則訊息";

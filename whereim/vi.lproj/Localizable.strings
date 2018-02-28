@@ -66,6 +66,7 @@
 "guest_view" = "Giao diện dành cho khách";
 "access_settings" = "Cài đặt truy cập";
 "messages" = "Tin nhắn";
+"send" = "Gửi";
 "unread" = "Chưa đọc";
 "begin_sharing" = "Thông báo cho những người khác là bạn đã bắt đầu chia sẻ địa điểm";
 "message_not_implemented" = "Yêu cầu dùng phiên bản mới để hiển thị tin nhắn này";

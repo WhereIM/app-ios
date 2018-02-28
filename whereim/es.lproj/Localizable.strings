@@ -66,6 +66,7 @@
 "guest_view" = "Vista de invitado";
 "access_settings" = "Configuración de acceso";
 "messages" = "Mensajes";
+"send" = "Enviar";
 "unread" = "No leído";
 "begin_sharing" = "Notifique a los demás que ha comenzado a compartir la ubicación";
 "message_not_implemented" = "Una nueva versión es necesaria para mostrar este mensaje";

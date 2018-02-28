@@ -66,6 +66,7 @@
 "guest_view" = "Gastweergave";
 "access_settings" = "Toegang tot instellingen";
 "messages" = "Berichten";
+"send" = "Stuur";
 "unread" = "Ongelezen";
 "begin_sharing" = "Stel anderen op de hoogte dat u de locatie deelt";
 "message_not_implemented" = "Vereist nieuwe versie om dit bericht weer te geven";

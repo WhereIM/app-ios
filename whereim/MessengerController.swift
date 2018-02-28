@@ -10,7 +10,7 @@ import UIKit
 
 class InputBar: UIStackView {
     let background = UIView()
-    let text = UITextField()
+    let text = UITextView()
     let btn_send = UIButton()
 
     init() {
@@ -26,13 +26,15 @@ class InputBar: UIStackView {
     func setView() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.axis = .horizontal
-        self.alignment = .leading
+        self.alignment = .bottom
         self.distribution = .fill
         self.layoutMargins = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         self.isLayoutMarginsRelativeArrangement = true
 
         background.translatesAutoresizingMaskIntoConstraints = false
-        background.backgroundColor = .lightGray
+        background.backgroundColor = UIColor(red:0.91, green:0.91, blue:0.91, alpha:1.0)
+        background.layer.borderWidth = 1
+        background.layer.borderColor = UIColor.lightGray.cgColor
         self.insertSubview(background, at: 0)
 
         background.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
@@ -42,13 +44,20 @@ class InputBar: UIStackView {
 
         text.translatesAutoresizingMaskIntoConstraints = false
         text.backgroundColor = .white
+        text.font = UIFont.systemFont(ofSize: 17)
         text.layer.cornerRadius = 5
-        //        text.addTarget(self, action: #selector(keyword_changed(sender:)), for: .editingChanged)
+        text.layer.borderWidth = 1
+        text.layer.borderColor = UIColor.lightGray.cgColor
+        text.isEditable = true
+        text.isScrollEnabled = false
+        text.setContentHuggingPriority(UILayoutPriority(rawValue: 0), for: .horizontal)
         self.addArrangedSubview(text)
 
         btn_send.translatesAutoresizingMaskIntoConstraints = false
         btn_send.contentEdgeInsets = UIEdgeInsetsMake(5, 10, 5, 5)
-        btn_send.setTitle("Send", for: .normal)
+        btn_send.setTitleColor(UIColor(red:0.06, green:0.53, blue:1.00, alpha:1.0), for: .normal)
+        btn_send.setTitle("send".localized, for: .normal)
+        btn_send.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
         self.addArrangedSubview(btn_send)
 
         text.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
@@ -165,7 +174,6 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = self.messageList.message[indexPath.row]
-        print(message.getText())
         if (message.mate_id == channel.mate_id) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
             cell.setMessage(message)

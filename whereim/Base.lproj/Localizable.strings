@@ -67,6 +67,7 @@
 "guest_view" = "Guest View";
 "access_settings" = "Access Settings";
 "messages" = "Messages";
+"send" = "Send";
 "unread" = "Unread";
 "begin_sharing" = "Notify others you have begun sharing location";
 "message_not_implemented" = "Require new version to display this message";
