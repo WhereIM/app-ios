@@ -113,6 +113,20 @@ class Message: RowConvertible, Persistable {
         }
     }
 
+    func getSender() -> String {
+        var sender: String?
+        if channel_id == nil {
+            sender = "system"
+        } else {
+            if mate_id == nil {
+                sender = ""
+            } else {
+                sender = service.getChannelMate(channel_id!, mate_id!).getDisplayName()
+            }
+        }
+        return sender!
+    }
+
     func getText() -> String {
         if type == "text" {
             return message!
