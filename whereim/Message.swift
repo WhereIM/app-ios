@@ -13,6 +13,7 @@ class BundledMessages {
     let message: [Message]
     let loadMoreBefore: Int64
     let loadMoreAfter: Int64
+    let firstId: Int64
     let lastId: Int64
     let loadMoreChannelMessage: Bool
     let loadMoreUserMessage: Bool
@@ -21,6 +22,7 @@ class BundledMessages {
         message: [Message],
         loadMoreBefore: Int64,
         loadMoreAfter: Int64,
+        firstId: Int64,
         lastId: Int64,
         loadMoreChannelMessage: Bool,
         loadMoreUserMessage: Bool) {
@@ -28,6 +30,7 @@ class BundledMessages {
         self.message = message
         self.loadMoreBefore = loadMoreBefore
         self.loadMoreAfter = loadMoreAfter
+        self.firstId = firstId
         self.lastId = lastId
         self.loadMoreChannelMessage = loadMoreChannelMessage
         self.loadMoreUserMessage = loadMoreUserMessage
@@ -35,6 +38,7 @@ class BundledMessages {
         print("count", message.count)
         print("loadMoreBefore", loadMoreBefore)
         print("loadMoreAfter", loadMoreAfter)
+        print("firstId", firstId)
         print("lastId", lastId)
         print("loadMoreChannelMessage", loadMoreChannelMessage)
         print("loadMoreUserMessage", loadMoreUserMessage)
@@ -195,10 +199,10 @@ class Message: RowConvertible, Persistable {
         var channelDataId: Int64 = 0
         var userDataSn: Int64 = 0
         var userDataId: Int64 = 0
+        var firstId: Int64 = 0
         var lastId: Int64 = 0
 
         var messages = [Message]()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try CoreService.bind().dbConn!.inDatabase { db in
                 let cursor = try Message.fetchCursor(
@@ -225,7 +229,7 @@ class Message: RowConvertible, Persistable {
                 )
 
                 while let m = try cursor.next() {
-                    messages.insert(m, at: 0)
+                    messages.append(m)
                     count += 1;
                     if m.channel_id == nil {
                         continue;
@@ -262,11 +266,12 @@ class Message: RowConvertible, Persistable {
                         }
                     }
                 }
-                lastId = messages.last?.id! ?? 0
+                firstId = messages.last?.id! ?? 0
+                lastId = messages.first?.id! ?? 0
             }
         } catch {
             print("Error reading message \(error)")
         }
-        return BundledMessages(message: messages, loadMoreBefore: loadMoreBefore, loadMoreAfter: loadMoreAfter, lastId: lastId, loadMoreChannelMessage: loadMoreChannelMessage, loadMoreUserMessage: loadMoreUserMessage)
+        return BundledMessages(message: messages, loadMoreBefore: loadMoreBefore, loadMoreAfter: loadMoreAfter, firstId: firstId, lastId: lastId, loadMoreChannelMessage: loadMoreChannelMessage, loadMoreUserMessage: loadMoreUserMessage)
     }
 }

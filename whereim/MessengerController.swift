@@ -72,6 +72,7 @@ class InTextCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
         sender.translatesAutoresizingMaskIntoConstraints = false
         sender.font = UIFont.systemFont(ofSize: 12)
         sender.textColor = .gray
@@ -116,6 +117,7 @@ class OutTextCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
         message.translatesAutoresizingMaskIntoConstraints = false
         message.backgroundColor = UIColor(red:0.73, green:0.95, blue:0.56, alpha:1.0)
         message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
@@ -146,13 +148,16 @@ class OutTextCell: UITableViewCell {
 
 class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     let vc: MessengerController
+    let tableView: UITableView
     let service: CoreService
     let channel: Channel
     let channelController: ChannelController
     var messageList: BundledMessages
+    var viewEnd = true
 
-    init(_ viewController: MessengerController, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
+    init(_ viewController: MessengerController, _ tableView: UITableView, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.vc = viewController
+        self.tableView = tableView
         self.service = service
         self.channel = channel
         self.channelController = channelController
@@ -185,9 +190,29 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y == scrollView.contentSize.height - scrollView.frame.size.height) {
+            if (messageList.loadMoreUserMessage || messageList.loadMoreChannelMessage) {
+                service.requestMessage(channel, before: messageList.loadMoreBefore, after: messageList.loadMoreAfter)
+            } else {
+                service.requestMessage(channel, before: messageList.firstId, after: nil)
+            }
+        }
+        viewEnd = scrollView.contentOffset.y == 0
+    }
+
     func reload() {
         self.messageList = service.getMessages(channel.id!)
         self.service.set(channel_id: channel.id!, unread: false)
+        self.tableView.reloadData()
+        if (self.viewEnd) {
+            if(messageList.message.count > 0){
+                DispatchQueue.main.async {
+                    let indexPath = IndexPath(row: self.messageList.message.count-1, section: 0)
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                }
+            }
+        }
     }
 }
 
@@ -195,7 +220,6 @@ class MessengerController: UIViewController, Callback {
     let inputBar = InputBar()
     let messageView = UITableView()
 
-    var messageList: BundledMessages?
     var service: CoreService?
     var channel: Channel?
     var cbkey: Int?
@@ -222,11 +246,12 @@ class MessengerController: UIViewController, Callback {
 
         service = CoreService.bind()
 
-        adapter = MessageAdapter(self, (service)!, channel!, parent)
+        adapter = MessageAdapter(self, messageView, (service)!, channel!, parent)
+        messageView.transform = CGAffineTransform.init(scaleX: 1, y: -1)
         messageView.register(InTextCell.self, forCellReuseIdentifier: "in_text")
         messageView.register(OutTextCell.self, forCellReuseIdentifier: "out_text")
         messageView.allowsSelection = false
-        messageView.estimatedRowHeight = 1000000.0
+        messageView.estimatedRowHeight = 100.0
         messageView.rowHeight = UITableViewAutomaticDimension
         messageView.separatorStyle = .none
         messageView.dataSource = adapter
@@ -246,6 +271,8 @@ class MessengerController: UIViewController, Callback {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
 
+        messageView.reloadData()
+
         super.viewDidLoad()
     }
 
@@ -255,7 +282,6 @@ class MessengerController: UIViewController, Callback {
 
     func onCallback() {
         adapter?.reload()
-        messageView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -1032,6 +1032,18 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         publish("channel/\(channel_id)/data/message/put", [Key.TYPE: type])
     }
 
+    func requestMessage(_ channel: Channel, before: Int64?, after: Int64?) {
+        var data = [String:Any]()
+        data[Key.CHANNEL] = channel.id!
+        if let b = before {
+            data["before"] = b
+        }
+        if let a = after {
+            data["after"] = a
+        }
+        self.publish("client/\(self.clientId!)/message/sync", data)
+    }
+
     var messageListener = [String:[Int:Callback]]()
     func addMessageListener(_ channel: Channel, _ okey: Int?, _ callback: Callback) -> Int {
         if messageListener[channel.id!] == nil {
