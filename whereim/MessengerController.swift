@@ -183,6 +183,33 @@ class OutTextCell: UITableViewCell {
     }
 }
 
+class MessageViewDelegate: NSObject, UITextViewDelegate {
+    let channelController: ChannelController
+    let service: CoreService
+    init(_ channelController: ChannelController, _ service: CoreService) {
+        self.channelController = channelController
+        self.service = service
+    }
+
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        if URL.scheme! == "wim" {
+            let args = URL.pathComponents
+            switch URL.host! {
+            case "marker":
+                if let marker = service.getChannelMarker(channelController.channel!.id!, args[1]) {
+                    channelController.moveTo(marker: marker)
+                } else {
+
+                }
+            default:
+                return false
+            }
+            return false
+        }
+        return true
+    }
+}
+
 class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     let vc: MessengerController
     let tableView: UITableView
@@ -191,6 +218,8 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     let channelController: ChannelController
     var messageList: BundledMessages
     var viewEnd = true
+
+    let textViewDelegate: MessageViewDelegate
 
     let dateFormatter = DateFormatter()
     let lymdFormatter = DateFormatter()
@@ -205,6 +234,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         self.channelController = channelController
         self.messageList = service.getMessages(channel.id!)
         self.service.set(channel_id: channel.id!, unread: false)
+        self.textViewDelegate = MessageViewDelegate(channelController, service)
         dateFormatter.dateFormat = "yyyy-MM-dd"
         lymdFormatter.dateStyle = .medium
         lymdFormatter.timeStyle = .none
@@ -247,6 +277,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
         if (message.mate_id == channel.mate_id) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
+            cell.message.delegate = textViewDelegate
             cell.message.attributedText = messageText
             cell.date.text = dateString
             cell.dateHeight.isActive = !showDate
@@ -255,6 +286,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
             cell.sender.text = message.getSender()
+            cell.message.delegate = textViewDelegate
             cell.message.attributedText = messageText
             cell.date.text = dateString
             cell.dateHeight.isActive = !showDate
