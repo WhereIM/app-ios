@@ -1197,7 +1197,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 unread += 1
             }
         }
-        UIApplication.shared.applicationIconBadgeNumber = unread
+        DispatchQueue.main.async {
+            UIApplication.shared.applicationIconBadgeNumber = unread
+        }
     }
 
     func syncChannelData(_ channel_id: String) {
