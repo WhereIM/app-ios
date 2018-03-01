@@ -66,13 +66,24 @@ class InputBar: UIStackView {
 }
 
 class InTextCell: UITableViewCell {
+    let date = UILabel()
     let sender = UILabel()
     let message = UITextView()
+    var dateHeight: NSLayoutConstraint
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
+
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+
+        date.translatesAutoresizingMaskIntoConstraints = false
+        date.textAlignment = .center
+        date.backgroundColor = UIColor(red:0.94, green:0.94, blue:0.94, alpha:1.0)
+        date.font = UIFont.systemFont(ofSize: 13)
+        self.contentView.addSubview(date)
+
         sender.translatesAutoresizingMaskIntoConstraints = false
         sender.font = UIFont.systemFont(ofSize: 12)
         sender.textColor = .gray
@@ -90,9 +101,13 @@ class InTextCell: UITableViewCell {
 
         self.contentView.addSubview(message)
 
+        date.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
+
         sender.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10).isActive = true
         sender.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -100).isActive = true
-        sender.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10).isActive = true
+        sender.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
 
         message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10).isActive = true
         message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -100).isActive = true
@@ -112,12 +127,23 @@ class InTextCell: UITableViewCell {
 }
 
 class OutTextCell: UITableViewCell {
+    let date = UILabel()
     let message = UITextView()
+    var dateHeight: NSLayoutConstraint
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
+
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+
+        date.translatesAutoresizingMaskIntoConstraints = false
+        date.textAlignment = .center
+        date.backgroundColor = UIColor(red:0.94, green:0.94, blue:0.94, alpha:1.0)
+        date.font = UIFont.systemFont(ofSize: 13)
+        self.contentView.addSubview(date)
+
         message.translatesAutoresizingMaskIntoConstraints = false
         message.backgroundColor = UIColor(red:0.73, green:0.95, blue:0.56, alpha:1.0)
         message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
@@ -130,9 +156,13 @@ class OutTextCell: UITableViewCell {
 
         self.contentView.addSubview(message)
 
+        date.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
+
         message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 100).isActive = true
         message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
-        message.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10).isActive = true
+        message.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
         message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
     }
 
@@ -179,13 +209,43 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = self.messageList.message[indexPath.row]
+        let time = Date(timeIntervalSince1970: TimeInterval(message.time!))
+
+        var showDate = false
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        if indexPath.row == self.messageList.message.count - 1 {
+            showDate = true
+        } else {
+            let prev = self.messageList.message[indexPath.row + 1]
+            if dateFormatter.string(from: time) != dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(prev.time!))) {
+                showDate = true
+            }
+        }
+
+        let lymdFormatter = DateFormatter()
+        lymdFormatter.dateStyle = .medium
+        lymdFormatter.timeStyle = .none
+        let lymd = lymdFormatter.string(from: time)
+
+        let eeeFormatter = DateFormatter()
+        eeeFormatter.dateFormat = "EEE"
+        let eee = eeeFormatter.string(from: time)
+
+        let dateString = String(format: "date_format".localized, eee, lymd)
+
         if (message.mate_id == channel.mate_id) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
             cell.setMessage(message)
+            cell.date.text = dateString
+            cell.dateHeight.isActive = !showDate
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
             cell.setMessage(message)
+            cell.date.text = dateString
+            cell.dateHeight.isActive = !showDate
             return cell
         }
     }

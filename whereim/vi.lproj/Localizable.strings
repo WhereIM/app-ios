@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "Thông báo khi bạn bè vào hoặc rời một địa điểm cụ thể.";
 "error" = "Lỗi";
 "retry" = "Thử lại";
+"date_format" = "%2$@ (%1$@)";
 "invitation" = "Mời: %1$@";
 "object_create_hint" = "Ấn lâu trên bản đồ để tạo";
 "mate_invite_hint" = "Không có ai ở đây, mời những người khác vào kênh này";

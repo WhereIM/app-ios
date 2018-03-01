@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "メイトがエリアから離れた時、または入ってきたときに通知します。";
 "error" = "エラー";
 "retry" = "リトライ";
+"date_format" = "%2$@ (%1$@)";
 "invitation" = "招待状：%1$@";
 "object_create_hint" = "地図を長押しして作成する";
 "mate_invite_hint" = "誰もこここにいません。このチャンネルに他の人を招待してください。";

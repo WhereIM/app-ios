@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "Envoyer une notification quand des amis entrent ou quittent une zone particulière.";
 "error" = "Erreur";
 "retry" = "Réessayer";
+"date_format" = "%1$@ %2$@";
 "invitation" = "Invitation : %1$@";
 "object_create_hint" = "Appuyez longuement sur la carte pour créer";
 "mate_invite_hint" = "Il n'y a personne ici, invitez d'autres à se joindre à cette chaîne";

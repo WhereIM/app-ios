@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "當夥伴進入或離開指定的區域時發送通知。";
 "error" = "錯誤";
 "retry" = "再試一次";
+"date_format" = "%2$@ (%1$@)";
 "invitation" = "邀請：%1$@";
 "object_create_hint" = "在地圖上長按即可建立";
 "mate_invite_hint" = "沒有人，邀請別人進來吧";

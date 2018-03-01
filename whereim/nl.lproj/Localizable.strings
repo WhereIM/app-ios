@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "Meld wanneer vrienden een bepaald gebied binnenkomen of verlaten.";
 "error" = "Fout";
 "retry" = "Opnieuw proberen";
+"date_format" = "%1$@ %2$@";
 "invitation" = "Uitnodiging: %1$@";
 "object_create_hint" = "Druk wat langer op de kaart voor het aanmaken";
 "mate_invite_hint" = "Niemand aanwezig, nodig anderen voor dit kanaal uit";

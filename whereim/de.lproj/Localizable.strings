@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "Mitteilung, wenn Kumpel einen bestimmten Bereich betreten oder verlassen.";
 "error" = "Fehler";
 "retry" = "Erneut versuchen";
+"date_format" = "%1$@ %2$@";
 "invitation" = "Einladung: %1$@";
 "object_create_hint" = "Lange gedrückt halten, um eine Karte zu erstellen";
 "mate_invite_hint" = "Niemand hier, laden Sie jemanden ein um diesen Channel zu nutzen";

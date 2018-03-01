@@ -27,6 +27,7 @@
 "fixed_enchantment_desc" = "Notificar cuando un amigo entre o salga de una zona particular";
 "error" = "Error";
 "retry" = "Reintentar";
+"date_format" = "%1$@ %2$@";
 "invitation" = "Invitación: %1$@";
 "object_create_hint" = "Pulsación larga en el mapa para crear";
 "mate_invite_hint" = "Nadie por aquí, invite a otros a este canal";
