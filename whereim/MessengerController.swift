@@ -69,6 +69,7 @@ class InTextCell: UITableViewCell {
     let date = UILabel()
     let sender = UILabel()
     let message = UITextView()
+    let time = UILabel()
     var dateHeight: NSLayoutConstraint
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -98,8 +99,12 @@ class InTextCell: UITableViewCell {
         message.isScrollEnabled = false
         message.layer.masksToBounds = true
         message.layer.cornerRadius = 10
-
         self.contentView.addSubview(message)
+
+        time.translatesAutoresizingMaskIntoConstraints = false
+        time.font = UIFont.systemFont(ofSize: 10)
+        time.textColor = .lightGray
+        self.contentView.addSubview(time)
 
         date.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
         date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
@@ -110,25 +115,23 @@ class InTextCell: UITableViewCell {
         sender.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
 
         message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10).isActive = true
-        message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -100).isActive = true
         message.topAnchor.constraint(equalTo: sender.bottomAnchor, constant: 2).isActive = true
         message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+
+        time.leadingAnchor.constraint(equalTo: message.trailingAnchor, constant: 5).isActive = true
+        time.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -80).isActive = true
+        time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    func setMessage(_ message: Message) {
-        self.sender.text = message.getSender()
-        self.message.text = message.getText()
-//        self.message.layoutIfNeeded()
     }
 }
 
 class OutTextCell: UITableViewCell {
     let date = UILabel()
     let message = UITextView()
+    let time = UILabel()
     var dateHeight: NSLayoutConstraint
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -156,11 +159,20 @@ class OutTextCell: UITableViewCell {
 
         self.contentView.addSubview(message)
 
+        time.translatesAutoresizingMaskIntoConstraints = false
+        time.font = UIFont.systemFont(ofSize: 10)
+        time.textColor = .lightGray
+        time.adjustsFontSizeToFitWidth = false
+        self.contentView.addSubview(time)
+
         date.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
         date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
         date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
 
-        message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 100).isActive = true
+        time.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: 80).isActive = true
+        time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
+
+        message.leadingAnchor.constraint(equalTo: time.trailingAnchor, constant: 5).isActive = true
         message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
         message.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
         message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
@@ -168,11 +180,6 @@ class OutTextCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    func setMessage(_ message: Message) {
-        self.message.text = message.getText()
-        self.message.layoutIfNeeded()
     }
 }
 
@@ -185,6 +192,11 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var messageList: BundledMessages
     var viewEnd = true
 
+    let dateFormatter = DateFormatter()
+    let lymdFormatter = DateFormatter()
+    let eeeFormatter = DateFormatter()
+    let timeFormatter = DateFormatter()
+
     init(_ viewController: MessengerController, _ tableView: UITableView, _ service: CoreService, _ channel: Channel, _ channelController: ChannelController) {
         self.vc = viewController
         self.tableView = tableView
@@ -193,6 +205,11 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         self.channelController = channelController
         self.messageList = service.getMessages(channel.id!)
         self.service.set(channel_id: channel.id!, unread: false)
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        lymdFormatter.dateStyle = .medium
+        lymdFormatter.timeStyle = .none
+        eeeFormatter.dateFormat = "EEE"
+        timeFormatter.dateFormat = "hh:mm"
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -212,8 +229,6 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let time = Date(timeIntervalSince1970: TimeInterval(message.time!))
 
         var showDate = false
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
 
         if indexPath.row == self.messageList.message.count - 1 {
             showDate = true
@@ -224,28 +239,25 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             }
         }
 
-        let lymdFormatter = DateFormatter()
-        lymdFormatter.dateStyle = .medium
-        lymdFormatter.timeStyle = .none
         let lymd = lymdFormatter.string(from: time)
-
-        let eeeFormatter = DateFormatter()
-        eeeFormatter.dateFormat = "EEE"
         let eee = eeeFormatter.string(from: time)
-
         let dateString = String(format: "date_format".localized, eee, lymd)
+        let timeString = timeFormatter.string(from: time)
 
         if (message.mate_id == channel.mate_id) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
-            cell.setMessage(message)
+            cell.message.text = message.getText()
             cell.date.text = dateString
             cell.dateHeight.isActive = !showDate
+            cell.time.text = timeString
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
-            cell.setMessage(message)
+            cell.sender.text = message.getSender()
+            cell.message.text = message.getText()
             cell.date.text = dateString
             cell.dateHeight.isActive = !showDate
+            cell.time.text = timeString
             return cell
         }
     }
