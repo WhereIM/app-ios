@@ -158,6 +158,17 @@ class Message: RowConvertible, Persistable {
                     let s = NSMutableAttributedString()
                     s.append(NSAttributedString(string: String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")))
                     s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
+                    if let sattr = attr?[Key.ATTR] as? [String: Any] {
+                        if let color = sattr[Key.COLOR] as? String {
+                            let attach = NSTextAttachment()
+                            attach.image = Marker.getIcon(color)
+                            let ss = NSMutableAttributedString(attributedString: NSAttributedString(attachment: attach))
+                            if let mid = attr?[Key.ID] as? String, let lat = attr?[Key.LATITUDE] as? Double, let lng = attr?[Key.LONGITUDE] as? Double {
+                                ss.addAttribute(NSAttributedStringKey.link, value: "wim://marker/\(mid)/\(lat)/\(lng)", range: NSMakeRange(0, ss.length))
+                            }
+                            s.append(ss)
+                        }
+                    }
                     return s
                 case "radius_report":
                     let s = String(format: "message_radius_report".localized, attr!["in"] as? String ?? "", attr!["out"] as? String ?? "", attr![Key.RADIUS] as? String ?? "")
