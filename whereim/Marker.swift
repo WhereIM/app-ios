@@ -141,7 +141,6 @@ class Marker: RowConvertible, Persistable {
 
     static func getAll() -> [Marker] {
         var ret = [Marker]()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         do {
             try CoreService.bind().dbConn!.inDatabase { db in
                 let markers = try Marker.fetchAll(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.name.name) ASC")

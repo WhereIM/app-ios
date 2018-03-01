@@ -93,7 +93,6 @@ class InTextCell: UITableViewCell {
         message.translatesAutoresizingMaskIntoConstraints = false
         message.backgroundColor = UIColor(red:0.89, green:0.91, blue:0.92, alpha:1.0)
         message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
-        message.font = UIFont.systemFont(ofSize: 17)
         message.dataDetectorTypes = .all
         message.isEditable = false
         message.textContainer.lineBreakMode = .byWordWrapping
@@ -151,7 +150,6 @@ class OutTextCell: UITableViewCell {
         message.translatesAutoresizingMaskIntoConstraints = false
         message.backgroundColor = UIColor(red:0.73, green:0.95, blue:0.56, alpha:1.0)
         message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
-        message.font = UIFont.systemFont(ofSize: 17)
         message.dataDetectorTypes = .all
         message.isEditable = false
         message.textContainer.lineBreakMode = .byWordWrapping
@@ -245,10 +243,11 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let eee = eeeFormatter.string(from: time)
         let dateString = String(format: "date_format".localized, eee, lymd)
         let timeString = timeFormatter.string(from: time)
+        let messageText = message.getText()
 
         if (message.mate_id == channel.mate_id) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
-            cell.message.text = message.getText()
+            cell.message.attributedText = messageText
             cell.date.text = dateString
             cell.dateHeight.isActive = !showDate
             cell.time.text = timeString
@@ -256,7 +255,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
             cell.sender.text = message.getSender()
-            cell.message.text = message.getText()
+            cell.message.attributedText = messageText
             cell.date.text = dateString
             cell.dateHeight.isActive = !showDate
             cell.time.text = timeString

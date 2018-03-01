@@ -117,9 +117,14 @@ class Message: RowConvertible, Persistable {
         return sender!
     }
 
-    func getText() -> String {
+    func getText() -> NSMutableAttributedString {
+        var textAttrs = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)
+        ] as [NSAttributedStringKey:Any]
         if type == "text" {
-            return message!
+            let r = NSMutableAttributedString(string: message!)
+            r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
+            return r
         } else {
             do {
                 let attr: [String: Any]?
@@ -131,28 +136,46 @@ class Message: RowConvertible, Persistable {
                 switch type! {
                 case "enchantment_create":
                     let s = String(format: "message_enchantment_create".localized, (attr?[Key.NAME] as? String) ?? "")
-                    return s
+                    let r = NSMutableAttributedString(string: s)
+                    r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
+                    return r
                 case "enchantment_emerge":
                     let s = String(format: "message_enchantment_emerge".localized, (attr?[Key.NAME] as? String) ?? "")
-                    return s
+                    let r = NSMutableAttributedString(string: s)
+                    r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
+                    return r
                 case "enchantment_in":
                     let s = String(format: "message_enchantment_in".localized, (attr?[Key.NAME] as? String) ?? "")
-                    return s
+                    let r = NSMutableAttributedString(string: s)
+                    r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
+                    return r
                 case "enchantment_out":
                     let s = String(format: "message_enchantment_out".localized, (attr?[Key.NAME] as? String) ?? "")
-                    return s
+                    let r = NSMutableAttributedString(string: s)
+                    r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
+                    return r
                 case "marker_create":
-                    let s = String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")
+                    let s = NSMutableAttributedString()
+                    s.append(NSAttributedString(string: String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")))
+                    s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
                     return s
                 case "radius_report":
                     let s = String(format: "message_radius_report".localized, attr!["in"] as? String ?? "", attr!["out"] as? String ?? "", attr![Key.RADIUS] as? String ?? "")
-                    return s
+                    let r = NSMutableAttributedString(string: s)
+                    r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
+                    return r
                 default:
-                    return "message_not_implemented".localized
+                    textAttrs[NSAttributedStringKey.font] = UIFont.italicSystemFont(ofSize: 17)
+                    textAttrs[NSAttributedStringKey.foregroundColor] = UIColor.gray
+                    let s = NSMutableAttributedString(string: "message_not_implemented".localized)
+                    s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
+                    return s
                 }
             } catch {
                 print("Error decoding message attr")
-                return ""
+                let s = NSMutableAttributedString(string: "")
+                s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
+                return s
             }
         }
     }
