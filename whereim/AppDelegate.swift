@@ -70,6 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                         switch t {
                         case "text":
                             vc.defaultTab = ChannelController.TAB_MESSAGE
+                        case "rich":
+                            vc.defaultTab = ChannelController.TAB_MESSAGE
                         default:
                             vc.defaultTab = ChannelController.TAB_MAP
                         }
