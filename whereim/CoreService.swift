@@ -842,7 +842,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func getChannelMarker(_ channel_id: String, _ marker_id: String) -> Marker? {
-        return channelMarker[channel_id]![marker_id]
+        return channelMarker[channel_id]?[marker_id]
     }
 
     func mqttChannelMarkerHandler(_ data: [String:Any]) {
