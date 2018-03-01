@@ -156,8 +156,8 @@ class Message: RowConvertible, Persistable {
                     return r
                 case "marker_create":
                     let s = NSMutableAttributedString()
-                    s.append(NSAttributedString(string: String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? "")))
-                    s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
+                    let text = NSMutableAttributedString(string: String(format: "message_marker_create".localized, (attr?[Key.NAME] as? String) ?? ""))
+                    text.setAttributes(textAttrs, range: NSMakeRange(0, text.length))
                     if let sattr = attr?[Key.ATTR] as? [String: Any] {
                         if let color = sattr[Key.COLOR] as? String {
                             let attach = NSTextAttachment()
@@ -169,6 +169,8 @@ class Message: RowConvertible, Persistable {
                             s.append(ss)
                         }
                     }
+                    s.append(NSAttributedString(string: "\n"))
+                    s.append(text)
                     return s
                 case "radius_report":
                     let s = String(format: "message_radius_report".localized, attr!["in"] as? String ?? "", attr!["out"] as? String ?? "", attr![Key.RADIUS] as? String ?? "")
