@@ -202,14 +202,32 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func reload() {
+        let prevLastId = self.messageList.lastId
+        let viewEnd = self.viewEnd
+        var rowOffset = CGFloat.init(0)
+        var anchorRowId = Int64(0)
+        if let firstIndex = self.tableView.indexPathsForVisibleRows?[0] {
+            anchorRowId = self.messageList.message[firstIndex.row].id!
+            rowOffset = self.tableView.contentOffset.y - self.tableView.rectForRow(at: firstIndex).origin.y
+        }
+
         self.messageList = service.getMessages(channel.id!)
         self.service.set(channel_id: channel.id!, unread: false)
         self.tableView.reloadData()
-        if (self.viewEnd) {
-            if(messageList.message.count > 0){
-                DispatchQueue.main.async {
-                    let indexPath = IndexPath(row: self.messageList.message.count-1, section: 0)
-                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        self.tableView.layoutIfNeeded()
+        if let row = self.messageList.rowMap[anchorRowId] {
+            let rowY = self.tableView.rectForRow(at: IndexPath.init(row: row, section: 0)).origin.y
+            self.tableView.contentOffset = CGPoint.init(x: 0, y: rowY + rowOffset)
+        }
+        DispatchQueue.main.async {
+            if (viewEnd) {
+                if(self.messageList.message.count > 0){
+                    let indexPath = IndexPath(row: 0, section: 0)
+                    self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+                }
+            } else {
+                if(self.messageList.lastId > prevLastId) {
+                    self.vc.unread.isHidden = false
                 }
             }
         }
@@ -218,6 +236,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
 
 class MessengerController: UIViewController, Callback {
     let inputBar = InputBar()
+    let unread = UITextView()
     let messageView = UITableView()
 
     var service: CoreService?
@@ -264,6 +283,27 @@ class MessengerController: UIViewController, Callback {
         messageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         messageView.bottomAnchor.constraint(equalTo: inputBar.topAnchor).isActive = true
 
+        unread.translatesAutoresizingMaskIntoConstraints = false
+        unread.isEditable = false
+        unread.isScrollEnabled = false
+        unread.backgroundColor = UIColor(red:0.00, green:0.00, blue:0.50, alpha:1.0)
+        unread.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
+        unread.font = UIFont.systemFont(ofSize: 17)
+        unread.textColor = .white
+        unread.layer.masksToBounds = true
+        unread.layer.cornerRadius = 10
+        unread.text = "unread".localized
+
+        self.view.addSubview(unread)
+        unread.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -15).isActive = true
+        unread.centerXAnchor.constraint(equalTo: messageView.centerXAnchor).isActive = true
+        self.view.bringSubview(toFront: unread)
+        unread.isHidden = true
+
+        let unreadTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(unread_clicked))
+        unreadTap.cancelsTouchesInView = false
+        unread.addGestureRecognizer(unreadTap)
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
 
@@ -274,6 +314,14 @@ class MessengerController: UIViewController, Callback {
         messageView.reloadData()
 
         super.viewDidLoad()
+    }
+
+    @objc func unread_clicked(sender: Any) {
+        if(self.adapter!.messageList.message.count > 0){
+            let indexPath = IndexPath(row: 0, section: 0)
+            self.messageView.scrollToRow(at: indexPath, at: .top, animated: true)
+        }
+        self.unread.isHidden = true
     }
 
     @objc func btn_send_clicked(sender: Any) {

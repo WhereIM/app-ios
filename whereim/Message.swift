@@ -17,6 +17,7 @@ class BundledMessages {
     let lastId: Int64
     let loadMoreChannelMessage: Bool
     let loadMoreUserMessage: Bool
+    var rowMap: [Int64:Int]
 
     init (
         message: [Message],
@@ -34,6 +35,11 @@ class BundledMessages {
         self.lastId = lastId
         self.loadMoreChannelMessage = loadMoreChannelMessage
         self.loadMoreUserMessage = loadMoreUserMessage
+        self.rowMap = [Int64:Int]()
+
+        for i in 0..<message.count {
+            rowMap[message[i].id!] = i
+        }
 
         print("count", message.count)
         print("loadMoreBefore", loadMoreBefore)
