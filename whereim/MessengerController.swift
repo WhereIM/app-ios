@@ -400,6 +400,7 @@ class MessengerController: UIViewController, Callback {
 
     @objc func btn_send_clicked(sender: Any) {
         service!.sendMessage(channel!.id!, inputBar.text.text!)
+        inputBar.text.text = nil
     }
 
     func onCallback() {
