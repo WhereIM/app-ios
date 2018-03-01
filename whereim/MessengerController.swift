@@ -94,6 +94,7 @@ class InTextCell: UITableViewCell {
         message.backgroundColor = UIColor(red:0.89, green:0.91, blue:0.92, alpha:1.0)
         message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
         message.font = UIFont.systemFont(ofSize: 17)
+        message.dataDetectorTypes = .all
         message.isEditable = false
         message.textContainer.lineBreakMode = .byWordWrapping
         message.isScrollEnabled = false
@@ -151,6 +152,7 @@ class OutTextCell: UITableViewCell {
         message.backgroundColor = UIColor(red:0.73, green:0.95, blue:0.56, alpha:1.0)
         message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
         message.font = UIFont.systemFont(ofSize: 17)
+        message.dataDetectorTypes = .all
         message.isEditable = false
         message.textContainer.lineBreakMode = .byWordWrapping
         message.isScrollEnabled = false
