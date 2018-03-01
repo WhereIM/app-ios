@@ -75,7 +75,6 @@ class PoiViewerController: UIViewController {
         contentArea.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         contentArea.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
 
-
         poiViewerControllerImpl!.viewDidLoad(self)
 
         super.viewDidLoad()

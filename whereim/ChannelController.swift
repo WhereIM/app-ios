@@ -36,6 +36,12 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     let toggleChannelDesc = UIHintDialog()
     let invitePointer = UIImageView()
     let inviteDesc = UIHintDialog()
+    var pendingPinLocation: CLLocationCoordinate2D?
+
+    func sendPin(_ location: CLLocationCoordinate2D) {
+        pendingPinLocation = location
+        self.selectedIndex = ChannelController.TAB_MESSAGE
+    }
 
     func setMapCtrl(_ mc: MapController) {
         mapController = mc
@@ -57,7 +63,14 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     func moveToSearchResult(at: Int) {
         if let mc = mapController {
             mc.moveToSearchResult(at: at)
-            self.selectedIndex = 0
+            self.selectedIndex = ChannelController.TAB_MAP
+        }
+    }
+
+    func moveTo(pin location: CLLocationCoordinate2D) {
+        if let mc = mapController {
+            mc.moveTo(pin: location)
+            self.selectedIndex = ChannelController.TAB_MAP
         }
     }
 
@@ -65,7 +78,7 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         if let mc = mapController {
             mc.moveTo(mate: mate, focus: true)
             if mate.latitude != nil {
-                self.selectedIndex = 0
+                self.selectedIndex = ChannelController.TAB_MAP
             }
         }
     }
@@ -73,28 +86,28 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     func moveTo(enchantment: Enchantment) {
         if let mc = mapController {
             mc.moveTo(enchantment: enchantment, focus: true)
-            self.selectedIndex = 0
+            self.selectedIndex = ChannelController.TAB_MAP
         }
     }
 
     func moveTo(marker: Marker) {
         if let mc = mapController {
             mc.moveTo(marker: marker, focus: true)
-            self.selectedIndex = 0
+            self.selectedIndex = ChannelController.TAB_MAP
         }
     }
 
     func edit(enchantment: Enchantment, name: String, shared: Bool) {
         if let mc = mapController {
             mc.edit(enchantment: enchantment, name: name, shared: shared)
-            self.selectedIndex = 0
+            self.selectedIndex = ChannelController.TAB_MAP
         }
     }
 
     func edit(marker: Marker, name: String, attr: [String:Any], shared: Bool) {
         if let mc = mapController {
             mc.edit(marker: marker, name: name, attr: attr, shared: shared)
-            self.selectedIndex = 0
+            self.selectedIndex = ChannelController.TAB_MAP
         }
     }
 

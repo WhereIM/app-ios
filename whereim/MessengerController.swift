@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import CoreLocation
 
 class InputBar: UIStackView {
     let background = UIView()
+    let pin = UIImageView()
     let text = UITextView()
     let btn_send = UIButton()
 
@@ -26,7 +28,7 @@ class InputBar: UIStackView {
     func setView() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.axis = .horizontal
-        self.alignment = .bottom
+        self.alignment = .center
         self.distribution = .fill
         self.layoutMargins = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         self.isLayoutMarginsRelativeArrangement = true
@@ -41,6 +43,11 @@ class InputBar: UIStackView {
         background.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         background.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         background.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+
+        pin.translatesAutoresizingMaskIntoConstraints = false
+        pin.image = UIImage(named: "icon_pin")
+        pin.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        self.addArrangedSubview(pin)
 
         text.translatesAutoresizingMaskIntoConstraints = false
         text.backgroundColor = .white
@@ -199,8 +206,10 @@ class MessageViewDelegate: NSObject, UITextViewDelegate {
                 if let marker = service.getChannelMarker(channelController.channel!.id!, args[1]) {
                     channelController.moveTo(marker: marker)
                 } else {
-
+                    channelController.moveTo(pin: CLLocationCoordinate2D(latitude: Double(args[2])!, longitude: Double(args[3])!))
                 }
+            case "pin":
+                channelController.moveTo(pin: CLLocationCoordinate2D(latitude: Double(args[1])!, longitude: Double(args[2])!))
             default:
                 return false
             }
@@ -343,6 +352,7 @@ class MessengerController: UIViewController, Callback {
     let inputBar = InputBar()
     let unread = UITextView()
     let messageView = UITableView()
+    var pinLocation: CLLocationCoordinate2D?
 
     var service: CoreService?
     var channel: Channel?
@@ -430,18 +440,28 @@ class MessengerController: UIViewController, Callback {
     }
 
     @objc func btn_send_clicked(sender: Any) {
-        service!.sendMessage(channel!.id!, inputBar.text.text!)
+        service!.sendMessage(channel!.id!, inputBar.text.text!, pinLocation)
         inputBar.text.text = nil
+        pinLocation = nil
+        updateUI()
     }
 
     func onCallback() {
         adapter?.reload()
     }
 
+    func updateUI() {
+        let parent = self.tabBarController as! ChannelController
+        pinLocation = parent.pendingPinLocation
+        parent.pendingPinLocation = nil
+        inputBar.pin.isHidden = pinLocation==nil
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         cbkey = service!.addMessageListener(channel!, cbkey, self)
+        updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

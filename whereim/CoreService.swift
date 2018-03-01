@@ -1028,8 +1028,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return Message.getMessages(channel_id)
     }
 
-    func sendMessage(_ channel_id: String, _ text: String) {
-        publish("channel/\(channel_id)/data/message/put", [Key.MESSAGE: text])
+    func sendMessage(_ channel_id: String, _ text: String, _ location: CLLocationCoordinate2D?) {
+        var data = [String:Any]()
+        data[Key.MESSAGE] = text
+        if let ll = location {
+            data[Key.TYPE] = "rich"
+            data[Key.LATITUDE] = ll.latitude
+            data[Key.LONGITUDE] = ll.longitude
+        }
+        publish("channel/\(channel_id)/data/message/put", data)
     }
 
     func sendNotification(_ channel_id: String, _ type: String) {

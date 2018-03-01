@@ -91,6 +91,11 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
 
     func viewDidAppear(_ viewController: UIViewController)  {
         if let poi = self.mapController.service!.pendingPOI {
+            if pendingMarker != nil {
+                mapView!.removeAnnotation(pendingMarker!)
+                pendingMarker = nil
+            }
+
             self.pendingMarker = WimPointAnnotation()
             self.pendingMarker!.coordinate = poi.location!
             self.pendingMarker!.title = poi.name!
@@ -160,7 +165,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         if let m = annotation as? WimPointAnnotation {
             m.selected = true
             if let obj = m.userData {
-                if pendingMarker != nil && m.reuseId != "pending_poi" {
+                if pendingMarker != nil && m.reuseId != "pending_poi" && m.reuseId != "pin" {
                     mapView.removeAnnotation(pendingMarker!)
                     pendingMarker = nil
                 }
@@ -341,6 +346,24 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             mapView!.selectAnnotation(searchResultMarker[at], animated: false)
             mapController.tapMarker(searchResultMarker[at].userData)
         }
+    }
+
+    func moveTo(pin location: CLLocationCoordinate2D) {
+        if pendingMarker != nil {
+            mapView!.removeAnnotation(pendingMarker!)
+            pendingMarker = nil
+        }
+
+        self.pendingMarker = WimPointAnnotation()
+        self.pendingMarker!.coordinate = location
+        self.pendingMarker!.reuseId = "pin"
+        self.pendingMarker!.icon = UIImage(named: "icon_pin")?.centerBottom()
+        self.pendingMarker!.userData = location
+        self.mapView!.addAnnotation(self.pendingMarker!)
+
+        self.mapController.tapMarker(location)
+
+        mapView?.setCenter(location, animated: false)
     }
 
     private var focusEnchantment: Enchantment?

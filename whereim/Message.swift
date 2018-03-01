@@ -134,6 +134,20 @@ class Message: RowConvertible, Persistable {
                     attr = nil
                 }
                 switch type! {
+                case "rich":
+                    let s = NSMutableAttributedString()
+                    let text = NSMutableAttributedString(string: (attr?["text"] as? String) ?? "")
+                    text.setAttributes(textAttrs, range: NSMakeRange(0, text.length))
+                    if let lat = attr?[Key.LATITUDE] as? Double, let lng = attr?[Key.LONGITUDE] as? Double {
+                        let attach = NSTextAttachment()
+                        attach.image = UIImage(named: "icon_pin")
+                        let ss = NSMutableAttributedString(attributedString: NSAttributedString(attachment: attach))
+                        ss.addAttribute(NSAttributedStringKey.link, value: "wim://pin/\(lat)/\(lng)", range: NSMakeRange(0, ss.length))
+                        s.append(ss)
+                    }
+                    s.append(NSAttributedString(string: "\n"))
+                    s.append(text)
+                    return s
                 case "enchantment_create":
                     let s = String(format: "message_enchantment_create".localized, (attr?[Key.NAME] as? String) ?? "")
                     let r = NSMutableAttributedString(string: s)

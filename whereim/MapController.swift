@@ -20,6 +20,7 @@ protocol MapControllerInterface: MapDataReceiver {
     func getMapCenter() -> CLLocationCoordinate2D
     func updateSearchResults()
     func moveToSearchResult(at: Int)
+    func moveTo(pin location: CLLocationCoordinate2D)
     func moveTo(mate: Mate?)
     func moveTo(marker: Marker?, focus: Bool)
     func moveTo(enchantment: Enchantment?)
@@ -327,6 +328,14 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
                 showCreateEnchantment = true
                 showShare = true
                 showOpenIn = true
+            } else if obj is CLLocationCoordinate2D {
+                title = ""
+                location = obj as! CLLocationCoordinate2D
+
+                showCreateMarker = true
+                showCreateEnchantment = true
+                showShare = true
+                showOpenIn = true
             }
             showMarkerActionsPanel(location!, title, showCreateMarker: showCreateMarker, showCreateEnchantment: showCreateEnchantment, showShare: showShare, showOpenIn: showOpenIn)
         }
@@ -344,6 +353,10 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
 
     func moveToSearchResult(at: Int) {
         mapControllerImpl?.moveToSearchResult(at: at)
+    }
+
+    func moveTo(pin location: CLLocationCoordinate2D) {
+        mapControllerImpl?.moveTo(pin: location)
     }
 
     func moveTo(mate: Mate?, focus: Bool) {
@@ -473,7 +486,7 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
             return
         }
 
-        _ = DialogMapMenu(self, mapView, touchPosition)
+        _ = DialogMapMenu(self.tabBarController as! ChannelController, self, mapView, touchPosition)
     }
 
     func refreshEditing() {

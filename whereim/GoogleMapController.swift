@@ -66,6 +66,11 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
 
     func viewDidAppear(_ viewController: UIViewController) {
         if let poi = self.mapController.service!.pendingPOI {
+            if pendingMarker != nil {
+                pendingMarker!.map = nil
+                pendingMarker = nil
+            }
+
             self.pendingMarker = GMSMarker()
             self.pendingMarker!.position = poi.location!
             self.pendingMarker!.groundAnchor = CGPoint(x: 0.5, y: 1.0)
@@ -280,6 +285,25 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             mapView!.selectedMarker = searchResultMarker[at]
             mapController.tapMarker(searchResultMarker[at].userData)
         }
+    }
+
+    func moveTo(pin location: CLLocationCoordinate2D) {
+        if pendingMarker != nil {
+            pendingMarker!.map = nil
+            pendingMarker = nil
+        }
+
+        self.pendingMarker = GMSMarker()
+        self.pendingMarker!.position = location
+        self.pendingMarker!.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+        self.pendingMarker!.icon = UIImage(named: "icon_pin")
+        self.pendingMarker!.zIndex = 50
+        self.pendingMarker!.map = self.mapView
+        self.pendingMarker!.userData = location
+
+        self.mapController.tapMarker(location)
+
+        mapView!.animate(toLocation: location)
     }
 
     private var focusEnchantment: Enchantment?
