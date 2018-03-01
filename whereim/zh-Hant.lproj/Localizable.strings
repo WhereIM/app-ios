@@ -79,6 +79,7 @@
 "message_radius_report" = "圈內/外：%1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@ 開始與你分享定位！";
 "apn_text" = "%1$@\n%2$@：%3$@";
+"apn_rich" = "%1$@\n%2$@：%3$@";
 "apn_enchantment_create" = "%1$@\n%2$@：%3$@ 地界已設立";
 "apn_enchantment_emerge" = "%1$@\n%2$@：出現在 %3$@ 地界";
 "apn_enchantment_in" = "%1$@\n%2$@：進入 %3$@ 地界";

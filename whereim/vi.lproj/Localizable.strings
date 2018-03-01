@@ -79,6 +79,7 @@
 "message_radius_report" = "Vào/Ra: %1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@ vừa bắt đầu chia sẻ địa điểm với bạn!";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Hàng rào địa lý %3$@ được tạo ra.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Đã xuất hiện trong hàng rào địa lý %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Đã vào hàng rào địa lý %3$@.";

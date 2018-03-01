@@ -79,6 +79,7 @@
 "message_radius_report" = "Dedans/Dehors : %1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@ vient de commencer à partager sa position avec vous !";
 "apn_text" = "%1$@\n%2$@ : %3$@";
+"apn_rich" = "%1$@\n%2$@ : %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@ : Le géorepérage %3$@ a été créé.";
 "apn_enchantment_emerge" = "%1$@\n%2$@ : A émergé dans le géorepérage %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@ : Est entré dans le géorepérage %3$@.";

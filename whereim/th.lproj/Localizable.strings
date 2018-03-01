@@ -79,6 +79,7 @@
 "message_radius_report" = "เข้า / ออก: %1$@ / %2$@ (%3$@ ม.)";
 "apn_begin_sharing" = "%1$@\n%2$@ เพิ่งเริ่มแบ่งปันตำแหน่งกับคุณ!";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: สร้าง geofence %3$@ แล้ว";
 "apn_enchantment_emerge" = "%1$@\n%2$@: ได้เกิดขึ้นใน geofence %3$@";
 "apn_enchantment_in" = "%1$@\n%2$@: เข้ามา geofence %3$@ แล้ว";

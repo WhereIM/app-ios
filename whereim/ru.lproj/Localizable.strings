@@ -79,6 +79,7 @@
 "message_radius_report" = "В/Из: %1$@ / %2$@ (%3$@ м)";
 "apn_begin_sharing" = "%1$@\n%2$@ начал делится с вами местоположением!";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Геозона %3$@ создана.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Появился в геозоне %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Вошел в геозону %3$@.";

@@ -80,6 +80,7 @@
 "message_radius_report" = "In/Out: %1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@ just begins sharing location with you !";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Geofence %3$@ is created.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Emerged in geofence %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Entered geofence %3$@.";

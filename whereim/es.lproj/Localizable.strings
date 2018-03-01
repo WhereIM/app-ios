@@ -79,6 +79,7 @@
 "message_radius_report" = "Dentro/Fuera: %1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n¡%2$@ acaba de comenzar a compartir su ubicación con usted!";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Se crea una geovalla %3$@.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Ha surgido en la geovalla %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Ha ingresado en la geovalla %3$@.";

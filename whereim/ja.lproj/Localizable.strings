@@ -79,6 +79,7 @@
 "message_radius_report" = "イン/アウト：%1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@の位置情報が共有されました！";
 "apn_text" = "%1$@\n%2$@：%3$@";
+"apn_rich" = "%1$@\n%2$@：%3$@";
 "apn_enchantment_create" = "%1$@\n%2$@：ジオフェンス%3$@が作られました。";
 "apn_enchantment_emerge" = "%1$@\n%2$@：ジオフェンスが登場しました%3$@。";
 "apn_enchantment_in" = "%1$@\n%2$@：ジオフェンスに入りました%3$@。";

@@ -79,6 +79,7 @@
 "message_radius_report" = "In / Uit: %1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@ begint zojuist met het delen van de locatie !";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Geofence %3$@ is gecreëerd.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Is tevoorschijn gekomen in geofence %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Is binnen gekomen in geofence %3$@.";

@@ -79,6 +79,7 @@
 "message_radius_report" = "Ein/Aus: %1$@ / %2$@ (%3$@ m)";
 "apn_begin_sharing" = "%1$@\n%2$@ hat gerade begonnen, seinen Standort mit Ihnen zu teilen!";
 "apn_text" = "%1$@\n%2$@: %3$@";
+"apn_rich" = "%1$@\n%2$@: %3$@";
 "apn_enchantment_create" = "%1$@\n%2$@: Geofencing %3$@ wurde erstellt.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Ist im Geofencing %3$@ aufgetaucht.";
 "apn_enchantment_in" = "%1$@\n%2$@: Ist im Geofencing %3$@ eingetreten.";
