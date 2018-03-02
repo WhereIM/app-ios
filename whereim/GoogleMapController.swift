@@ -17,8 +17,10 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     var mapView: GMSMapView?
     var mapCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     var moveCameraToMyLocation = true
+    let channelController: ChannelController
 
-    required init(_ mapController: MapController) {
+    required init(_ channelController: ChannelController, _ mapController: MapController) {
+        self.channelController = channelController
         self.mapController = mapController
         super.init()
         initmarkerTamplate()
@@ -262,7 +264,7 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
             let m = searchResultMarker.remove(at: 0)
             m.map = nil
         }
-        for r in mapController.searchResults {
+        for r in channelController.searchResults {
             let m = GMSMarker()
             m.position = r.location!
             m.groundAnchor = CGPoint(x: 0.5, y: 1.0)
@@ -277,8 +279,8 @@ class GoogleMapController: NSObject, MapControllerInterface, GMSMapViewDelegate,
     }
 
     func moveToSearchResult(at: Int) {
-        if at < mapController.searchResults.count {
-            let r = mapController.searchResults[at]
+        if at < channelController.searchResults.count {
+            let r = channelController.searchResults[at]
             mapView!.animate(toLocation: r.location!)
         }
         if at < searchResultMarker.count {

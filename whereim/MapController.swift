@@ -10,7 +10,7 @@ import CoreLocation
 import UIKit
 
 protocol MapControllerInterface: MapDataReceiver {
-    init(_ mapController: MapController)
+    init(_ channelController: ChannelController, _ mapController: MapController)
     func viewDidLoad(_ viewContrller: UIViewController)
     func viewWillAppear(_ viewContrller: UIViewController)
     func viewDidAppear(_ viewController: UIViewController)
@@ -45,11 +45,13 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
     }
 
     func _init() {
+        let parent = self.tabBarController as! ChannelController
+
         switch Config.getMapProvider() {
         case .GOOGLE:
-            mapControllerImpl = GoogleMapController(self)
+            mapControllerImpl = GoogleMapController(parent, self)
         case .MAPBOX:
-            mapControllerImpl = MapboxController(self)
+            mapControllerImpl = MapboxController(parent, self)
         }
     }
 
@@ -248,6 +250,28 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
 
     override func viewDidAppear(_ animated: Bool) {
         mapControllerImpl!.viewDidAppear(self)
+
+        let parent = self.tabBarController as! ChannelController
+        if let pos = parent.pendingMoveToSearchResult {
+            parent.pendingMoveToSearchResult = nil
+            self.moveToSearchResult(at: pos)
+        }
+        if let location = parent.pendingMoveToPin {
+            parent.pendingMoveToPin = nil
+            self.moveTo(pin: location)
+        }
+        if let mate = parent.pendingMoveToMate {
+            parent.pendingMoveToMate = nil
+            self.moveTo(mate: mate, focus: true)
+        }
+        if let marker = parent.pendingMoveToMarker {
+            parent.pendingMoveToMarker = nil
+            self.moveTo(marker: marker, focus: true)
+        }
+        if let enchantment = parent.pendingMoveToEnchantment {
+            parent.pendingMoveToEnchantment = nil
+            self.moveTo(enchantment: enchantment, focus: true)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -345,9 +369,7 @@ class MapController: UIViewController, ChannelChangedListener, MapDataReceiver {
         return mapControllerImpl!.getMapCenter()
     }
 
-    var searchResults = [POI]()
-    func setSearchResults(_ results: [POI]) {
-        searchResults = results
+    func updateSearchResults() {
         mapControllerImpl?.updateSearchResults()
     }
 

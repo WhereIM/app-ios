@@ -37,6 +37,12 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     let invitePointer = UIImageView()
     let inviteDesc = UIHintDialog()
     var pendingPinLocation: CLLocationCoordinate2D?
+    var searchResults = [POI]()
+    var pendingMoveToSearchResult: Int?
+    var pendingMoveToPin: CLLocationCoordinate2D?
+    var pendingMoveToMate: Mate?
+    var pendingMoveToMarker: Marker?
+    var pendingMoveToEnchantment: Enchantment?
 
     func sendPin(_ location: CLLocationCoordinate2D) {
         pendingPinLocation = location
@@ -55,46 +61,37 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
     }
 
     func setSearchResults(_ results: [POI]) {
+        searchResults = results
         if let mc = mapController {
-            mc.setSearchResults(results)
+            mc.updateSearchResults()
         }
     }
 
     func moveToSearchResult(at: Int) {
-        if let mc = mapController {
-            mc.moveToSearchResult(at: at)
-            self.selectedIndex = ChannelController.TAB_MAP
-        }
+        pendingMoveToSearchResult = at
+        self.selectedIndex = ChannelController.TAB_MAP
     }
 
     func moveTo(pin location: CLLocationCoordinate2D) {
-        if let mc = mapController {
-            mc.moveTo(pin: location)
-            self.selectedIndex = ChannelController.TAB_MAP
-        }
+        pendingMoveToPin = location
+        self.selectedIndex = ChannelController.TAB_MAP
     }
 
     func moveTo(mate: Mate) {
-        if let mc = mapController {
-            mc.moveTo(mate: mate, focus: true)
-            if mate.latitude != nil {
-                self.selectedIndex = ChannelController.TAB_MAP
-            }
+        pendingMoveToMate = mate
+        if mate.latitude != nil {
+            self.selectedIndex = ChannelController.TAB_MAP
         }
     }
 
     func moveTo(enchantment: Enchantment) {
-        if let mc = mapController {
-            mc.moveTo(enchantment: enchantment, focus: true)
-            self.selectedIndex = ChannelController.TAB_MAP
-        }
+        pendingMoveToEnchantment = enchantment
+        self.selectedIndex = ChannelController.TAB_MAP
     }
 
     func moveTo(marker: Marker) {
-        if let mc = mapController {
-            mc.moveTo(marker: marker, focus: true)
-            self.selectedIndex = ChannelController.TAB_MAP
-        }
+        pendingMoveToMarker = marker
+        self.selectedIndex = ChannelController.TAB_MAP
     }
 
     func edit(enchantment: Enchantment, name: String, shared: Bool) {

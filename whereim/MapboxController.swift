@@ -18,8 +18,10 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     var mapView: MGLMapView?
     var mapCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     var moveCameraToMyLocation = true
+    let channelController: ChannelController
 
-    required init(_ mapController: MapController) {
+    required init(_ channelController: ChannelController, _ mapController: MapController) {
+        self.channelController = channelController
         self.mapController = mapController
         super.init()
         initmarkerTamplate()
@@ -324,7 +326,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
             let m = searchResultMarker.remove(at: 0)
             self.mapView!.removeAnnotation(m)
         }
-        for r in mapController.searchResults {
+        for r in channelController.searchResults {
             let m = WimPointAnnotation()
             m.coordinate = r.location!
             m.title = r.name!
@@ -338,8 +340,8 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
     }
 
     func moveToSearchResult(at: Int) {
-        if at < mapController.searchResults.count {
-            let r = mapController.searchResults[at]
+        if at < channelController.searchResults.count {
+            let r = channelController.searchResults[at]
             mapView!.setCenter(r.location!, animated: false)
         }
         if at < searchResultMarker.count {
