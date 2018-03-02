@@ -1408,7 +1408,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel.active = nil
 
         if wasActive == false {
-            _ = DialogSendSharingNotification(vc, channel.id!)
+            if isActiveDevice==true {
+                _ = DialogSendSharingNotification(vc, channel.id!)
+            } else {
+                _ = DialogRequestActiveDevice(vc)
+            }
         }
 
         notifyChannelListChangedListeners()
