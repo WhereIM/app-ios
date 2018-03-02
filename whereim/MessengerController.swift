@@ -313,6 +313,9 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             }
         }
         viewEnd = scrollView.contentOffset.y == 0
+        if viewEnd {
+            self.vc.unread.isHidden = true
+        }
     }
 
     func reload() {
