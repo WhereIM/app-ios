@@ -106,6 +106,14 @@ class DialogCreateMarker {
         layout.topAnchor.constraint(equalTo: alert.contentView.topAnchor).isActive = true
         alert.contentView.bottomAnchor.constraint(equalTo: layout.bottomAnchor).isActive = true
 
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        alert.contentView.addGestureRecognizer(tap)
+
         mapController.present(alert, animated: true, completion:nil)
+    }
+
+    @objc func dismissKeyboard() {
+        alert.contentView.endEditing(true)
     }
 }
