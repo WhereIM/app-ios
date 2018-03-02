@@ -29,10 +29,10 @@ class SearchHistoryCell: UITableViewCell {
         keyword.adjustsFontSizeToFitWidth = false
 
         self.contentView.addSubview(keyword)
-        keyword.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
-        keyword.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
-        keyword.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        keyword.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+        keyword.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 5).isActive = true
+        keyword.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5).isActive = true
+        keyword.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10).isActive = true
+        keyword.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -282,6 +282,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
         textAttributionHidden!.isActive = true
 
         listView.translatesAutoresizingMaskIntoConstraints = false
+        listView.estimatedRowHeight = 60
+        listView.rowHeight = UITableViewAutomaticDimension
         self.view.addSubview(listView)
         listView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
         listView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true

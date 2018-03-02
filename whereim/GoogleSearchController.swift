@@ -38,10 +38,10 @@ class GoogleSearchResultsCell: UITableViewCell {
         layout.addArrangedSubview(attribution)
 
         self.contentView.addSubview(layout)
-        layout.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
-        layout.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
-        layout.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        layout.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+        layout.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 5).isActive = true
+        layout.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5).isActive = true
+        layout.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 3).isActive = true
+        layout.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -3).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -174,10 +174,10 @@ class GoogleAutoCompletesCell: UITableViewCell {
         prediction.adjustsFontSizeToFitWidth = false
 
         self.contentView.addSubview(prediction)
-        prediction.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
-        prediction.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
-        prediction.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        prediction.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+        prediction.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 5).isActive = true
+        prediction.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5).isActive = true
+        prediction.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 3).isActive = true
+        prediction.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -3).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
