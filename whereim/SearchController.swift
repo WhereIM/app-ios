@@ -287,7 +287,6 @@ class SearchController: UIViewController, UITextFieldDelegate {
         listView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         listView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         listView.bottomAnchor.constraint(equalTo: textAttribution.topAnchor).isActive = true
-        listView.isHidden = true
 
         contentArea.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(contentArea)
@@ -321,6 +320,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShown(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+
+        history_or_autocomplete()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -354,7 +355,8 @@ class SearchController: UIViewController, UITextFieldDelegate {
         keyword.text = ""
         keyword.resignFirstResponder()
         search("")
-        listView.isHidden = true
+        history_or_autocomplete()
+        listView.isHidden = false
         btn_clear.isHidden = true
         btn_search.isHidden = false
     }
