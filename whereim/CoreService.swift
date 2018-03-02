@@ -202,6 +202,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func logout() {
+        isActiveDevice = nil
+        _checkLocationService()
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()
         dictionary.keys.forEach { key in
