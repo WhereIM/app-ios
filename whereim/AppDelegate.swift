@@ -68,12 +68,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     vc.channel = channel
                     if let t = userInfo["type"] as? String {
                         switch t {
-                        case "text":
-                            vc.defaultTab = ChannelController.TAB_MESSAGE
-                        case "rich":
-                            vc.defaultTab = ChannelController.TAB_MESSAGE
-                        default:
+                        case "begin_sharing":
                             vc.defaultTab = ChannelController.TAB_MAP
+                        default:
+                            vc.defaultTab = ChannelController.TAB_MESSAGE
                         }
                     }
                     startupVC.topViewController?.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
