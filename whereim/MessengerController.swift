@@ -248,7 +248,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         lymdFormatter.dateStyle = .medium
         lymdFormatter.timeStyle = .none
         eeeFormatter.dateFormat = "EEE"
-        timeFormatter.dateFormat = "hh:mm"
+        timeFormatter.dateFormat = "HH:mm"
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
