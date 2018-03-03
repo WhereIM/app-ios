@@ -18,6 +18,7 @@ target 'whereim' do
   pod 'GRDB.swift'
 
   pod 'Mapbox-iOS-SDK'
+  pod 'MaterialComponents/Snackbar'
 
   pod 'Moscapsule', :git => 'https://github.com/flightonary/Moscapsule.git'
   pod 'OpenSSL-Universal'
