@@ -323,9 +323,13 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let viewEnd = self.viewEnd
         var rowOffset = CGFloat.init(0)
         var anchorRowId = Int64(0)
-        if let firstIndex = self.tableView.indexPathsForVisibleRows?[0] {
-            anchorRowId = self.messageList.message[firstIndex.row].id!
-            rowOffset = self.tableView.contentOffset.y - self.tableView.rectForRow(at: firstIndex).origin.y
+        if let count = self.tableView.indexPathsForVisibleRows?.count {
+            if count > 0 {
+                if let firstIndex = self.tableView.indexPathsForVisibleRows?[0] {
+                    anchorRowId = self.messageList.message[firstIndex.row].id!
+                    rowOffset = self.tableView.contentOffset.y - self.tableView.rectForRow(at: firstIndex).origin.y
+                }
+            }
         }
 
         self.messageList = service.getMessages(channel.id!)
