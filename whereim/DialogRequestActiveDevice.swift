@@ -9,15 +9,23 @@
 import UIKit
 
 class DialogRequestActiveDevice {
-    init(_ viewController: UIViewController) {
+    init(_ viewController: UIViewController, _ onEnd: (() -> Void)?) {
         let alert = UIAlertController(title: "active_client".localized, message: "active_client_message".localized, preferredStyle: .alert)
         let action_ok = UIAlertAction(title: "ok".localized, style: .default) { (alert: UIAlertAction!) -> Void in
             let service = CoreService.bind()
             service.setActive()
+            if let cb = onEnd {
+                cb()
+            }
         }
 
         alert.addAction(action_ok)
-        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        let action_cancel = UIAlertAction(title: "cancel".localized, style: .cancel) { (alert: UIAlertAction!) -> Void in
+            if let cb = onEnd {
+                cb()
+            }
+        }
+        alert.addAction(action_cancel)
         viewController.present(alert, animated: true, completion:nil)
     }
 }

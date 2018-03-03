@@ -6,18 +6,23 @@
 //  Copyright © 2018 Where.IM. All rights reserved.
 //
 
+import MaterialComponents.MaterialSnackbar
 import UIKit
 
 class DialogSendSharingNotification {
     init(_ viewController: UIViewController, _ channel_id: String) {
-        let alert = UIAlertController(title: nil, message: "begin_sharing".localized, preferredStyle: .alert)
-        let action_ok = UIAlertAction(title: "ok".localized, style: .default) { (alert: UIAlertAction!) -> Void in
+        let message = MDCSnackbarMessage()
+        message.text = "begin_sharing".localized
+
+        let action = MDCSnackbarMessageAction()
+        let actionHandler = {() in
             let service = CoreService.bind()
             service.sendNotification(channel_id, "begin_sharing")
         }
+        action.handler = actionHandler
+        action.title = "send".localized
+        message.action = action
 
-        alert.addAction(action_ok)
-        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
-        viewController.present(alert, animated: true, completion:nil)
+        MDCSnackbarManager.show(message)
     }
 }

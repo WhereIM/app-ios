@@ -562,7 +562,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         requestActiveDevice = false
         if let vc = currentViewController {
             DispatchQueue.main.async {
-                _ = DialogRequestActiveDevice(vc)
+                _ = DialogRequestActiveDevice(vc, nil)
             }
         }
     }
@@ -1410,10 +1410,12 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         channel.active = nil
 
         if wasActive == false {
-            if isActiveDevice==true {
+            if isActiveDevice == true {
                 _ = DialogSendSharingNotification(vc, channel.id!)
             } else {
-                _ = DialogRequestActiveDevice(vc)
+                _ = DialogRequestActiveDevice(vc) {
+                    _ = DialogSendSharingNotification(vc, channel.id!)
+                }
             }
         }
 
