@@ -73,7 +73,6 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
     }
 
     @objc func onProfileUpdated(notification: NSNotification) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.FBSDKProfileDidChange, object: nil)
         self.checkProfile()
     }
 
@@ -104,6 +103,7 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
             auth_provider = Key.FACEBOOK
             auth_id = token.userId
             auth_token = token.authenticationToken
+            checkProfile()
         }
     }
 
@@ -116,10 +116,10 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         if profileChecked {
             return
         }
-        profileChecked = true
-        let profile = FBSDKProfile.current()
-        if profile != nil {
-            auth_name = profile!.name
+        if let profile = FBSDKProfile.current() {
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.FBSDKProfileDidChange, object: nil)
+            profileChecked = true
+            auth_name = profile.name
             register_client()
         }
     }
@@ -151,8 +151,24 @@ class LoginController: UIViewController, LoginButtonDelegate, RegisterClientCall
         UserDefaults.standard.set(auth_id, forKey: Key.ID)
         UserDefaults.standard.set(auth_name, forKey: Key.NAME)
 
+        guard let provider = auth_provider else {
+            return
+        }
+
+        guard let token = auth_token else {
+            return
+        }
+
+        guard let id = auth_id else {
+            return
+        }
+
+        guard let name = auth_name else {
+            return
+        }
+
         self.view.makeToastActivity(.center)
-        service?.register_client(authProvider: auth_provider!, authToken: auth_token!, authId: auth_id!, name: auth_name!, callback: self)
+        service?.register_client(authProvider: provider, authToken: token, authId: id, name: name, callback: self)
     }
 
     func onCaptchaRequired() {
