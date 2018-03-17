@@ -122,11 +122,11 @@ class InTextCell: UITableViewCell {
         sender.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
 
         message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10).isActive = true
+        message.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -100).isActive = true
         message.topAnchor.constraint(equalTo: sender.bottomAnchor, constant: 2).isActive = true
         message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
 
         time.leadingAnchor.constraint(equalTo: message.trailingAnchor, constant: 5).isActive = true
-        time.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -80).isActive = true
         time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
     }
 
@@ -176,13 +176,13 @@ class OutTextCell: UITableViewCell {
         date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
         date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
 
-        time.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: 80).isActive = true
-        time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
-
-        message.leadingAnchor.constraint(equalTo: time.trailingAnchor, constant: 5).isActive = true
+        message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 100).isActive = true
         message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
         message.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
         message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+
+        time.trailingAnchor.constraint(equalTo: message.leadingAnchor, constant: -10).isActive = true
+        time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
