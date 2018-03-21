@@ -425,7 +425,7 @@
 				58568FAF1E51ADF2002FAD41 /* Resources */,
 				04CA559B7837A039854768A6 /* [CP] Embed Pods Frameworks */,
 				4E20F854A2DCED040C514235 /* [CP] Copy Pods Resources */,
-				5840689E1EAB6B9E00E4964D /* ShellScript */,
+				585EF05D205D92AD00321303 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -609,7 +609,6 @@
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
 				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
 				"${BUILT_PRODUCTS_DIR}/Moscapsule/Moscapsule.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SDCAlertView/SDCAlertView.framework",
 				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -633,7 +632,6 @@
 				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moscapsule.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDCAlertView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -681,7 +679,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-whereim/Pods-whereim-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5840689E1EAB6B9E00E4964D /* ShellScript */ = {
+		585EF05D205D92AD00321303 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -692,7 +690,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo GOOGLE_APP_ID=1:737200913386:ios:227b288786fe93e1\necho \"${PODS_ROOT}\"/FirebaseCrash/upload-sym \"${PODS_ROOT}\"/../where-im-154418-firebase-crashreporting-r0fbj-d866bd6cce.json";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\"";
 		};
 		6FB0676166BE6928ED2EE583 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -13,7 +13,9 @@ target 'whereim' do
 
   pod 'Firebase'
   pod 'Firebase/Auth'
-  pod 'Firebase/Crash'
+
+  pod 'Fabric', '~> 1.7.5'
+  pod 'Crashlytics', '~> 3.10.1'
 
   pod 'GRDB.swift'
 
