@@ -29,6 +29,7 @@ target 'whereim' do
   pod 'GoogleSignIn'
 
   pod 'SDCAlertView'
+  pod 'SDWebImage', '~> 4.0'
 
   pod 'Toast-Swift'
 

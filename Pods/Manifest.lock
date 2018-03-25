@@ -135,6 +135,9 @@ PODS:
   - nanopb/encode (0.3.8)
   - OpenSSL-Universal (1.0.2.11)
   - SDCAlertView (8.0.1)
+  - SDWebImage (4.3.3):
+    - SDWebImage/Core (= 4.3.3)
+  - SDWebImage/Core (4.3.3)
   - Toast-Swift (3.0.1)
 
 DEPENDENCIES:
@@ -154,6 +157,7 @@ DEPENDENCIES:
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
   - OpenSSL-Universal
   - SDCAlertView
+  - SDWebImage (~> 4.0)
   - Toast-Swift
 
 EXTERNAL SOURCES:
@@ -194,8 +198,9 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   OpenSSL-Universal: bcea8d73aec478029029164f9f0695b57cb94309
   SDCAlertView: 0dac88159108e755a78ca8d789b3b82305accae4
+  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
 
-PODFILE CHECKSUM: b7f21c9b158380a7a85d7c1ca057e7873226e3be
+PODFILE CHECKSUM: 0d8a796a8d93eff8046f5b890044c98d06756b4f
 
 COCOAPODS: 1.4.0
