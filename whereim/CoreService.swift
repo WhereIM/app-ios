@@ -183,6 +183,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 try Message.migrate(db, db_version)
                 print("Message db migration finished")
 
+                try PendingMessage.migrate(db, db_version)
+                print("PendingMessage db migration finished")
+
                 try Log.migrate(db, db_version)
                 print("Log migration finished")
 
@@ -334,6 +337,8 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             pending_link = nil
             processLink(link)
         }
+
+        deliverPendingMessage(0)
     }
 
     func mqttOnDisconnected() {
@@ -641,6 +646,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
     }
 
     func mqttChannelMessageHandler(_ channel_id: String, _ data: [String: Any]) {
+        if let hash = data[Key.HASH] as? String {
+            dbConn!.inDatabase { db in
+                PendingMessage.delete(db, hash)
+            }
+        }
+        deliverPendingMessage(0)
+        guard let _ = data[Key.TYPE] as? String else {
+            return
+        }
         let m = Message(data)
 
         dbConn!.inDatabase { db in
@@ -1030,15 +1044,63 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return Message.getMessages(channel_id)
     }
 
-    func sendMessage(_ channel_id: String, _ text: String, _ location: CLLocationCoordinate2D?) {
-        var data = [String:Any]()
-        data[Key.MESSAGE] = text
-        if let ll = location {
-            data[Key.TYPE] = "rich"
-            data[Key.LATITUDE] = ll.latitude
-            data[Key.LONGITUDE] = ll.longitude
+    let DELIVERY_INTERVAL = 5000
+    var uploading = false
+    var deliveryJob: DispatchWorkItem?
+    func deliverPendingMessage(_ delay: Int){
+        if deliveryJob != nil {
+            return
         }
-        publish("channel/\(channel_id)/data/message/put", data)
+        deliveryJob = DispatchWorkItem {
+            self.deliveryJob = nil
+            if !self.mqttConnected {
+                return
+            }
+            if self.uploading {
+                self.deliverPendingMessage(self.DELIVERY_INTERVAL)
+            }
+            var discard = false
+            self.dbConn!.inDatabase { db in
+                if let pm = PendingMessage.pop(db) {
+                    switch pm.type! {
+                    case "rich", "text":
+                        pm.payload[Key.HASH] = pm.hash
+                        self.publish("channel/\(pm.channel_id!)/data/message/put", pm.payload)
+                    default:
+                        discard = true
+                        print("Unsupported pending message type")
+                    }
+                    if discard {
+                        PendingMessage.delete(db, pm.hash!)
+                    }
+                }
+            }
+            self.deliverPendingMessage(self.DELIVERY_INTERVAL)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay), execute: deliveryJob!)
+    }
+
+    func sendImage(_ channel_id: String, _ path: URL){
+
+    }
+
+    func sendMessage(_ channel_id: String, _ text: String, _ location: CLLocationCoordinate2D?) {
+        let pm = PendingMessage()
+        pm.channel_id = channel_id
+        pm.type = "rich"
+        pm.payload[Key.TEXT] = text
+        if let ll = location {
+            pm.payload[Key.TYPE] = "rich"
+            pm.payload[Key.LATITUDE] = ll.latitude
+            pm.payload[Key.LONGITUDE] = ll.longitude
+        }
+        dbConn!.inDatabase { db in
+            do {
+                try pm.save(db)
+            } catch {
+                print("Error saving pending message \(error)")
+            }
+        }
     }
 
     func sendNotification(_ channel_id: String, _ type: String) {

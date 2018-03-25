@@ -32,6 +32,8 @@ class Key {
     static let GOOGLE = "google"
     static let GOOGLE_SEARCH = "google_search"
 
+    static let HASH = "hash"
+
     static let ID = "id"
 
     static let KEY = "key"
@@ -62,6 +64,7 @@ class Key {
     static let SPEED = "spd"
     static let STALE = "stale"
 
+    static let TEXT = "text"
     static let TILE = "tile"
     static let TIME = "time"
     static let TOKEN = "token"
