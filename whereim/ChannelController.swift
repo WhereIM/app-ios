@@ -130,7 +130,10 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
 
         layout.addArrangedSubview(titleLayout)
 
-        loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(switchClicked(gestureReconizer:)))
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(switchLongPress(gestureReconizer:)))
+        loadingSwitch.addGestureRecognizer(tap)
+        loadingSwitch.addGestureRecognizer(longPress)
         layout.addArrangedSubview(loadingSwitch)
 
         navigator.addSubview(layout)
@@ -287,8 +290,16 @@ class ChannelController: UITabBarController, ChannelListChangedListener, Connect
         }
     }
 
-    @objc func switchClicked(sender: UISwitch) {
-        service.toggleChannelActive(self, channel!)
+    @objc func switchClicked(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended){
+            service.toggleChannelActive(self, channel!)
+        }
+    }
+
+    @objc func switchLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.began){
+            service.deactivateChannel(self, channel!)
+        }
     }
 
     func onMateData(_ mate: Mate) {

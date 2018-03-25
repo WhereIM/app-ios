@@ -1422,6 +1422,13 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         notifyChannelListChangedListeners()
     }
 
+    func deactivateChannel(_ vc: UIViewController, _ channel: Channel) {
+        publish("client/\(clientId!)/channel/put", [Key.CHANNEL: channel.id!, Key.ACTIVE: false])
+        channel.active = nil
+
+        notifyChannelListChangedListeners()
+    }
+
     func toggleChannelEnabled(_ channel: Channel) {
         if channel.enabled == nil {
             return

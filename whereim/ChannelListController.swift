@@ -121,8 +121,11 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
             cell.subtitle.isHidden = true
         }
 
-        cell.loadingSwitch.uiswitch.tag = indexPath.row
-        cell.loadingSwitch.uiswitch.addTarget(self, action: #selector(switchClicked(sender:)), for: UIControlEvents.touchUpInside)
+        cell.loadingSwitch.tag = indexPath.row
+        let tap = UITapGestureRecognizer(target: self, action: #selector(switchClicked(gestureReconizer:)))
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(switchLongPress(gestureReconizer:)))
+        cell.loadingSwitch.addGestureRecognizer(tap)
+        cell.loadingSwitch.addGestureRecognizer(longPress)
         cell.loadingSwitch.setEnabled(channel.active)
 
         if channel.enabled == true {
@@ -200,9 +203,18 @@ class ChannelListAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         return false
     }
 
-    @objc func switchClicked(sender: UISwitch) {
-        let channel = channelList[sender.tag]
-        service.toggleChannelActive(self.vc, channel)
+    @objc func switchClicked(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended){
+            let channel = channelList[gestureReconizer.view!.tag]
+            service.toggleChannelActive(self.vc, channel)
+        }
+    }
+
+    @objc func switchLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.began){
+            let channel = channelList[gestureReconizer.view!.tag]
+            service.deactivateChannel(self.vc, channel)
+        }
     }
 
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -370,6 +382,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         channelListView.register(ChannelCell.self, forCellReuseIdentifier: "channel")
         channelListView.dataSource = adapter
         channelListView.delegate = adapter
+        channelListView.rowHeight = 44
         channelListView.backgroundColor = UIColor.clear
 
         listArea.layer.backgroundColor = UIColor.white.withAlphaComponent(0.39).cgColor

@@ -26,6 +26,7 @@ class UILoadingSwitch: UIView {
         loading.translatesAutoresizingMaskIntoConstraints = false
         loading.activityIndicatorViewStyle = .gray
         loading.hidesWhenStopped = true
+        uiswitch.isUserInteractionEnabled = false
         addSubview(uiswitch)
         addSubview(loading)
         NSLayoutConstraint.activate([
