@@ -176,7 +176,7 @@ class OutTextCell: UITableViewCell {
         date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
         date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
 
-        message.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 100).isActive = true
+        message.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: 100).isActive = true
         message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
         message.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
         message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
