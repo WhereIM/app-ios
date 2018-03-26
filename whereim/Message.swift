@@ -51,6 +51,20 @@ class BundledMessages {
     }
 }
 
+class Image {
+    var key: String
+    var width: Float
+    var height: Float
+    var ext: String
+
+    init(_ key: String, _ width: Int, _ height: Int, _ ext: String){
+        self.key = key
+        self.width = Float(width)
+        self.height = Float(height)
+        self.ext = ext
+    }
+}
+
 class Message: RowConvertible, Persistable {
     let service = CoreService.bind()
 
@@ -115,6 +129,32 @@ class Message: RowConvertible, Persistable {
             }
         }
         return sender!
+    }
+
+    func getImage() -> Image? {
+        do {
+            guard let attr = try JSONSerialization.jsonObject(with: message!.data(using: .utf8)!, options: []) as? [String: Any] else {
+                return nil
+            }
+            if type != "image" {
+                return nil
+            }
+            guard let key = attr[Key.KEY] as? String else {
+                return nil
+            }
+            guard let w = attr[Key.WIDTH] as? Int else {
+                return nil
+            }
+            guard let h = attr[Key.HEIGHT] as? Int else {
+                return nil
+            }
+            guard let ext = attr[Key.EXTENSION] as? String else {
+                return nil
+            }
+            return Image(key, w, h, ext)
+        } catch {
+            return nil
+        }
     }
 
     func getText() -> NSMutableAttributedString {

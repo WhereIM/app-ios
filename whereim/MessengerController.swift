@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import AVFoundation
 import CoreLocation
+import SDWebImage
 
 class InputBar: UIStackView {
     let background = UIView()
+    let btn_picker = UIButton()
+    let btn_camera = UIButton()
     let pin = UIImageView()
     let text = UITextView()
     let btn_send = UIButton()
@@ -44,6 +48,18 @@ class InputBar: UIStackView {
         background.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         background.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
 
+        btn_picker.translatesAutoresizingMaskIntoConstraints = false
+        btn_picker.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        btn_picker.setImage(UIImage(named: "ic_insert_photo"), for: .normal)
+        btn_picker.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        self.addArrangedSubview(btn_picker)
+
+        btn_camera.translatesAutoresizingMaskIntoConstraints = false
+        btn_camera.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0 , bottom: 0, right: 5)
+        btn_camera.setImage(UIImage(named: "ic_camera_alt"), for: .normal)
+        btn_camera.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        self.addArrangedSubview(btn_camera)
+
         pin.translatesAutoresizingMaskIntoConstraints = false
         pin.image = UIImage(named: "icon_pin")
         pin.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
@@ -69,6 +85,130 @@ class InputBar: UIStackView {
 
         text.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         btn_send.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+    }
+}
+
+
+class InImageCell: UITableViewCell {
+    let date = UILabel()
+    let sender = UILabel()
+    let imageview = UIImageView()
+    let imageviewWidth: NSLayoutConstraint
+    let imageviewHeight: NSLayoutConstraint
+    let time = UILabel()
+    var dateHeight: NSLayoutConstraint
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
+
+        imageviewWidth = imageview.widthAnchor.constraint(equalToConstant: 200)
+        imageviewWidth.isActive = true
+        imageviewHeight = imageview.heightAnchor.constraint(equalToConstant: 200)
+        imageviewHeight.isActive = true
+
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+
+        date.translatesAutoresizingMaskIntoConstraints = false
+        date.textAlignment = .center
+        date.backgroundColor = UIColor(red:0.94, green:0.94, blue:0.94, alpha:1.0)
+        date.font = UIFont.systemFont(ofSize: 13)
+        self.contentView.addSubview(date)
+
+        sender.translatesAutoresizingMaskIntoConstraints = false
+        sender.font = UIFont.systemFont(ofSize: 12)
+        sender.textColor = .gray
+        self.contentView.addSubview(sender)
+
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        imageview.backgroundColor = UIColor(red:0.89, green:0.91, blue:0.92, alpha:1.0)
+        imageview.contentMode = .scaleAspectFill
+        imageview.layer.masksToBounds = true
+        imageview.layer.cornerRadius = 10
+        self.contentView.addSubview(imageview)
+
+        time.translatesAutoresizingMaskIntoConstraints = false
+        time.font = UIFont.systemFont(ofSize: 10)
+        time.textColor = .lightGray
+        self.contentView.addSubview(time)
+
+        date.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
+
+        sender.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10).isActive = true
+        sender.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -100).isActive = true
+        sender.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
+
+        imageview.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10).isActive = true
+        imageview.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -100).isActive = true
+        imageview.topAnchor.constraint(equalTo: sender.bottomAnchor, constant: 2).isActive = true
+        imageview.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+
+        time.leadingAnchor.constraint(equalTo: imageview.trailingAnchor, constant: 5).isActive = true
+        time.bottomAnchor.constraint(equalTo: imageview.bottomAnchor).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class OutImageCell: UITableViewCell {
+    let date = UILabel()
+    let imageview = UIImageView()
+    let imageviewWidth: NSLayoutConstraint
+    let imageviewHeight: NSLayoutConstraint
+    let time = UILabel()
+    var dateHeight: NSLayoutConstraint
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
+
+        imageviewWidth = imageview.widthAnchor.constraint(equalToConstant: 200)
+        imageviewWidth.isActive = true
+        imageviewHeight = imageview.heightAnchor.constraint(equalToConstant: 200)
+        imageviewHeight.isActive = true
+
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+
+        date.translatesAutoresizingMaskIntoConstraints = false
+        date.textAlignment = .center
+        date.backgroundColor = UIColor(red:0.94, green:0.94, blue:0.94, alpha:1.0)
+        date.font = UIFont.systemFont(ofSize: 13)
+        self.contentView.addSubview(date)
+
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        imageview.backgroundColor = UIColor(red:0.89, green:0.91, blue:0.92, alpha:1.0)
+        imageview.contentMode = .scaleAspectFill
+        imageview.layer.masksToBounds = true
+        imageview.layer.cornerRadius = 10
+        self.contentView.addSubview(imageview)
+
+        time.translatesAutoresizingMaskIntoConstraints = false
+        time.font = UIFont.systemFont(ofSize: 10)
+        time.textColor = .lightGray
+        time.adjustsFontSizeToFitWidth = false
+        self.contentView.addSubview(time)
+
+        date.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+        date.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        date.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
+
+        imageview.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: 100).isActive = true
+        imageview.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
+        imageview.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
+        imageview.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+
+        time.trailingAnchor.constraint(equalTo: imageview.leadingAnchor, constant: -10).isActive = true
+        time.bottomAnchor.constraint(equalTo: imageview.bottomAnchor).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -284,22 +424,47 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let timeString = timeFormatter.string(from: time)
         let messageText = message.getText()
 
-        if (message.mate_id == channel.mate_id) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
-            cell.message.delegate = textViewDelegate
-            cell.message.attributedText = messageText
-            cell.date.text = dateString
-            cell.dateHeight.isActive = !showDate
-            cell.time.text = timeString
-            return cell
+        if indexPath.row < messageList.message.count {
+            if let img = message.getImage() {
+                if (message.mate_id == channel.mate_id) {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "out_image", for: indexPath) as! OutImageCell
+                    cell.imageview.sd_setImage(with: Config.getThumbnail(img))
+                    cell.imageviewHeight.constant = cell.imageviewWidth.constant * CGFloat(img.height/img.width)
+                    cell.date.text = dateString
+                    cell.dateHeight.isActive = !showDate
+                    cell.time.text = timeString
+                    return cell
+                } else {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "in_image", for: indexPath) as! InImageCell
+                    cell.sender.text = message.getSender()
+                    cell.imageview.sd_setImage(with: Config.getThumbnail(img))
+                    cell.imageviewHeight.constant = cell.imageviewWidth.constant * CGFloat(img.height/img.width)
+                    cell.date.text = dateString
+                    cell.dateHeight.isActive = !showDate
+                    cell.time.text = timeString
+                    return cell
+                }
+            }
+            if (message.mate_id == channel.mate_id) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
+                cell.message.delegate = textViewDelegate
+                cell.message.attributedText = messageText
+                cell.date.text = dateString
+                cell.dateHeight.isActive = !showDate
+                cell.time.text = timeString
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
+                cell.sender.text = message.getSender()
+                cell.message.delegate = textViewDelegate
+                cell.message.attributedText = messageText
+                cell.date.text = dateString
+                cell.dateHeight.isActive = !showDate
+                cell.time.text = timeString
+                return cell
+            }
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
-            cell.sender.text = message.getSender()
-            cell.message.delegate = textViewDelegate
-            cell.message.attributedText = messageText
-            cell.date.text = dateString
-            cell.dateHeight.isActive = !showDate
-            cell.time.text = timeString
             return cell
         }
     }
@@ -355,11 +520,13 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-class MessengerController: UIViewController, Callback {
+class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, Callback {
     let inputBar = InputBar()
     let unread = UITextView()
     let messageView = UITableView()
     var pinLocation: CLLocationCoordinate2D?
+
+    var isTyping = false
 
     var service: CoreService?
     var channel: Channel?
@@ -380,6 +547,8 @@ class MessengerController: UIViewController, Callback {
         inputBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         inputBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
 
+        inputBar.text.delegate = self
+        inputBar.btn_camera.addTarget(self, action: #selector(btn_camera_clicked(sender:)), for: .touchUpInside)
         inputBar.btn_send.addTarget(self, action: #selector(btn_send_clicked(sender:)), for: .touchUpInside)
 
         let parent = self.tabBarController as! ChannelController
@@ -389,6 +558,8 @@ class MessengerController: UIViewController, Callback {
 
         adapter = MessageAdapter(self, messageView, (service)!, channel!, parent)
         messageView.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+        messageView.register(InImageCell.self, forCellReuseIdentifier: "in_image")
+        messageView.register(OutImageCell.self, forCellReuseIdentifier: "out_image")
         messageView.register(InTextCell.self, forCellReuseIdentifier: "in_text")
         messageView.register(OutTextCell.self, forCellReuseIdentifier: "out_text")
         messageView.allowsSelection = false
@@ -438,12 +609,64 @@ class MessengerController: UIViewController, Callback {
         super.viewDidLoad()
     }
 
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        isTyping = true
+        updateUI()
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        isTyping = false
+        updateUI()
+    }
+
     @objc func unread_clicked(sender: Any) {
         if(self.adapter!.messageList.message.count > 0){
             let indexPath = IndexPath(row: 0, section: 0)
             self.messageView.scrollToRow(at: indexPath, at: .top, animated: true)
         }
         self.unread.isHidden = true
+    }
+
+    @objc func btn_camera_clicked(sender: Any) {
+        if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != AVAuthorizationStatus.authorized {
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
+                if response {
+                    self.takePhoto()
+                }
+            }
+        } else {
+            takePhoto()
+        }
+    }
+
+    func takePhoto() {
+        let pickerController = UIImagePickerController()
+        pickerController.delegate = self
+        pickerController.sourceType = UIImagePickerControllerSourceType.camera
+        self.present(pickerController, animated: true, completion: nil)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let folder = path.appendingPathComponent("temp")
+            do {
+                try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: false, attributes: nil)
+            } catch let error as NSError {
+                // noop
+            }
+            let uid = UUID().uuidString
+            let file = "temp/\(uid).jpg"
+            let newPath = path.appendingPathComponent(file)
+            let jpgImageData = UIImageJPEGRepresentation(image, 1.0)
+            do {
+                try jpgImageData!.write(to: newPath)
+                service!.sendImage(channel!.id!, file)
+            } catch {
+                print(error)
+            }
+        }
+        dismiss(animated:true, completion: nil)
     }
 
     @objc func btn_send_clicked(sender: Any) {
@@ -462,6 +685,14 @@ class MessengerController: UIViewController, Callback {
         pinLocation = parent.pendingPinLocation
         parent.pendingPinLocation = nil
         inputBar.pin.isHidden = pinLocation==nil
+        if isTyping || (pinLocation != nil) {
+            inputBar.btn_picker.isHidden = true
+            inputBar.btn_camera.isHidden = true
+        } else {
+            inputBar.btn_picker.isHidden = false
+            inputBar.btn_camera.isHidden = !UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
+
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -487,7 +718,6 @@ class MessengerController: UIViewController, Callback {
     @objc func keyboardShown(_ n:NSNotification) {
         let d = n.userInfo!
         let r = (d[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        print(r.size.height)
         self.bottomConstraint!.constant = -(r.size.height - self.tabBarController!.tabBar.frame.size.height)
         self.view.layoutIfNeeded()
     }

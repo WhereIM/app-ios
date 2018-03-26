@@ -36,6 +36,9 @@ class Config {
 
     static let WHERE_IM_URL = "https://dev.where.im/%@"
 
+    static let THUMBNAIL_URL = "https://s3-ap-northeast-1.amazonaws.com/whereim-thumbnail/%@"
+    static let PREVIEW_URL = "https://s3-ap-northeast-1.amazonaws.com/whereim-preview/%@"
+
     static let AWS_IOT_MQTT_ENDPOINT = "a3ftvwpcurxils.iot.ap-northeast-1.amazonaws.com"
     static let AWS_IOT_MQTT_PORT = 8883
     static let AWS_API_GATEWAY_REGISTER_CLIENT = "https://gznzura26h.execute-api.ap-northeast-1.amazonaws.com/production"
@@ -82,5 +85,13 @@ class Config {
 
     static func setSearchProvider(_ provider: SearchProvider) {
         UserDefaults.standard.set(provider.rawValue, forKey: Key.SEARCH_PROVIDER)
+    }
+
+    static func getThumbnail(_ image: Image) -> URL {
+        return URL(string: String(format: Config.THUMBNAIL_URL, image.key))!.deletingPathExtension().appendingPathExtension(image.ext)
+    }
+
+    static func getPreview(_ image: Image) -> URL {
+        return URL(string: String(format: Config.PREVIEW_URL, image.key))!.deletingPathExtension().appendingPathExtension(image.ext)
     }
 }

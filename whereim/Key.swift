@@ -26,6 +26,7 @@ class Key {
 
     static let ENABLED = "enabled"
     static let ENABLE_RADIUS = "enable_radius"
+    static let EXTENSION = "ext"
 
     static let FACEBOOK = "facebook"
 
@@ -33,8 +34,10 @@ class Key {
     static let GOOGLE_SEARCH = "google_search"
 
     static let HASH = "hash"
+    static let HEIGHT = "h"
 
     static let ID = "id"
+    static let IMAGE = "img"
 
     static let KEY = "key"
 
@@ -79,4 +82,6 @@ class Key {
 
     static let USER_CHANNEL_NAME = "user_channel_name"
     static let USER_MATE_NAME = "user_mate_name"
+
+    static let WIDTH = "w"
 }

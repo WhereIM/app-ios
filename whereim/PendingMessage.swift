@@ -71,9 +71,9 @@ class PendingMessage: RowConvertible, Persistable {
     func encode(to container: inout PersistenceContainer) {
         container[Columns.id] = id
         if hash == nil {
-            let guid = ProcessInfo.processInfo.globallyUniqueString
+            let uid = UUID().uuidString
             let time = NSDate().timeIntervalSince1970 * 1000
-            hash = "\(guid)\(time)"
+            hash = "\(uid)\(time)"
         }
         container[Columns.hash] = hash
         container[Columns.channel] = channel_id

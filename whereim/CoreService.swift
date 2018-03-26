@@ -41,6 +41,10 @@ protocol Callback {
     func onCallback()
 }
 
+protocol UploadLinkCallback {
+    func onUploadLink(_ uid: String, _ url: String, _ data: [String:String])
+}
+
 protocol ApiKeyCallback {
     func apiKey(_ key: String)
 }
@@ -411,6 +415,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             let systemKeyPattern = try NSRegularExpression(pattern: "^system/key/get$", options: [])
             if let _ = systemKeyPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, nstopic.length)) {
                 mqttSystemKeyHandler(data)
+                return
+            }
+            let systemUploadPattern = try NSRegularExpression(pattern: "^system/upload/get$", options: [])
+            if let _ = systemUploadPattern.firstMatch(in: topic, options: [], range: NSMakeRange(0, nstopic.length)) {
+                mqttSystemUploadHandler(data)
                 return
             }
         } catch {
@@ -1044,7 +1053,15 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         return Message.getMessages(channel_id)
     }
 
-    let DELIVERY_INTERVAL = 5000
+    var uploadLinkListener = [String:UploadLinkCallback]()
+    func getUploadLink(_ type: String, _ filename: String, _ callback: UploadLinkCallback) {
+        let guid = UUID().uuidString
+        uploadLinkListener[guid] = callback
+        let data = [Key.TOKEN: guid, Key.TYPE: type, "file":filename] as [String:String]
+        publish("system/upload/get", data)
+    }
+
+    let DELIVERY_INTERVAL = 15000
     var uploading = false
     var deliveryJob: DispatchWorkItem?
     func deliverPendingMessage(_ delay: Int){
@@ -1058,6 +1075,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
             if self.uploading {
                 self.deliverPendingMessage(self.DELIVERY_INTERVAL)
+                return
             }
             var discard = false
             self.dbConn!.inDatabase { db in
@@ -1066,6 +1084,69 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     case "rich", "text":
                         pm.payload[Key.HASH] = pm.hash
                         self.publish("channel/\(pm.channel_id!)/data/message/put", pm.payload)
+                    case "image":
+                        if let suffix = pm.payload["file"] as? String {
+                            let prefix = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                            let path = prefix.appendingPathComponent(suffix)
+                            if FileManager.default.fileExists(atPath: path.path) {
+                                class CB: UploadLinkCallback {
+                                    let service: CoreService
+                                    let channel_id: String
+                                    let path: URL
+                                    let hash: String
+
+                                    init(_ service: CoreService, _ channel_id: String, _ path: URL, _ hash: String) {
+                                        self.service = service
+                                        self.channel_id = channel_id
+                                        self.path = path
+                                        self.hash = hash
+                                    }
+
+                                    func onUploadLink(_ uid: String, _ url: String, _ data: [String : String]) {
+                                        service.uploading = true
+                                        Alamofire.upload(
+                                            multipartFormData: { (multipartForm) in
+                                                for (key, value) in data {
+                                                    multipartForm.append(value.data(using: .utf8)!, withName: key)
+                                                }
+                                                multipartForm.append(self.path, withName: "file")
+                                            },
+                                            to: url,
+                                            method : .post
+                                        ) { (encodeResult) in
+                                            switch encodeResult {
+                                                case .success(let upload, _, _):
+                                                    upload.response { response in
+                                                        if (200 ... 299).contains(response.response!.statusCode) {
+                                                            var data = [String:String]()
+                                                            data[Key.TYPE] = "image"
+                                                            data[Key.IMAGE] = uid
+                                                            data[Key.HASH] = self.hash
+                                                            self.service.publish("channel/\(self.channel_id)/data/message/put", data)
+                                                            do {
+                                                                try FileManager.default.removeItem(at: self.path)
+                                                            } catch {
+                                                                // noop
+                                                            }
+                                                        } else {
+                                                            print("Upload failed \(response.response?.statusCode)")
+                                                        }
+                                                        self.service.uploading = false
+                                                    }
+                                                case .failure(let encodingError):
+                                                    print(encodingError)
+                                            }
+                                        }
+                                    }
+                                }
+                                self.getUploadLink("image", path.lastPathComponent, CB(self, pm.channel_id!, path, pm.hash!))
+                            } else {
+                                print("File not found \(path.path)")
+                                discard = true
+                            }
+                        } else {
+                            discard = true
+                        }
                     default:
                         discard = true
                         print("Unsupported pending message type")
@@ -1073,15 +1154,26 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     if discard {
                         PendingMessage.delete(db, pm.hash!)
                     }
+                    self.deliverPendingMessage(self.DELIVERY_INTERVAL)
                 }
             }
-            self.deliverPendingMessage(self.DELIVERY_INTERVAL)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay), execute: deliveryJob!)
     }
 
-    func sendImage(_ channel_id: String, _ path: URL){
-
+    func sendImage(_ channel_id: String, _ path: String){
+        let pm = PendingMessage()
+        pm.channel_id = channel_id
+        pm.type = "image"
+        pm.payload["file"] = path
+        dbConn!.inDatabase { db in
+            do {
+                try pm.save(db)
+            } catch {
+                print("Error saving pending image message \(error)")
+            }
+        }
+        deliverPendingMessage(0)
     }
 
     func sendMessage(_ channel_id: String, _ text: String, _ location: CLLocationCoordinate2D?) {
@@ -1098,9 +1190,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             do {
                 try pm.save(db)
             } catch {
-                print("Error saving pending message \(error)")
+                print("Error saving pending text message \(error)")
             }
         }
+        deliverPendingMessage(0)
     }
 
     func sendNotification(_ channel_id: String, _ type: String) {
@@ -1705,6 +1798,24 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                     callback.apiKey(key)
                 }
             }
+        }
+    }
+
+    func mqttSystemUploadHandler(_ data: [String:Any]) {
+        guard let guid = data[Key.ID] as? String else {
+            return
+        }
+        guard let token = data[Key.TOKEN] as? String else {
+            return
+        }
+        guard let url = data["url"] as? String else {
+            return
+        }
+        guard let data = data["data"] as? [String:String] else {
+            return
+        }
+        if let cb = uploadLinkListener.removeValue(forKey: token) {
+            cb.onUploadLink(guid, url, data)
         }
     }
 
