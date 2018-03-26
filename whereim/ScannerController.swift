@@ -50,7 +50,7 @@ class ScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
     func alertNoPermission() {
         let alert = AlertController(title: "scan_qr_code".localized, message: "NSCameraUsageDescription".localized, preferredStyle: .alert)
         alert.addAction(AlertAction(title: "cancel".localized, style: .normal, handler: nil))
-        let action = AlertAction(title: "action_settings".localized, style: .preferred){ _ in
+        let action = AlertAction(title: "settings".localized, style: .preferred){ _ in
             UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
         }
         alert.addAction(action)
