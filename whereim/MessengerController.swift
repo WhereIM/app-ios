@@ -670,10 +670,13 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
     }
 
     @objc func btn_send_clicked(sender: Any) {
-        service!.sendMessage(channel!.id!, inputBar.text.text!, pinLocation)
-        inputBar.text.text = nil
-        pinLocation = nil
-        updateUI()
+        let text = inputBar.text.text!.trim()
+        if text.count > 0 {
+            service!.sendMessage(channel!.id!, inputBar.text.text!, pinLocation)
+            inputBar.text.text = nil
+            pinLocation = nil
+            updateUI()
+        }
     }
 
     func onCallback() {
