@@ -86,6 +86,10 @@ class PendingMessage: RowConvertible, Persistable {
         }
     }
 
+    func getFile() -> String? {
+        return payload["file"] as? String
+    }
+
     static func pop(_ db: Database) -> PendingMessage? {
         do {
             let cursor = try PendingMessage.fetchCursor(db, "SELECT * FROM \(TABLE_NAME) ORDER BY \(Columns.id.name) ASC LIMIT 1")
@@ -100,9 +104,35 @@ class PendingMessage: RowConvertible, Persistable {
 
     static func delete(_ db: Database, _ hash: String) {
         do {
+            let cursor = try PendingMessage.fetchCursor(db, "SELECT * FROM \(TABLE_NAME) WHERE \(Columns.hash.name)=?", arguments: [hash])
+            if let m = try cursor.next() {
+                do {
+                    let prefix = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    if let f = m.getFile() {
+                        let path = prefix.appendingPathComponent(f)
+                        try FileManager.default.removeItem(at: path)
+                    }
+                } catch {
+                    print("Error deleting pending image file")
+                }
+            }
+
             try db.execute("DELETE FROM \(TABLE_NAME) WHERE \(Columns.hash.name)=?", arguments: [hash])
         } catch {
             print("Error deleting pending message \(error)")
         }
+    }
+
+    static func getMessage(_ db: Database, _ channel_id: String) -> [PendingMessage] {
+        var ret = [PendingMessage]()
+        do {
+            let cursor = try PendingMessage.fetchCursor(db, "SELECT * FROM \(TABLE_NAME) WHERE \(Columns.channel.name)=? AND \(Columns.type.name)!='ctrl' ORDER BY \(Columns.id.name) DESC", arguments: [channel_id])
+            while let m = try cursor.next() {
+                ret.append(m)
+            }
+        } catch {
+            print("Error reading pending messages \(error)")
+        }
+        return ret
     }
 }

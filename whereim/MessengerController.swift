@@ -88,6 +88,69 @@ class InputBar: UIStackView {
     }
 }
 
+class PendingImageCell: UITableViewCell {
+    let imageview = UIImageView()
+    let imageviewWidth: NSLayoutConstraint
+    let imageviewHeight: NSLayoutConstraint
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        imageviewWidth = imageview.widthAnchor.constraint(equalToConstant: 200)
+        imageviewWidth.isActive = true
+        imageviewHeight = imageview.heightAnchor.constraint(equalToConstant: 200)
+        imageviewHeight.isActive = true
+
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        imageview.backgroundColor = UIColor(red:0.89, green:0.91, blue:0.92, alpha:1.0)
+        imageview.contentMode = .scaleAspectFill
+        imageview.layer.masksToBounds = true
+        imageview.layer.cornerRadius = 10
+        self.contentView.addSubview(imageview)
+
+        imageview.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: 100).isActive = true
+        imageview.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
+        imageview.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10).isActive = true
+        imageview.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class PendingTextCell: UITableViewCell {
+    let message = UITextView()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+
+        message.translatesAutoresizingMaskIntoConstraints = false
+        message.backgroundColor = UIColor(red:0.73, green:0.95, blue:0.56, alpha:1.0)
+        message.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
+        message.dataDetectorTypes = .all
+        message.isEditable = false
+        message.textContainer.lineBreakMode = .byWordWrapping
+        message.isScrollEnabled = false
+        message.layer.masksToBounds = true
+        message.layer.cornerRadius = 10
+
+        self.contentView.addSubview(message)
+
+        message.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: 100).isActive = true
+        message.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
+        message.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10).isActive = true
+        message.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
 class InImageCell: UITableViewCell {
     let date = UILabel()
@@ -392,7 +455,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.messageList.message.count
+        return self.messageList.message.count + self.messageList.pendingMessage.count
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -404,27 +467,48 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = self.messageList.message[indexPath.row]
-        let time = Date(timeIntervalSince1970: TimeInterval(message.time!))
-
         var showDate = false
 
-        if indexPath.row == self.messageList.message.count - 1 {
-            showDate = true
-        } else {
-            let prev = self.messageList.message[indexPath.row + 1]
-            if dateFormatter.string(from: time) != dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(prev.time!))) {
-                showDate = true
+        if indexPath.row < messageList.pendingMessage.count {
+            let message = self.messageList.pendingMessage[indexPath.row]
+            if message.type == "image" {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "pending_image", for: indexPath) as! PendingImageCell
+                let prefix = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let path = prefix.appendingPathComponent(message.getFile()!)
+                do {
+                    let data = try Data(contentsOf: URL(string: path.absoluteString)!)
+                    let im = UIImage(data: data)!
+                    cell.imageview.image = im
+                    cell.imageviewHeight.constant = cell.imageviewWidth.constant * CGFloat(im.size.height/im.size.width)
+                } catch {
+                    print("Unable to load data: \(error)")
+                }
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "pending_text", for: indexPath) as! PendingTextCell
+                cell.message.delegate = textViewDelegate
+                cell.message.attributedText = Message.getText("rich", message.payload)
+                cell.layoutSubviews()
+                return cell
             }
-        }
+        } else {
+            let row = indexPath.row - messageList.pendingMessage.count
+            let message = self.messageList.message[row]
+            let time = Date(timeIntervalSince1970: TimeInterval(message.time!))
 
-        let lymd = lymdFormatter.string(from: time)
-        let eee = eeeFormatter.string(from: time)
-        let dateString = String(format: "date_format".localized, eee, lymd)
-        let timeString = timeFormatter.string(from: time)
-        let messageText = message.getText()
-
-        if indexPath.row < messageList.message.count {
+            let lymd = lymdFormatter.string(from: time)
+            let eee = eeeFormatter.string(from: time)
+            let dateString = String(format: "date_format".localized, eee, lymd)
+            let timeString = timeFormatter.string(from: time)
+            let messageText = message.getText()
+            if row == self.messageList.message.count - 1 {
+                showDate = true
+            } else {
+                let prev = self.messageList.message[row + 1]
+                if dateFormatter.string(from: time) != dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(prev.time!))) {
+                    showDate = true
+                }
+            }
             if let img = message.getImage() {
                 if (message.mate_id == channel.mate_id) {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "out_image", for: indexPath) as! OutImageCell
@@ -463,9 +547,6 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 cell.time.text = timeString
                 return cell
             }
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
-            return cell
         }
     }
 
@@ -487,27 +568,38 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         let prevLastId = self.messageList.lastId
         let viewEnd = self.viewEnd
         var rowOffset = CGFloat.init(0)
-        var anchorRowId = Int64(0)
+        var anchorRowId = Int64(-1)
         if let count = self.tableView.indexPathsForVisibleRows?.count {
             if count > 0 {
-                if let firstIndex = self.tableView.indexPathsForVisibleRows?[0] {
-                    anchorRowId = self.messageList.message[firstIndex.row].id!
-                    rowOffset = self.tableView.contentOffset.y - self.tableView.rectForRow(at: firstIndex).origin.y
+                for indexPath in self.tableView.indexPathsForVisibleRows! {
+                    if indexPath.row >= self.messageList.pendingMessage.count {
+                        anchorRowId = self.messageList.message[indexPath.row - self.messageList.pendingMessage.count].id!
+                        rowOffset = self.tableView.contentOffset.y - self.tableView.rectForRow(at: indexPath).origin.y
+                        break
+                    }
                 }
             }
         }
-
         self.messageList = service.getMessages(channel.id!)
         self.service.set(channel_id: channel.id!, unread: false)
         self.tableView.reloadData()
         self.tableView.layoutIfNeeded()
-        if let row = self.messageList.rowMap[anchorRowId] {
+        var row = -1
+        if anchorRowId != -1 {
+            for i in 0..<self.messageList.message.count {
+                if self.messageList.message[i].id! <= anchorRowId {
+                    row = i + self.messageList.pendingMessage.count
+                    break
+                }
+            }
+        }
+        if row != -1 {
             let rowY = self.tableView.rectForRow(at: IndexPath.init(row: row, section: 0)).origin.y
             self.tableView.contentOffset = CGPoint.init(x: 0, y: rowY + rowOffset)
         }
         DispatchQueue.main.async {
             if (viewEnd) {
-                if(self.messageList.message.count > 0){
+                if(self.messageList.message.count + self.messageList.pendingMessage.count > 0){
                     let indexPath = IndexPath(row: 0, section: 0)
                     self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                 }
@@ -558,6 +650,8 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
 
         adapter = MessageAdapter(self, messageView, (service)!, channel!, parent)
         messageView.transform = CGAffineTransform.init(scaleX: 1, y: -1)
+        messageView.register(PendingImageCell.self, forCellReuseIdentifier: "pending_image")
+        messageView.register(PendingTextCell.self, forCellReuseIdentifier: "pending_text")
         messageView.register(InImageCell.self, forCellReuseIdentifier: "in_image")
         messageView.register(OutImageCell.self, forCellReuseIdentifier: "out_image")
         messageView.register(InTextCell.self, forCellReuseIdentifier: "in_text")
@@ -603,8 +697,6 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-
-        messageView.reloadData()
 
         super.viewDidLoad()
     }

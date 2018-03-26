@@ -17,7 +17,7 @@ class BundledMessages {
     let lastId: Int64
     let loadMoreChannelMessage: Bool
     let loadMoreUserMessage: Bool
-    var rowMap: [Int64:Int]
+    let pendingMessage: [PendingMessage]
 
     init (
         message: [Message],
@@ -26,7 +26,8 @@ class BundledMessages {
         firstId: Int64,
         lastId: Int64,
         loadMoreChannelMessage: Bool,
-        loadMoreUserMessage: Bool) {
+        loadMoreUserMessage: Bool,
+        pendingMessage: [PendingMessage]) {
 
         self.message = message
         self.loadMoreBefore = loadMoreBefore
@@ -35,11 +36,7 @@ class BundledMessages {
         self.lastId = lastId
         self.loadMoreChannelMessage = loadMoreChannelMessage
         self.loadMoreUserMessage = loadMoreUserMessage
-        self.rowMap = [Int64:Int]()
-
-        for i in 0..<message.count {
-            rowMap[message[i].id!] = i
-        }
+        self.pendingMessage = pendingMessage
 
         print("count", message.count)
         print("loadMoreBefore", loadMoreBefore)
@@ -79,6 +76,8 @@ class Message: RowConvertible, Persistable {
         static let type = Column("type")
         static let message = Column("message")
         static let time = Column("time")
+        static let deleted = Column("deleted")
+        static let hidden = Column("hidden")
     }
 
     var id: Int64?
@@ -114,6 +113,17 @@ class Message: RowConvertible, Persistable {
             try db.execute(sql)
 
             version = 1
+        }
+        if version < 6 {
+            var sql: String
+
+            sql = "ALTER TABLE \(TABLE_NAME) ADD COLUMN \(Columns.deleted.name) BOOLEAN NOT NULL DEFAULT 0"
+            try db.execute(sql)
+
+            sql = "ALTER TABLE \(TABLE_NAME) ADD COLUMN \(Columns.hidden.name) BOOLEAN NOT NULL DEFAULT 0"
+            try db.execute(sql)
+
+            version = 6
         }
     }
 
@@ -158,22 +168,39 @@ class Message: RowConvertible, Persistable {
     }
 
     func getText() -> NSMutableAttributedString {
+        return Message.getText(type!, message!)
+    }
+
+    static func getText(_ type: String, _ message: Any) -> NSMutableAttributedString {
+        var textMessage: String?
+        var jsonMessage: [String: Any]?
         var textAttrs = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)
         ] as [NSAttributedStringKey:Any]
+        if let t = message as? String {
+            textMessage = t
+        }
+        if let t = message as? [String:Any] {
+            jsonMessage = t
+        }
         if type == "text" {
-            let r = NSMutableAttributedString(string: message!)
+            let r = NSMutableAttributedString(string: textMessage!)
             r.setAttributes(textAttrs, range: NSMakeRange(0, r.length))
             return r
         } else {
             do {
-                let attr: [String: Any]?
-                do {
-                    attr = try JSONSerialization.jsonObject(with: message!.data(using: .utf8)!, options: []) as? [String: Any]
-                } catch {
-                    attr = nil
+                var attr: [String: Any]?
+                if let t = textMessage {
+                    do {
+                        attr = try JSONSerialization.jsonObject(with: t.data(using: .utf8)!, options: []) as? [String: Any]
+                    } catch {
+                        attr = nil
+                    }
                 }
-                switch type! {
+                if let t = jsonMessage {
+                    attr = t
+                }
+                switch type {
                 case "rich":
                     let s = NSMutableAttributedString()
                     let text = NSMutableAttributedString(string: (attr?["text"] as? String) ?? "")
@@ -184,8 +211,8 @@ class Message: RowConvertible, Persistable {
                         let ss = NSMutableAttributedString(attributedString: NSAttributedString(attachment: attach))
                         ss.addAttribute(NSAttributedStringKey.link, value: "wim://pin/\(lat)/\(lng)", range: NSMakeRange(0, ss.length))
                         s.append(ss)
+                        s.append(NSAttributedString(string: "\n"))
                     }
-                    s.append(NSAttributedString(string: "\n"))
                     s.append(text)
                     return s
                 case "enchantment_create":
@@ -284,41 +311,27 @@ class Message: RowConvertible, Persistable {
     }
 
     static func getMessages(_ channel_id: String) -> BundledMessages {
-        var count = 0
-        var loadMoreBefore: Int64 = 0
-        var loadMoreAfter: Int64 = 0
-        var loadMoreChannelMessage = false
-        var loadMoreUserMessage = false
-        var hasChannelData = false
-        var hasUserData = false
-        var channelDataSn: Int64 = 0
-        var channelDataId: Int64 = 0
-        var userDataSn: Int64 = 0
-        var userDataId: Int64 = 0
-        var firstId: Int64 = 0
-        var lastId: Int64 = 0
+        let mb = MessageBlock.get(channel_id)
 
         var messages = [Message]()
+        var pendingMessage = [PendingMessage]()
         do {
             try CoreService.bind().dbConn!.inDatabase { db in
                 let cursor = try Message.fetchCursor(
                     db,
                     """
-                    SELECT
-                        \(Columns.id.name),
-                        \(Columns.sn.name),
-                        \(Columns.is_public.name),
-                        \(Columns.channel.name),
-                        \(Columns.mate.name),
-                        \(Columns.type.name),
-                        \(Columns.message.name),
-                        \(Columns.time.name),
-                        \(Columns.type.name)
-                    FROM \(TABLE_NAME)
+                    SELECT * FROM \(TABLE_NAME)
                     WHERE
-                        \(Columns.channel.name)=?
-                        OR
-                        \(Columns.channel.name) IS NULL
+                        \(Columns.id.name)>=\(mb.firstId)
+                        AND
+                        \(Columns.id.name)<=\(mb.lastId)
+                        AND
+                        \(Columns.type.name)!='ctrl'
+                        AND (
+                            \(Columns.channel.name)=?
+                            OR
+                            \(Columns.channel.name) IS NULL
+                        )
                     ORDER BY \(Columns.id.name) DESC
                     """,
                     arguments: [channel_id]
@@ -326,48 +339,12 @@ class Message: RowConvertible, Persistable {
 
                 while let m = try cursor.next() {
                     messages.append(m)
-                    count += 1;
-                    if m.channel_id == nil {
-                        continue;
-                    }
-                    if m.isPublic == true {
-                        if !hasChannelData {
-                            hasChannelData = true
-                            channelDataSn = m.sn!
-                        } else {
-                            if m.sn == channelDataSn - 1 {
-                                channelDataSn = m.sn!
-                                channelDataId = m.id!
-                            } else {
-                                loadMoreBefore = channelDataId
-                                loadMoreAfter = m.id!
-                                loadMoreChannelMessage = true
-                                break
-                            }
-                        }
-                    } else if m.isPublic == false {
-                        if !hasUserData {
-                            hasUserData = true
-                            userDataSn = m.sn!
-                        } else {
-                            if m.sn == userDataSn - 1 {
-                                userDataSn = m.sn!
-                                userDataId = m.id!
-                            } else {
-                                loadMoreBefore = userDataId
-                                loadMoreAfter = m.id!
-                                loadMoreUserMessage = true
-                                break
-                            }
-                        }
-                    }
                 }
-                firstId = messages.last?.id! ?? 0
-                lastId = messages.first?.id! ?? 0
+                pendingMessage = PendingMessage.getMessage(db, channel_id)
             }
         } catch {
             print("Error reading message \(error)")
         }
-        return BundledMessages(message: messages, loadMoreBefore: loadMoreBefore, loadMoreAfter: loadMoreAfter, firstId: firstId, lastId: lastId, loadMoreChannelMessage: loadMoreChannelMessage, loadMoreUserMessage: loadMoreUserMessage)
+        return BundledMessages(message: messages, loadMoreBefore: mb.loadMoreBefore, loadMoreAfter: mb.loadMoreAfter, firstId: mb.firstId, lastId: mb.lastId, loadMoreChannelMessage: mb.loadMoreChannelMessage, loadMoreUserMessage: mb.loadMoreUserMessage, pendingMessage: pendingMessage)
     }
 }

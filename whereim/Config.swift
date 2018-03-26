@@ -21,7 +21,7 @@ enum SearchProvider: String {
 class Config {
     static let LOGGING = false
 
-    static let DB_VERSION = 5
+    static let DB_VERSION = 6
 
     static let KEY_FILE = "whereim.key"
     static let CRT_FILE = "whereim.crt"

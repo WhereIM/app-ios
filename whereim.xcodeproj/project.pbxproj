@@ -74,6 +74,7 @@
 		58A6EB9A1E5897BA00C29A49 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6EB991E5897BA00C29A49 /* Channel.swift */; };
 		58D1C0401E6DA52B005A904F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D1C03F1E6DA52B005A904F /* Message.swift */; };
 		58D3E12920684F510094BC80 /* PendingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D3E12820684F510094BC80 /* PendingMessage.swift */; };
+		58D3E12B2068CA130094BC80 /* MessageBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D3E12A2068CA130094BC80 /* MessageBlock.swift */; };
 		58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */; };
 		58DBA2A11E9F2D8E000744F0 /* whereim.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58DBA2A01E9F2D8E000744F0 /* whereim.bundle */; };
 		58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA2A21E9F31D5000744F0 /* AboutController.swift */; };
@@ -204,6 +205,7 @@
 		58A6EB991E5897BA00C29A49 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		58D1C03F1E6DA52B005A904F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		58D3E12820684F510094BC80 /* PendingMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingMessage.swift; sourceTree = "<group>"; };
+		58D3E12A2068CA130094BC80 /* MessageBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlock.swift; sourceTree = "<group>"; };
 		58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIPlacerHolderCell.swift; sourceTree = "<group>"; };
 		58DBA2A01E9F2D8E000744F0 /* whereim.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = whereim.bundle; sourceTree = "<group>"; };
 		58DBA2A21E9F31D5000744F0 /* AboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
@@ -407,10 +409,11 @@
 				5831E33A1E5CB95600A7EB0E /* Marker.swift */,
 				5831E33C1E5CC96500A7EB0E /* Enchantment.swift */,
 				58D1C03F1E6DA52B005A904F /* Message.swift */,
+				58D3E12A2068CA130094BC80 /* MessageBlock.swift */,
+				58D3E12820684F510094BC80 /* PendingMessage.swift */,
 				58202AC31E74854A00BC7FCD /* Log.swift */,
 				584599D11EC05E4F003C53A8 /* POI.swift */,
 				584599D31EC05E8E003C53A8 /* GooglePOI.swift */,
-				58D3E12820684F510094BC80 /* PendingMessage.swift */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -819,6 +822,7 @@
 				58230E111E6EEB7400AF4087 /* MessengerController.swift in Sources */,
 				58A6EB881E56F5CF00C29A49 /* CaptchaController.swift in Sources */,
 				58FA16161EE854110094A610 /* MapboxPoiViewerController.swift in Sources */,
+				58D3E12B2068CA130094BC80 /* MessageBlock.swift in Sources */,
 				583CA8F51EBCEF280043B171 /* DialogEditEnchantment.swift in Sources */,
 				58E347A51E5A183D0025211B /* MapController.swift in Sources */,
 				5801156E1EE5C0AB00DB8F2A /* Utils.swift in Sources */,

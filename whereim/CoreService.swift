@@ -1082,7 +1082,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                         pm.payload[Key.HASH] = pm.hash
                         self.publish("channel/\(pm.channel_id!)/data/message/put", pm.payload)
                     case "image":
-                        if let suffix = pm.payload["file"] as? String {
+                        if let suffix = pm.getFile() {
                             let prefix = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                             let path = prefix.appendingPathComponent(suffix)
                             if FileManager.default.fileExists(atPath: path.path) {
@@ -1120,11 +1120,6 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                                                             data[Key.IMAGE] = uid
                                                             data[Key.HASH] = self.hash
                                                             self.service.publish("channel/\(self.channel_id)/data/message/put", data)
-                                                            do {
-                                                                try FileManager.default.removeItem(at: self.path)
-                                                            } catch {
-                                                                // noop
-                                                            }
                                                         } else {
                                                             print("Upload failed \(response.response?.statusCode)")
                                                         }
@@ -1174,6 +1169,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 print("Error saving pending image message \(error)")
             }
         }
+        notifyChannelMessageListeners(channel_id)
         deliverPendingMessage(0)
     }
 
@@ -1194,6 +1190,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 print("Error saving pending text message \(error)")
             }
         }
+        notifyChannelMessageListeners(channel_id)
         deliverPendingMessage(0)
     }
 
@@ -1230,7 +1227,9 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         }
 
         messageListener[channel.id!]![key!] = callback
-
+        DispatchQueue.main.async {
+            callback.onCallback()
+        }
         return key!
     }
 
@@ -1371,7 +1370,7 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
         if channelMessageSync[channel_id] == nil {
             channelMessageSync[channel_id] = true
             DispatchQueue.main.async {
-                let data = Message.getMessages(channel_id)
+                let data = MessageBlock.get(channel_id)
                 self.publish("client/\(self.clientId!)/message/sync", [Key.CHANNEL: channel_id, "after": data.lastId])
             }
         }
