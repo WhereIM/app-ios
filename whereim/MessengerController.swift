@@ -681,9 +681,6 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
     }
 
     func updateUI() {
-        let parent = self.tabBarController as! ChannelController
-        pinLocation = parent.pendingPinLocation
-        parent.pendingPinLocation = nil
         inputBar.pin.isHidden = pinLocation==nil
         if isTyping || (pinLocation != nil) {
             inputBar.btn_picker.isHidden = true
@@ -699,6 +696,11 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
         super.viewWillAppear(animated)
 
         cbkey = service!.addMessageListener(channel!, cbkey, self)
+
+        let parent = self.tabBarController as! ChannelController
+        pinLocation = parent.pendingPinLocation
+        parent.pendingPinLocation = nil
+
         updateUI()
     }
 
