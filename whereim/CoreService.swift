@@ -1063,13 +1063,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
 
     let DELIVERY_INTERVAL = 15000
     var uploading = false
-    var deliveryJob: DispatchWorkItem?
+    var jobQueue = [DispatchWorkItem]()
     func deliverPendingMessage(_ delay: Int){
-        if deliveryJob != nil {
-            return
-        }
-        deliveryJob = DispatchWorkItem {
-            self.deliveryJob = nil
+        let deliveryJob = DispatchWorkItem {
+            self.jobQueue.removeAll()
             if !self.mqttConnected {
                 return
             }
@@ -1158,7 +1155,11 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                 }
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay), execute: deliveryJob!)
+        jobQueue.append(deliveryJob)
+        if jobQueue.count > 0 {
+            let j = jobQueue.remove(at: 0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay), execute: j)
+        }
     }
 
     func sendImage(_ channel_id: String, _ path: String){
