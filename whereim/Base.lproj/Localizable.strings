@@ -1,7 +1,7 @@
 "app_name" = "Where.IM";
 "lang" = "en";
 "google_lang" = "en";
-"NSCameraUsageDescription" = "Camera will be used to join channel with QR code";
+"NSCameraUsageDescription" = "Camera will be used for joining channel with QR code and taking photo";
 "settings" = "Settings";
 "about" = "About";
 "active_client" = "Client not active";
@@ -35,6 +35,7 @@
 "no_match" = "No match";
 "name" = "Name";
 "icon" = "Icon";
+"desc" = "Description";
 "channel_name" = "Channel Name";
 "channel_alias" = "Channel Alias";
 "display_name" = "Display Name";
@@ -65,6 +66,12 @@
 "public_marker" = "Shared Marker";
 "private_marker" = "Personal Marker";
 "error_exhausted" = "Client capacity is exhausted, please try later.";
+"confirm" = "Confirm";
+"copy" = "Copy";
+"report_inappropriate" = "Report inappropriate content";
+"report" = "Report";
+"message_deleted" = "This message has been deleted";
+"message_hidden" = "This message has been hidden";
 "guest_view" = "Guest View";
 "access_settings" = "Access Settings";
 "messages" = "Messages";
@@ -81,6 +88,7 @@
 "apn_begin_sharing" = "%1$@\n%2$@ just begins sharing location with you !";
 "apn_text" = "%1$@\n%2$@: %3$@";
 "apn_rich" = "%1$@\n%2$@: %3$@";
+"apn_image" = "%1$@\n%2$@ has uploaded an image";
 "apn_enchantment_create" = "%1$@\n%2$@: Geofence %3$@ is created.";
 "apn_enchantment_emerge" = "%1$@\n%2$@: Emerged in geofence %3$@.";
 "apn_enchantment_in" = "%1$@\n%2$@: Entered geofence %3$@.";
