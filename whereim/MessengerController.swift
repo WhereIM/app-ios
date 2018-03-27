@@ -92,6 +92,7 @@ class PendingImageCell: UITableViewCell {
     let imageview = UIImageView()
     let imageviewWidth: NSLayoutConstraint
     let imageviewHeight: NSLayoutConstraint
+    var delegate: MessageViewDelegate?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         imageviewWidth = imageview.widthAnchor.constraint(equalToConstant: 200)
@@ -123,6 +124,7 @@ class PendingImageCell: UITableViewCell {
 
 class PendingTextCell: UITableViewCell {
     let message = UITextView()
+    var delegate: MessageViewDelegate?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -160,6 +162,8 @@ class InImageCell: UITableViewCell {
     let imageviewHeight: NSLayoutConstraint
     let time = UILabel()
     var dateHeight: NSLayoutConstraint
+    var msg: Message?
+    var delegate: MessageViewDelegate?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
@@ -191,6 +195,12 @@ class InImageCell: UITableViewCell {
         imageview.layer.cornerRadius = 10
         self.contentView.addSubview(imageview)
 
+        imageview.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tap(gestureReconizer:)))
+        imageview.addGestureRecognizer(tap)
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress(gestureReconizer:)))
+        imageview.addGestureRecognizer(longPress)
+
         time.translatesAutoresizingMaskIntoConstraints = false
         time.font = UIFont.systemFont(ofSize: 10)
         time.textColor = .lightGray
@@ -213,6 +223,18 @@ class InImageCell: UITableViewCell {
         time.bottomAnchor.constraint(equalTo: imageview.bottomAnchor).isActive = true
     }
 
+    @objc func tap(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended) {
+            print("tap")
+        }
+    }
+
+    @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.began){
+            print("longPress")
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -225,6 +247,8 @@ class OutImageCell: UITableViewCell {
     let imageviewHeight: NSLayoutConstraint
     let time = UILabel()
     var dateHeight: NSLayoutConstraint
+    var msg: Message?
+    var delegate: MessageViewDelegate?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
@@ -251,6 +275,12 @@ class OutImageCell: UITableViewCell {
         imageview.layer.cornerRadius = 10
         self.contentView.addSubview(imageview)
 
+        imageview.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tap(gestureReconizer:)))
+        imageview.addGestureRecognizer(tap)
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress(gestureReconizer:)))
+        imageview.addGestureRecognizer(longPress)
+
         time.translatesAutoresizingMaskIntoConstraints = false
         time.font = UIFont.systemFont(ofSize: 10)
         time.textColor = .lightGray
@@ -270,6 +300,18 @@ class OutImageCell: UITableViewCell {
         time.bottomAnchor.constraint(equalTo: imageview.bottomAnchor).isActive = true
     }
 
+    @objc func tap(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended) {
+            print("tap")
+        }
+    }
+
+    @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.began) {
+            print("longPress")
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -281,6 +323,8 @@ class InTextCell: UITableViewCell {
     let message = UITextView()
     let time = UILabel()
     var dateHeight: NSLayoutConstraint
+    var msg: Message?
+    var delegate: MessageViewDelegate?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
@@ -307,9 +351,21 @@ class InTextCell: UITableViewCell {
         message.isEditable = false
         message.textContainer.lineBreakMode = .byWordWrapping
         message.isScrollEnabled = false
+        message.delaysContentTouches = false
         message.layer.masksToBounds = true
         message.layer.cornerRadius = 10
+        message.isSelectable = true
         self.contentView.addSubview(message)
+
+        if let rs = message.gestureRecognizers {
+            for r in rs {
+                r.isEnabled = false
+            }
+        }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tap(gestureReconizer:)))
+        message.addGestureRecognizer(tap)
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress(gestureReconizer:)))
+        message.addGestureRecognizer(longPress)
 
         time.translatesAutoresizingMaskIntoConstraints = false
         time.font = UIFont.systemFont(ofSize: 10)
@@ -333,6 +389,33 @@ class InTextCell: UITableViewCell {
         time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
     }
 
+    @objc func tap(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended) {
+            let tapLocation = gestureReconizer.location(in: message)
+            guard
+                let textPosition = message.closestPosition(to: tapLocation),
+                let attrA = message.textStyling(at: textPosition, in: UITextStorageDirection.forward),
+                let attrB = message.textStyling(at: textPosition, in: UITextStorageDirection.backward)
+                else {
+                    return
+            }
+            let urlA = attrA[NSAttributedStringKey.link.rawValue]
+            let urlB = attrB[NSAttributedStringKey.link.rawValue]
+            if urlA != nil || urlB != nil {
+                let url = URL(string: String(describing: (urlA ?? urlB)!))!
+                if delegate?.shouldInteract(with: url) != false {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+        }
+    }
+
+    @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.began){
+            print("longPress")
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -343,6 +426,8 @@ class OutTextCell: UITableViewCell {
     let message = UITextView()
     let time = UILabel()
     var dateHeight: NSLayoutConstraint
+    var msg: Message?
+    var delegate: MessageViewDelegate?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         dateHeight = date.heightAnchor.constraint(equalToConstant: 0)
@@ -364,10 +449,21 @@ class OutTextCell: UITableViewCell {
         message.isEditable = false
         message.textContainer.lineBreakMode = .byWordWrapping
         message.isScrollEnabled = false
+        message.delaysContentTouches = false
         message.layer.masksToBounds = true
         message.layer.cornerRadius = 10
-
+        message.isSelectable = true
         self.contentView.addSubview(message)
+
+        if let rs = message.gestureRecognizers {
+            for r in rs {
+                r.isEnabled = false
+            }
+        }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tap(gestureReconizer:)))
+        message.addGestureRecognizer(tap)
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress(gestureReconizer:)))
+        message.addGestureRecognizer(longPress)
 
         time.translatesAutoresizingMaskIntoConstraints = false
         time.font = UIFont.systemFont(ofSize: 10)
@@ -388,12 +484,39 @@ class OutTextCell: UITableViewCell {
         time.bottomAnchor.constraint(equalTo: message.bottomAnchor).isActive = true
     }
 
+    @objc func tap(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended) {
+            let tapLocation = gestureReconizer.location(in: message)
+            guard
+                let textPosition = message.closestPosition(to: tapLocation),
+                let attrA = message.textStyling(at: textPosition, in: UITextStorageDirection.forward),
+                let attrB = message.textStyling(at: textPosition, in: UITextStorageDirection.backward)
+            else {
+                return
+            }
+            let urlA = attrA[NSAttributedStringKey.link.rawValue]
+            let urlB = attrB[NSAttributedStringKey.link.rawValue]
+            if urlA != nil || urlB != nil {
+                let url = URL(string: String(describing: (urlA ?? urlB)!))!
+                if delegate?.shouldInteract(with: url) != false {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+        }
+    }
+
+    @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.began){
+            print("longPress")
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-class MessageViewDelegate: NSObject, UITextViewDelegate {
+class MessageViewDelegate: NSObject {
     let channelController: ChannelController
     let service: CoreService
     init(_ channelController: ChannelController, _ service: CoreService) {
@@ -401,7 +524,7 @@ class MessageViewDelegate: NSObject, UITextViewDelegate {
         self.service = service
     }
 
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+    func shouldInteract(with URL: URL) -> Bool {
         if URL.scheme! == "wim" {
             let args = URL.pathComponents
             switch URL.host! {
@@ -431,7 +554,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     var messageList: BundledMessages
     var viewEnd = true
 
-    let textViewDelegate: MessageViewDelegate
+    let messageViewDelegate: MessageViewDelegate
 
     let dateFormatter = DateFormatter()
     let lymdFormatter = DateFormatter()
@@ -446,7 +569,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
         self.channelController = channelController
         self.messageList = service.getMessages(channel.id!)
         self.service.set(channel_id: channel.id!, unread: false)
-        self.textViewDelegate = MessageViewDelegate(channelController, service)
+        self.messageViewDelegate = MessageViewDelegate(channelController, service)
         dateFormatter.dateFormat = "yyyy-MM-dd"
         lymdFormatter.dateStyle = .medium
         lymdFormatter.timeStyle = .none
@@ -483,10 +606,11 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 } catch {
                     print("Unable to load data: \(error)")
                 }
+                cell.delegate = messageViewDelegate
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "pending_text", for: indexPath) as! PendingTextCell
-                cell.message.delegate = textViewDelegate
+                cell.delegate = messageViewDelegate
                 cell.message.attributedText = Message.getText("rich", message.payload)
                 cell.layoutSubviews()
                 return cell
@@ -517,6 +641,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                     cell.date.text = dateString
                     cell.dateHeight.isActive = !showDate
                     cell.time.text = timeString
+                    cell.delegate = messageViewDelegate
                     return cell
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "in_image", for: indexPath) as! InImageCell
@@ -526,25 +651,26 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                     cell.date.text = dateString
                     cell.dateHeight.isActive = !showDate
                     cell.time.text = timeString
+                    cell.delegate = messageViewDelegate
                     return cell
                 }
             }
             if (message.mate_id == channel.mate_id) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "out_text", for: indexPath) as! OutTextCell
-                cell.message.delegate = textViewDelegate
                 cell.message.attributedText = messageText
                 cell.date.text = dateString
                 cell.dateHeight.isActive = !showDate
                 cell.time.text = timeString
+                cell.delegate = messageViewDelegate
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "in_text", for: indexPath) as! InTextCell
                 cell.sender.text = message.getSender()
-                cell.message.delegate = textViewDelegate
                 cell.message.attributedText = messageText
                 cell.date.text = dateString
                 cell.dateHeight.isActive = !showDate
                 cell.time.text = timeString
+                cell.delegate = messageViewDelegate
                 return cell
             }
         }
