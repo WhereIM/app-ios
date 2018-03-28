@@ -45,21 +45,12 @@ class MessageBlock {
                 let cursor = try Message.fetchCursor(
                     db,
                     """
-                    SELECT
-                    \(Message.Columns.id.name),
-                    \(Message.Columns.sn.name),
-                    \(Message.Columns.is_public.name),
-                    \(Message.Columns.channel.name),
-                    \(Message.Columns.mate.name),
-                    \(Message.Columns.type.name),
-                    \(Message.Columns.message.name),
-                    \(Message.Columns.time.name),
-                    \(Message.Columns.type.name)
+                    SELECT *
                     FROM \(Message.TABLE_NAME)
                     WHERE
-                    \(Message.Columns.channel.name)=?
-                    OR
-                    \(Message.Columns.channel.name) IS NULL
+                        \(Message.Columns.channel.name)=?
+                        OR
+                        \(Message.Columns.channel.name) IS NULL
                     ORDER BY \(Message.Columns.id.name) DESC
                     """,
                     arguments: [channel_id]

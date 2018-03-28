@@ -665,7 +665,28 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             return
         }
         let m = Message(data)
-
+        if m.type == "ctrl" {
+            do {
+                if
+                    let message = m.message?.data(using: .utf8),
+                    let data = try JSONSerialization.jsonObject(with: message, options: []) as? [String: Any],
+                    let id = data[Key.ID] as? Int64,
+                    let action = data[Key.ACTION] as? String,
+                    let channel_id = m.channel_id
+                {
+                    switch action {
+                    case "delete":
+                        Message.setDeleted(channel_id, id)
+                    case "report":
+                        Message.setHidden(channel_id, id)
+                    default:
+                        ()
+                    }
+                }
+            } catch {
+                // noop
+            }
+        }
         dbConn!.inDatabase { db in
             do {
                 try m.save(db)
@@ -1139,6 +1160,10 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
                         } else {
                             discard = true
                         }
+                    case "ctrl":
+                        pm.payload[Key.TYPE] = "ctrl"
+                        pm.payload[Key.HASH] = pm.hash
+                        self.publish("channel/\(pm.channel_id!)/data/message/put", pm.payload)
                     default:
                         discard = true
                         print("Unsupported pending message type")
@@ -1191,6 +1216,40 @@ class CoreService: NSObject, CLLocationManagerDelegate, MQTTCallback {
             }
         }
         notifyChannelMessageListeners(channel_id)
+        deliverPendingMessage(0)
+    }
+
+    func report(_ message: Message) {
+        let pm = PendingMessage()
+        pm.channel_id = message.channel_id
+        pm.type = "ctrl"
+        pm.payload[Key.ACTION] = "report"
+        pm.payload[Key.ID] = message.id!
+        dbConn!.inDatabase { db in
+            do {
+                try pm.save(db)
+            } catch {
+                print("Error in report message \(error)")
+            }
+        }
+        Message.setHidden(message.channel_id!, message.id!)
+        notifyChannelMessageListeners(message.channel_id!)
+        deliverPendingMessage(0)
+    }
+
+    func delete(_ message: Message) {
+        let pm = PendingMessage()
+        pm.channel_id = message.channel_id
+        pm.type = "ctrl"
+        pm.payload[Key.ACTION] = "delete"
+        pm.payload[Key.ID] = message.id!
+        dbConn!.inDatabase { db in
+            do {
+                try pm.save(db)
+            } catch {
+                print("Error in delete message \(error)")
+            }
+        }
         deliverPendingMessage(0)
     }
 

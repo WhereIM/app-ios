@@ -8,6 +8,7 @@
 
 class Key {
     static let ACCURACY = "acc"
+    static let ACTION = "act"
     static let ACTIVE = "active"
     static let ALTITUDE = "alt"
     static let API = "api"
@@ -35,6 +36,7 @@ class Key {
 
     static let HASH = "hash"
     static let HEIGHT = "h"
+    static let HIDDEN = "hidden"
 
     static let ID = "id"
     static let IMAGE = "img"

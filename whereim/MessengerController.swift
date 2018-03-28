@@ -231,7 +231,7 @@ class InImageCell: UITableViewCell {
 
     @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
         if (gestureReconizer.state == UIGestureRecognizerState.began){
-            print("longPress")
+            DialogMessage.show(delegate!.channelController, msg!, true, imageview, gestureReconizer.location(in: imageview))
         }
     }
 
@@ -308,7 +308,7 @@ class OutImageCell: UITableViewCell {
 
     @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
         if (gestureReconizer.state == UIGestureRecognizerState.began) {
-            print("longPress")
+            DialogMessage.show(delegate!.channelController, msg!, false, imageview, gestureReconizer.location(in: imageview))
         }
     }
 
@@ -412,7 +412,7 @@ class InTextCell: UITableViewCell {
 
     @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
         if (gestureReconizer.state == UIGestureRecognizerState.began){
-            print("longPress")
+            DialogMessage.show(delegate!.channelController, msg!, true, message, gestureReconizer.location(in: message))
         }
     }
 
@@ -507,7 +507,7 @@ class OutTextCell: UITableViewCell {
 
     @objc func longPress(gestureReconizer: UILongPressGestureRecognizer) {
         if (gestureReconizer.state == UIGestureRecognizerState.began){
-            print("longPress")
+            DialogMessage.show(delegate!.channelController, msg!, false, message, gestureReconizer.location(in: message))
         }
     }
 
@@ -641,6 +641,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                     cell.date.text = dateString
                     cell.dateHeight.isActive = !showDate
                     cell.time.text = timeString
+                    cell.msg = message
                     cell.delegate = messageViewDelegate
                     return cell
                 } else {
@@ -651,6 +652,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                     cell.date.text = dateString
                     cell.dateHeight.isActive = !showDate
                     cell.time.text = timeString
+                    cell.msg = message
                     cell.delegate = messageViewDelegate
                     return cell
                 }
@@ -661,6 +663,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 cell.date.text = dateString
                 cell.dateHeight.isActive = !showDate
                 cell.time.text = timeString
+                cell.msg = message
                 cell.delegate = messageViewDelegate
                 return cell
             } else {
@@ -670,6 +673,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
                 cell.date.text = dateString
                 cell.dateHeight.isActive = !showDate
                 cell.time.text = timeString
+                cell.msg = message
                 cell.delegate = messageViewDelegate
                 return cell
             }

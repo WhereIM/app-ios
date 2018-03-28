@@ -75,6 +75,7 @@
 		58D1C0401E6DA52B005A904F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D1C03F1E6DA52B005A904F /* Message.swift */; };
 		58D3E12920684F510094BC80 /* PendingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D3E12820684F510094BC80 /* PendingMessage.swift */; };
 		58D3E12B2068CA130094BC80 /* MessageBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D3E12A2068CA130094BC80 /* MessageBlock.swift */; };
+		58D3E12D206AE2AE0094BC80 /* DialogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D3E12C206AE2AE0094BC80 /* DialogMessage.swift */; };
 		58DBA29F1E9E19C7000744F0 /* UIPlacerHolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */; };
 		58DBA2A11E9F2D8E000744F0 /* whereim.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58DBA2A01E9F2D8E000744F0 /* whereim.bundle */; };
 		58DBA2A31E9F31D5000744F0 /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DBA2A21E9F31D5000744F0 /* AboutController.swift */; };
@@ -206,6 +207,7 @@
 		58D1C03F1E6DA52B005A904F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		58D3E12820684F510094BC80 /* PendingMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingMessage.swift; sourceTree = "<group>"; };
 		58D3E12A2068CA130094BC80 /* MessageBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlock.swift; sourceTree = "<group>"; };
+		58D3E12C206AE2AE0094BC80 /* DialogMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogMessage.swift; sourceTree = "<group>"; };
 		58DBA29E1E9E19C7000744F0 /* UIPlacerHolderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIPlacerHolderCell.swift; sourceTree = "<group>"; };
 		58DBA2A01E9F2D8E000744F0 /* whereim.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = whereim.bundle; sourceTree = "<group>"; };
 		58DBA2A21E9F31D5000744F0 /* AboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				5893BDD21EF0553600F908BE /* DialogMobileEnchantment.swift */,
 				5893BDD41EF0554300F908BE /* DialogFixedEnchantment.swift */,
 				580F8A8F2032037C000F9022 /* DialogSendSharingNotification.swift */,
+				58D3E12C206AE2AE0094BC80 /* DialogMessage.swift */,
 			);
 			name = dialogs;
 			sourceTree = "<group>";
@@ -839,6 +842,7 @@
 				58E347A71E5A18F00025211B /* Mate.swift in Sources */,
 				5893BDD31EF0553600F908BE /* DialogMobileEnchantment.swift in Sources */,
 				58E347A91E5A23F20025211B /* ChannelController.swift in Sources */,
+				58D3E12D206AE2AE0094BC80 /* DialogMessage.swift in Sources */,
 				584599D81EC06BE1003C53A8 /* GooglePoiViewerController.swift in Sources */,
 				584068A01EABE0E600E4964D /* SettingsController.swift in Sources */,
 				58F5C5D41ED1668B00BD9567 /* FilterBar.swift in Sources */,

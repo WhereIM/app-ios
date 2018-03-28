@@ -89,6 +89,8 @@ class Message: RowConvertible, Persistable {
     var time: Int64?
     var notify: Int?
     var isPublic: Bool?
+    var deleted = false
+    var hidden = false
 
     static func migrate(_ db: Database, _ db_version: Int) throws {
         var version = db_version
@@ -168,6 +170,24 @@ class Message: RowConvertible, Persistable {
     }
 
     func getText() -> NSMutableAttributedString {
+        if deleted {
+            let textAttrs = [
+                NSAttributedStringKey.font: UIFont.italicSystemFont(ofSize: 17),
+                NSAttributedStringKey.foregroundColor: UIColor.gray
+                ] as [NSAttributedStringKey:Any]
+            let s = NSMutableAttributedString(string: "message_deleted".localized)
+            s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
+            return s
+        }
+        if hidden {
+            let textAttrs = [
+                NSAttributedStringKey.font: UIFont.italicSystemFont(ofSize: 17),
+                NSAttributedStringKey.foregroundColor: UIColor.gray
+                ] as [NSAttributedStringKey:Any]
+            let s = NSMutableAttributedString(string: "message_hidden".localized)
+            s.setAttributes(textAttrs, range: NSMakeRange(0, s.length))
+            return s
+        }
         return Message.getText(type!, message!)
     }
 
@@ -285,6 +305,8 @@ class Message: RowConvertible, Persistable {
         message = row[Columns.message]
         time = row[Columns.time]
         isPublic = row[Columns.is_public]
+        deleted = row[Columns.deleted]
+        hidden = row[Columns.hidden]
     }
 
     init(_ data: [String: Any]) {
@@ -297,6 +319,12 @@ class Message: RowConvertible, Persistable {
         isPublic = data[Key.PUBLIC] as? Bool
         time = data["time"] as! Int64?
         notify = data["notify"] as? Int
+        if let d = data[Key.DELETED] as? Bool {
+            deleted = d
+        }
+        if let h = data[Key.HIDDEN] as? Bool {
+            hidden = h
+        }
     }
 
     func encode(to container: inout PersistenceContainer) {
@@ -308,6 +336,30 @@ class Message: RowConvertible, Persistable {
         container[Columns.message] = message
         container[Columns.time] = time
         container[Columns.is_public] = isPublic!
+        container[Columns.deleted] = deleted
+        container[Columns.hidden] = hidden
+    }
+
+    static func setDeleted(_ channel_id: String, _ id: Int64) {
+        do {
+            try CoreService.bind().dbConn!.inDatabase { db in
+                let sql = "UPDATE \(TABLE_NAME) SET \(Columns.deleted.name)=1, \(Columns.message.name)='' WHERE \(Columns.channel.name)=? AND \(Columns.id.name)=\(id)"
+                try db.execute(sql, arguments: [channel_id])
+            }
+        } catch {
+            print("Error in setDelete \(error)")
+        }
+    }
+
+    static func setHidden(_ channel_id: String, _ id: Int64) {
+        do {
+            try CoreService.bind().dbConn!.inDatabase { db in
+                let sql = "UPDATE \(TABLE_NAME) SET \(Columns.hidden.name)=1, \(Columns.message.name)='' WHERE \(Columns.channel.name)=? AND \(Columns.id.name)=\(id)"
+                try db.execute(sql, arguments: [channel_id])
+            }
+        } catch {
+            print("Error in setDelete \(error)")
+        }
     }
 
     static func getMessages(_ channel_id: String) -> BundledMessages {
@@ -345,6 +397,8 @@ class Message: RowConvertible, Persistable {
         } catch {
             print("Error reading message \(error)")
         }
-        return BundledMessages(message: messages, loadMoreBefore: mb.loadMoreBefore, loadMoreAfter: mb.loadMoreAfter, firstId: mb.firstId, lastId: mb.lastId, loadMoreChannelMessage: mb.loadMoreChannelMessage, loadMoreUserMessage: mb.loadMoreUserMessage, pendingMessage: pendingMessage)
+        let firstId = messages.last?.id ?? -1
+        let lastId = messages.first?.id ?? -1
+        return BundledMessages(message: messages, loadMoreBefore: mb.loadMoreBefore, loadMoreAfter: mb.loadMoreAfter, firstId: firstId, lastId: lastId, loadMoreChannelMessage: mb.loadMoreChannelMessage, loadMoreUserMessage: mb.loadMoreUserMessage, pendingMessage: pendingMessage)
     }
 }
