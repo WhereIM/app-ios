@@ -85,7 +85,7 @@ class DialogInMessage {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let action_copy = UIAlertAction(title: "copy".localized, style: .default) { (alert: UIAlertAction!) -> Void in
-            print("copy")
+            UIPasteboard.general.string = message.getPlainText()
         }
         alert.addAction(action_copy)
         let action_report = UIAlertAction(title: "report".localized, style: .default) { (alert: UIAlertAction!) -> Void in
@@ -113,7 +113,7 @@ class DialogOutMessage {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let action_copy = UIAlertAction(title: "copy".localized, style: .default) { (alert: UIAlertAction!) -> Void in
-            print("copy")
+            UIPasteboard.general.string = message.getPlainText()
         }
         alert.addAction(action_copy)
         let action_delete = UIAlertAction(title: "delete".localized, style: .default) { (alert: UIAlertAction!) -> Void in

@@ -169,6 +169,30 @@ class Message: RowConvertible, Persistable {
         }
     }
 
+    func getPlainText() -> String {
+        if type == "text" {
+            return message!
+        }
+        do {
+            if
+                let type = type,
+                let p = message,
+                let attr = try JSONSerialization.jsonObject(with: p.data(using: .utf8)!, options: []) as? [String: Any]
+            {
+                switch type {
+                    case "rich":
+                        return attr[Key.TEXT] as? String ?? ""
+                    default:
+                        return ""
+                }
+            } else {
+                return ""
+            }
+        } catch {
+            return ""
+        }
+    }
+
     func getText() -> NSMutableAttributedString {
         if deleted {
             let textAttrs = [
