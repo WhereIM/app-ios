@@ -52,6 +52,7 @@ class MapboxController: NSObject, MapControllerInterface, MGLMapViewDelegate, Ma
         mapView!.setCenter(mapCenter, zoomLevel: 15, direction: 0, animated: false)
         mapView!.delegate = self
         mapView!.showsUserLocation = true
+        mapView!.showsUserHeadingIndicator = true
 
         mapView!.translatesAutoresizingMaskIntoConstraints = false
         viewContrller.view.addSubview(mapView!)
