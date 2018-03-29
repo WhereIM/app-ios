@@ -77,6 +77,10 @@ class ImageViewerController: UIViewController, UIScrollViewDelegate {
         scrollView.showsVerticalScrollIndicator = true
         scrollView.flashScrollIndicators()
 
+        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+        tap.numberOfTapsRequired = 2
+        scrollView.addGestureRecognizer(tap)
+
         imageView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(imageView)
 
@@ -148,6 +152,19 @@ class ImageViewerController: UIViewController, UIScrollViewDelegate {
             loading.isHidden = true
         } catch {
             print("Unable to load data: \(error)")
+        }
+    }
+
+    @objc func doubleTapped(gestureReconizer: UITapGestureRecognizer) {
+        if (gestureReconizer.state == UIGestureRecognizerState.ended) {
+            if let im = imageView.image {
+                if scrollView.zoomScale >= 1 {
+                    let scale = min(scrollView.bounds.size.width/im.size.width, scrollView.bounds.size.height/im.size.height)
+                    scrollView.setZoomScale(scale, animated: true)
+                } else {
+                    scrollView.setZoomScale(1.0, animated: true)
+                }
+            }
         }
     }
 
