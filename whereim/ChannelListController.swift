@@ -357,7 +357,7 @@ class ChannelListController: UIViewController, ChannelListChangedListener, Conne
         navigator.addSubview(connectionStatusIndicator)
 
         NSLayoutConstraint.activate([
-            title.leftAnchor.constraint(equalTo: navigator.leftAnchor),
+            title.centerXAnchor.constraint(equalTo: navigator.centerXAnchor),
             title.centerYAnchor.constraint(equalTo: navigator.centerYAnchor)
             ])
         NSLayoutConstraint.activate([
