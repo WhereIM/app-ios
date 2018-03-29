@@ -225,7 +225,9 @@ class InImageCell: UITableViewCell {
 
     @objc func tap(gestureReconizer: UITapGestureRecognizer) {
         if (gestureReconizer.state == UIGestureRecognizerState.ended) {
-            print("tap")
+            delegate?.channelController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
+            let vc = ImageViewerController(msg!.getSender(), msg!.time!, msg!.getImage()!)
+            delegate?.channelController.navigationController?.pushViewController(vc, animated: true)
         }
     }
 
@@ -302,7 +304,9 @@ class OutImageCell: UITableViewCell {
 
     @objc func tap(gestureReconizer: UITapGestureRecognizer) {
         if (gestureReconizer.state == UIGestureRecognizerState.ended) {
-            print("tap")
+            delegate?.channelController.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "", style: .plain, target: nil, action: nil)
+            let vc = ImageViewerController(msg!.getSender(), msg!.time!, msg!.getImage()!)
+            delegate?.channelController.navigationController?.pushViewController(vc, animated: true)
         }
     }
 
@@ -874,7 +878,7 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
             let folder = path.appendingPathComponent("temp")
             do {
                 try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: false, attributes: nil)
-            } catch let error as NSError {
+            } catch {
                 // noop
             }
             let uid = UUID().uuidString
