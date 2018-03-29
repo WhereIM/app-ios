@@ -98,6 +98,8 @@ public final class Database {
     
     /// True if the database connection is currently in a transaction.
     public var isInsideTransaction: Bool {
+        if isClosed { return false }
+        
         // https://sqlite.org/c3ref/get_autocommit.html
         //
         // > The sqlite3_get_autocommit() interface returns non-zero or zero if
@@ -270,7 +272,7 @@ extension Database {
         setupBusyMode()
         setupDefaultFunctions()
         setupDefaultCollations()
-        observationBroker.setup()
+        observationBroker.installCommitAndRollbackHooks()
     }
     
     private func setupTrace() {
@@ -549,7 +551,7 @@ extension Database {
     /// - throws: The error thrown by the block.
     public func inTransaction(_ kind: TransactionKind? = nil, _ block: () throws -> TransactionCompletion) throws {
         // Begin transaction
-        try beginTransaction(kind ?? configuration.defaultTransactionKind)
+        try beginTransaction(kind)
         
         // Now that transaction has begun, we'll rollback in case of error.
         // But we'll throw the first caught error, so that user knows
@@ -669,11 +671,20 @@ extension Database {
         }
     }
     
-    func beginTransaction(_ kind: TransactionKind) throws {
+    /// Begins a database transaction.
+    ///
+    /// - parameter kind: The transaction type (default nil). If nil, the
+    ///   transaction type is configuration.defaultTransactionKind, which itself
+    ///   defaults to .immediate. See https://www.sqlite.org/lang_transaction.html
+    ///   for more information.
+    /// - throws: The error thrown by the block.
+    public func beginTransaction(_ kind: TransactionKind? = nil) throws {
+        let kind = kind ?? configuration.defaultTransactionKind
         try execute("BEGIN \(kind.rawValue) TRANSACTION")
     }
     
-    private func rollback() throws {
+    /// Rollbacks a database transaction.
+    public func rollback() throws {
         // The SQLite documentation contains two related but distinct techniques
         // to handle rollbacks and errors:
         //
@@ -718,7 +729,8 @@ extension Database {
         }
     }
     
-    func commit() throws {
+    /// Commits a database transaction.
+    public func commit() throws {
         try execute("COMMIT TRANSACTION")
     }
 }
@@ -817,8 +829,10 @@ extension Database {
     ///
     /// See https://www.sqlite.org/datatype3.html#collation
     public struct CollationName : RawRepresentable, Hashable {
+        /// :nodoc:
         public let rawValue: String
         
+        /// :nodoc:
         public init(rawValue: String) {
             self.rawValue = rawValue
         }
@@ -828,6 +842,7 @@ extension Database {
         }
         
         /// The hash value
+        /// :nodoc:
         public var hashValue: Int {
             return rawValue.hashValue
         }
@@ -851,8 +866,10 @@ extension Database {
     ///
     /// See https://www.sqlite.org/datatype3.html
     public struct ColumnType : RawRepresentable, Hashable {
+        /// :nodoc:
         public let rawValue: String
         
+        /// :nodoc:
         public init(rawValue: String) {
             self.rawValue = rawValue
         }
@@ -862,6 +879,7 @@ extension Database {
         }
         
         /// The hash value
+        /// :nodoc:
         public var hashValue: Int {
             return rawValue.hashValue
         }

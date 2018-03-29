@@ -237,7 +237,7 @@ BNCCurrency BNCCurrencyZMW = @"ZMW";
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 
 	#define assign(x) \
-		do { if (self.x) { dictionary[@#x] = self.x; } } while (0)
+		do { if (self.x != nil) { dictionary[@#x] = self.x; } } while (0)
 
 	assign(sku);
 	assign(name);
@@ -354,6 +354,8 @@ BNCCurrency BNCCurrencyZMW = @"ZMW";
 		params[@"metadata"] = self.metadata;
 	if (self.commerceDictionary)
 		params[@"commerce_data"] = self.commerceDictionary;
+    if (preferenceHelper.limitFacebookTracking)
+        params[@"limit_facebook_tracking"] = CFBridgingRelease(kCFBooleanTrue);
 
 	NSString *URL = [preferenceHelper getAPIURL:BRANCH_REQUEST_ENDPOINT_USER_COMPLETED_ACTION];
     [serverInterface postRequest:params

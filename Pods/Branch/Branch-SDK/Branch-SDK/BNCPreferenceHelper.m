@@ -57,7 +57,6 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
 @property (strong, nonatomic) NSMutableDictionary *creditsDictionary;
 @property (strong, nonatomic) NSMutableDictionary *requestMetadataDictionary;
 @property (strong, nonatomic) NSMutableDictionary *instrumentationDictionary;
-
 @end
 
 @implementation BNCPreferenceHelper
@@ -100,14 +99,16 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
 }
 
 - (id)init {
-    if ((self = [super init])) {
-        _timeout = DEFAULT_TIMEOUT;
-        _retryCount = DEFAULT_RETRY_COUNT;
-        _retryInterval = DEFAULT_RETRY_INTERVAL;
-        
-        _isDebug = NO;
-    }
-    
+    self = [super init];
+    if (!self) return self;
+
+    _timeout = DEFAULT_TIMEOUT;
+    _retryCount = DEFAULT_RETRY_COUNT;
+    _retryInterval = DEFAULT_RETRY_INTERVAL;
+    _isDebug = NO;
+    _persistPrefsQueue = [[NSOperationQueue alloc] init];
+    _persistPrefsQueue.maxConcurrentOperationCount = 1;
+
     return self;
 }
 
@@ -122,21 +123,8 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
     return preferenceHelper;
 }
 
-- (NSOperationQueue *)persistPrefsQueue {
-    @synchronized (self) {
-        if (_persistPrefsQueue)
-            return _persistPrefsQueue;
-        _persistPrefsQueue = [[NSOperationQueue alloc] init];
-        _persistPrefsQueue.maxConcurrentOperationCount = 1;
-        return _persistPrefsQueue;
-    }
-}
-
 - (void) synchronize {
-    @synchronized(self) {
-        //  Flushes preference queue to persistence.
-        [_persistPrefsQueue waitUntilAllOperationsAreFinished];
-    }
+    [_persistPrefsQueue waitUntilAllOperationsAreFinished];
 }
 
 - (void) dealloc {
@@ -550,6 +538,59 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
     }
 }
 
+- (BOOL) limitFacebookTracking {
+    @synchronized (self) {
+        return [self readBoolFromDefaults:@"_limitFacebookTracking"];
+    }
+}
+
+- (void) setLimitFacebookTracking:(BOOL)limitFacebookTracking {
+    @synchronized (self) {
+        [self writeBoolToDefaults:@"_limitFacebookTracking" value:limitFacebookTracking];
+    }
+}
+
+- (NSDate*) previousAppBuildDate {
+    @synchronized (self) {
+        NSDate *date = (NSDate*) [self readObjectFromDefaults:@"_previousAppBuildDate"];
+        if ([date isKindOfClass:[NSDate class]]) return date;
+        return nil;
+    }
+}
+
+- (void) setPreviousAppBuildDate:(NSDate*)date {
+    @synchronized (self) {
+        if (date == nil || [date isKindOfClass:[NSDate class]])
+            [self writeObjectToDefaults:@"_previousAppBuildDate" value:date];
+    }
+}
+
+- (NSArray<NSString*>*) URLBlackList {
+    @synchronized(self) {
+        id a = [self readObjectFromDefaults:@"URLBlackList"];
+        if ([a isKindOfClass:NSArray.class]) return a;
+        return nil;
+    }
+}
+
+- (void) setURLBlackList:(NSArray<NSString *> *)URLBlackList {
+    @synchronized(self) {
+        [self writeObjectToDefaults:@"URLBlackList" value:URLBlackList];
+    }
+}
+
+- (NSInteger) URLBlackListVersion {
+    @synchronized(self) {
+        return [self readIntegerFromDefaults:@"URLBlackListVersion"];
+    }
+}
+
+- (void) setURLBlackListVersion:(NSInteger)URLBlackListVersion {
+    @synchronized(self) {
+        [self writeIntegerToDefaults:@"URLBlackListVersion" value:URLBlackListVersion];
+    }
+}
+
 #pragma mark - Credit Storage
 
 - (NSMutableDictionary *)creditsDictionary {
@@ -703,7 +744,7 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
                 BNCLogWarning(@"Failed to persist preferences: %@.", error);
             }
         }];
-        [self.persistPrefsQueue addOperation:newPersistOp];
+        [_persistPrefsQueue addOperation:newPersistOp];
     }
 }
 
@@ -760,7 +801,7 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
 - (NSInteger)readIntegerFromDefaults:(NSString *)key {
     @synchronized(self) {
         NSNumber *number = self.persistenceDict[key];
-        if (number) {
+        if (number != nil) {
             return [number integerValue];
         }
         return NSNotFound;
@@ -815,11 +856,9 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
 
 @end
 
+#pragma mark - BNCURLForBranchDirectory
 
-#pragma mark - URLForBranchDirectory
-
-
-NSURL* _Null_unspecified BNCCreateDirectoryForBranchURLWithPath(NSSearchPathDirectory directory) {
+NSURL* _Null_unspecified BNCCreateDirectoryForBranchURLWithSearchPath_Unthreaded(NSSearchPathDirectory directory) {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *URLs = [fileManager URLsForDirectory:directory inDomains:NSUserDomainMask | NSLocalDomainMask];
 
@@ -835,27 +874,25 @@ NSURL* _Null_unspecified BNCCreateDirectoryForBranchURLWithPath(NSSearchPathDire
         if (success) {
             return branchURL;
         } else  {
-            BNCLogError(@"CreateBranchURL failed: %@ URL: %@.", error, branchURL);
+            NSLog(@"[branch.io] Info: CreateBranchURL failed: %@ URL: %@.", error, branchURL);
         }
     }
     return nil;
 }
 
-NSURL* _Nonnull BNCURLForBranchDirectory() {
-    NSSearchPathDirectory kSearchDirectories[] = {
-        NSApplicationSupportDirectory,
-        NSCachesDirectory,
-        NSDocumentDirectory,
-    };
+NSURL* _Nonnull BNCURLForBranchDirectory_Unthreaded() {
+    NSArray *kSearchDirectories = @[
+        @(NSApplicationSupportDirectory),
+        @(NSLibraryDirectory),
+        @(NSCachesDirectory),
+        @(NSDocumentDirectory),
+    ];
 
-    #define _countof(array)     (sizeof(array)/sizeof(array[0]))
-
-    for (NSSearchPathDirectory directory = 0; directory < _countof(kSearchDirectories); directory++) {
-        NSURL *URL = BNCCreateDirectoryForBranchURLWithPath(kSearchDirectories[directory]);
+    for (NSNumber *directory in kSearchDirectories) {
+        NSSearchPathDirectory directoryValue = [directory unsignedLongValue];
+        NSURL *URL = BNCCreateDirectoryForBranchURLWithSearchPath_Unthreaded(directoryValue);
         if (URL) return URL;
     }
-
-    #undef _countof
 
     //  Worst case backup plan:
     NSString *path = [@"~/Library/io.branch" stringByExpandingTildeInPath];
@@ -869,7 +906,16 @@ NSURL* _Nonnull BNCURLForBranchDirectory() {
             attributes:nil
             error:&error];
     if (!success) {
-        BNCLogError(@"Worst case CreateBranchURL error: %@ URL: %@.", error, branchURL);
+        NSLog(@"[io.branch] Error: Worst case CreateBranchURL error was: %@ URL: %@.", error, branchURL);
     }
     return branchURL;
+}
+
+NSURL* _Nonnull BNCURLForBranchDirectory() {
+    static NSURL *urlForBranchDirectory = nil;
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^ {
+        urlForBranchDirectory = BNCURLForBranchDirectory_Unthreaded();
+    });
+    return urlForBranchDirectory;
 }

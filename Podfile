@@ -19,6 +19,8 @@ target 'whereim' do
 
   pod 'GRDB.swift'
 
+  pod 'ImagePicker'
+
   pod 'Mapbox-iOS-SDK'
   pod 'MaterialComponents/Snackbar'
 

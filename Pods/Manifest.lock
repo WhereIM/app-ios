@@ -1,17 +1,17 @@
 PODS:
-  - Alamofire (4.6.0)
-  - Bolts (1.8.4):
-    - Bolts/AppLinks (= 1.8.4)
-    - Bolts/Tasks (= 1.8.4)
-  - Bolts/AppLinks (1.8.4):
+  - Alamofire (4.7.0)
+  - Bolts (1.9.0):
+    - Bolts/AppLinks (= 1.9.0)
+    - Bolts/Tasks (= 1.9.0)
+  - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.8.4)
-  - Branch (0.21.14):
-    - Branch/Core (= 0.21.14)
-  - Branch/Core (0.21.14)
+  - Bolts/Tasks (1.9.0)
+  - Branch (0.23.5):
+    - Branch/Core (= 0.23.5)
+  - Branch/Core (0.23.5)
   - Crashlytics (3.10.1):
     - Fabric (~> 1.7.5)
-  - Fabric (1.7.5)
+  - Fabric (1.7.6)
   - FacebookCore (0.3.0):
     - Bolts (~> 1.8)
     - FBSDKCoreKit (~> 4.27)
@@ -20,37 +20,37 @@ PODS:
     - FacebookCore (~> 0.3)
     - FBSDKCoreKit (~> 4.27)
     - FBSDKLoginKit (~> 4.27)
-  - FBSDKCoreKit (4.29.0):
+  - FBSDKCoreKit (4.31.1):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.29.0):
+  - FBSDKLoginKit (4.31.1):
     - FBSDKCoreKit
-  - Firebase (4.10.1):
-    - Firebase/Core (= 4.10.1)
-  - Firebase/Auth (4.10.1):
+  - Firebase (4.11.0):
+    - Firebase/Core (= 4.11.0)
+  - Firebase/Auth (4.11.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.4.4)
-  - Firebase/Core (4.10.1):
+    - FirebaseAuth (= 4.5.0)
+  - Firebase/Core (4.11.0):
     - FirebaseAnalytics (= 4.1.0)
-    - FirebaseCore (= 4.0.17)
+    - FirebaseCore (= 4.0.18)
   - FirebaseAnalytics (4.1.0):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.4.4):
+  - FirebaseAuth (4.5.0):
     - FirebaseAnalytics (~> 4.1)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.17):
+  - FirebaseCore (4.0.18):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseInstanceID (2.0.9):
+  - FirebaseInstanceID (2.0.10):
     - FirebaseCore (~> 4.0)
-  - GoogleMaps (2.5.0):
-    - GoogleMaps/Maps (= 2.5.0)
-  - GoogleMaps/Base (2.5.0)
-  - GoogleMaps/Maps (2.5.0):
+  - GoogleMaps (2.6.0):
+    - GoogleMaps/Maps (= 2.6.0)
+  - GoogleMaps/Base (2.6.0)
+  - GoogleMaps/Maps (2.6.0):
     - GoogleMaps/Base
-  - GoogleSignIn (4.1.1):
+  - GoogleSignIn (4.1.2):
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
     - GTMOAuth2 (~> 1.0)
@@ -65,26 +65,18 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.3)
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
-  - GRDB.swift (2.4.1)
+  - GRDB.swift (2.9.0)
   - GTMOAuth2 (1.1.6):
     - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.1.12):
-    - GTMSessionFetcher/Full (= 1.1.12)
-  - GTMSessionFetcher/Core (1.1.12)
-  - GTMSessionFetcher/Full (1.1.12):
-    - GTMSessionFetcher/Core (= 1.1.12)
-  - Mapbox-iOS-SDK (3.7.1)
-  - MaterialComponents/AnimationTiming (43.0.0)
-  - MaterialComponents/Buttons (43.0.0):
-    - MaterialComponents/Buttons/ColorThemer (= 43.0.0)
-    - MaterialComponents/Buttons/Component (= 43.0.0)
-    - MaterialComponents/Buttons/TitleColorAccessibilityMutator (= 43.0.0)
-    - MaterialComponents/private/Math
-  - MaterialComponents/Buttons/ColorThemer (43.0.0):
-    - MaterialComponents/Buttons/Component
-    - MaterialComponents/private/Math
-    - MaterialComponents/Themes
-  - MaterialComponents/Buttons/Component (43.0.0):
+  - GTMSessionFetcher (1.1.14):
+    - GTMSessionFetcher/Full (= 1.1.14)
+  - GTMSessionFetcher/Core (1.1.14)
+  - GTMSessionFetcher/Full (1.1.14):
+    - GTMSessionFetcher/Core (= 1.1.14)
+  - ImagePicker (3.0.0)
+  - Mapbox-iOS-SDK (3.7.6)
+  - MaterialComponents/AnimationTiming (48.0.0)
+  - MaterialComponents/Buttons (48.0.0):
     - MaterialComponents/Ink
     - MaterialComponents/private/Math
     - MaterialComponents/ShadowElevations
@@ -92,29 +84,19 @@ PODS:
     - MaterialComponents/Typography
     - MDFInternationalization
     - MDFTextAccessibility
-  - MaterialComponents/Buttons/TitleColorAccessibilityMutator (43.0.0):
-    - MaterialComponents/Buttons/Component
+  - MaterialComponents/Ink (48.0.0):
     - MaterialComponents/private/Math
-    - MDFTextAccessibility
-  - MaterialComponents/Ink (43.0.0):
-    - MaterialComponents/Ink/ColorThemer (= 43.0.0)
-    - MaterialComponents/Ink/Component (= 43.0.0)
-  - MaterialComponents/Ink/ColorThemer (43.0.0):
-    - MaterialComponents/Ink/Component
-    - MaterialComponents/Themes
-  - MaterialComponents/Ink/Component (43.0.0):
-    - MaterialComponents/private/Math
-  - MaterialComponents/OverlayWindow (43.0.0):
+  - MaterialComponents/OverlayWindow (48.0.0):
     - MaterialComponents/private/Application
-  - MaterialComponents/private/Application (43.0.0)
-  - MaterialComponents/private/KeyboardWatcher (43.0.0):
+  - MaterialComponents/private/Application (48.0.0)
+  - MaterialComponents/private/KeyboardWatcher (48.0.0):
     - MaterialComponents/private/Application
-  - MaterialComponents/private/Math (43.0.0)
-  - MaterialComponents/private/Overlay (43.0.0)
-  - MaterialComponents/ShadowElevations (43.0.0)
-  - MaterialComponents/ShadowLayer (43.0.0):
+  - MaterialComponents/private/Math (48.0.0)
+  - MaterialComponents/private/Overlay (48.0.0)
+  - MaterialComponents/ShadowElevations (48.0.0)
+  - MaterialComponents/ShadowLayer (48.0.0):
     - MaterialComponents/ShadowElevations
-  - MaterialComponents/Snackbar (43.0.0):
+  - MaterialComponents/Snackbar (48.0.0):
     - MaterialComponents/AnimationTiming
     - MaterialComponents/Buttons
     - MaterialComponents/OverlayWindow
@@ -122,8 +104,7 @@ PODS:
     - MaterialComponents/private/KeyboardWatcher
     - MaterialComponents/private/Overlay
     - MaterialComponents/Typography
-  - MaterialComponents/Themes (43.0.0)
-  - MaterialComponents/Typography (43.0.0):
+  - MaterialComponents/Typography (48.0.0):
     - MaterialComponents/private/Application
   - MDFInternationalization (1.0.4)
   - MDFTextAccessibility (1.2.0)
@@ -133,8 +114,8 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - OpenSSL-Universal (1.0.2.11)
-  - SDCAlertView (8.0.1)
+  - OpenSSL-Universal (1.0.2.13)
+  - SDCAlertView (8.0.2)
   - SDWebImage (4.3.3):
     - SDWebImage/Core (= 4.3.3)
   - SDWebImage/Core (4.3.3)
@@ -152,6 +133,7 @@ DEPENDENCIES:
   - GoogleMaps
   - GoogleSignIn
   - GRDB.swift
+  - ImagePicker
   - Mapbox-iOS-SDK
   - MaterialComponents/Snackbar
   - Moscapsule (from `https://github.com/flightonary/Moscapsule.git`)
@@ -170,37 +152,38 @@ CHECKOUT OPTIONS:
     :git: https://github.com/flightonary/Moscapsule.git
 
 SPEC CHECKSUMS:
-  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
-  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Branch: 1d09c85256236f067dfa96944709f1f011ec17c0
+  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
+  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
+  Branch: d92cc14a602a9c4142435d782efa741dc136d0b5
   Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
-  Fabric: ae7146a5f505ea370a1e44820b4b1dc8890e2890
+  Fabric: f8d42c893bb187326a7968b62abe55c36a987a46
   FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
   FacebookLogin: 0af839ea858faef99550d16596b87b4a8e8906e6
-  FBSDKCoreKit: 6f139173dc63a1deaff4430a55f2fe5bb222d2af
-  FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
-  Firebase: 92c6ba593e32db0defde464a9adc981d5cb49f97
+  FBSDKCoreKit: e08ccfcefa7bc1347a07c276dac9bf6c7fe57024
+  FBSDKLoginKit: 99797ac39252fef6f72600b886f6ee60b4b29cab
+  Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
   FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
-  FirebaseAuth: d040bb7a9db6dfc29d0e7ec82d48be51352b2581
-  FirebaseCore: 872307b001bbefda1dfa0dbfffa50a6919023d4a
-  FirebaseInstanceID: d2058a35e9bebda1b6dd42486b84917bde552a9d
-  GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
-  GoogleSignIn: 3fdaa34a2ba04dbd7a25d7db39aecb0da98d5bdc
+  FirebaseAuth: 147bf340a0706b44ca1753d6b41ebafd9687cfe6
+  FirebaseCore: b981f47e5254cbcfdeb483355300d743f6fcab2c
+  FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
+  GoogleMaps: 42f91c68b7fa2f84d5c86597b18ceb99f5414c7f
+  GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
-  GRDB.swift: 2c984d506b75b48c9d2dad43c77605fa9e9593b8
+  GRDB.swift: db8429f12d250f3056df82eb3409e5af083948ca
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
-  GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
-  Mapbox-iOS-SDK: 34c96bec48a1122ead238e7e886cd9d613e6280c
-  MaterialComponents: dc77450aafa8639522bb15aa9440a1a3b6946cd3
+  GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
+  ImagePicker: 973953c25960fe04729a7082a56194321c6762d2
+  Mapbox-iOS-SDK: 23ececda1d90c3b436b45e2c88e9677f025303c0
+  MaterialComponents: 540ef387fee311a1b4b3ccec93d4db6db35d24bf
   MDFInternationalization: e355b0cebecf53d60233bd267084e49366c82513
   MDFTextAccessibility: 94098925e0853551c5a311ce7c1ecefbe297cdb6
   Moscapsule: 7c272cc4f434b5805effc237ecb1668fdb7aba5d
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  OpenSSL-Universal: bcea8d73aec478029029164f9f0695b57cb94309
-  SDCAlertView: 0dac88159108e755a78ca8d789b3b82305accae4
+  OpenSSL-Universal: 401888162f11c33ebbd46f782d9229da35c61327
+  SDCAlertView: 289481e983c60abc5b4b5f4c7241fec9c7a853d5
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
 
-PODFILE CHECKSUM: 0d8a796a8d93eff8046f5b890044c98d06756b4f
+PODFILE CHECKSUM: 11341573d36c1d77d0cd8fb92b005ba820766d28
 
 COCOAPODS: 1.4.0

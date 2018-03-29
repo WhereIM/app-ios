@@ -101,8 +101,10 @@
                 } \
             } \
             object.field = newArray; \
+        } else if ([a isKindOfClass:[NSString class]]) { \
+            object.field = [NSMutableArray arrayWithObject:a]; \
         } else { \
-            object.field = (id) [NSArray new]; \
+            object.field = (id) [NSMutableArray new]; \
         } \
     }
 
@@ -147,7 +149,7 @@
     }
 
     #define addNumber(field, name) { \
-        if (self.field) { \
+        if (self.field != nil) { \
             dictionary[@#name] = self.field; \
         } \
     }

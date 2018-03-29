@@ -123,20 +123,24 @@ static NSString *const MDCFloatingButtonHitAreaInsetsDictionaryKey =
           (CGFloat)[aDecoder decodeDoubleForKey:MDCFloatingButtonImageTitleSpaceKey];
     }
     if ([aDecoder containsValueForKey:MDCFloatingButtonMinimumSizeDictionaryKey]) {
-      _shapeToModeToMinimumSize = (NSMutableDictionary *)
-          [aDecoder decodeObjectForKey:MDCFloatingButtonMinimumSizeDictionaryKey];
+      _shapeToModeToMinimumSize =
+          [aDecoder decodeObjectOfClass:[NSMutableDictionary class]
+                                 forKey:MDCFloatingButtonMinimumSizeDictionaryKey];
     }
     if ([aDecoder containsValueForKey:MDCFloatingButtonMaximumSizeDictionaryKey]) {
-      _shapeToModeToMaximumSize = (NSMutableDictionary *)
-          [aDecoder decodeObjectForKey:MDCFloatingButtonMaximumSizeDictionaryKey];
+      _shapeToModeToMaximumSize =
+          [aDecoder decodeObjectOfClass:[NSMutableDictionary class]
+                                 forKey:MDCFloatingButtonMaximumSizeDictionaryKey];
     }
     if ([aDecoder containsValueForKey:MDCFloatingButtonContentEdgeInsetsDictionaryKey]) {
-      _shapeToModeToContentEdgeInsets = (NSMutableDictionary *)
-          [aDecoder decodeObjectForKey:MDCFloatingButtonContentEdgeInsetsDictionaryKey];
+      _shapeToModeToContentEdgeInsets =
+          [aDecoder decodeObjectOfClass:[NSMutableDictionary class]
+                                 forKey:MDCFloatingButtonContentEdgeInsetsDictionaryKey];
     }
     if ([aDecoder containsValueForKey:MDCFloatingButtonHitAreaInsetsDictionaryKey]) {
-      _shapeToModeToHitAreaInsets = (NSMutableDictionary *)
-          [aDecoder decodeObjectForKey:MDCFloatingButtonHitAreaInsetsDictionaryKey];
+      _shapeToModeToHitAreaInsets =
+          [aDecoder decodeObjectOfClass:[NSMutableDictionary class]
+                                 forKey:MDCFloatingButtonHitAreaInsetsDictionaryKey];
     }
 
     [self updateShapeAndAllowResize:NO];
@@ -167,7 +171,7 @@ static NSString *const MDCFloatingButtonHitAreaInsetsDictionaryKey =
                                            MDCFloatingButtonMiniDimension);
   const CGSize defaultNormalSize = CGSizeMake(MDCFloatingButtonDefaultDimension,
                                               MDCFloatingButtonDefaultDimension);
-  const CGSize defaultExpandedMinimumSize = CGSizeMake(132, 48);
+  const CGSize defaultExpandedMinimumSize = CGSizeMake(0, 48);
   const CGSize defaultExpandedMaximumSize = CGSizeMake(328, 0);
 
   // Minimum size values for different shape + mode combinations
@@ -279,7 +283,7 @@ static NSString *const MDCFloatingButtonHitAreaInsetsDictionaryKey =
     alignment guidelines (internalLayoutInsets).
  4. Position the imageView along the leading (or trailing) edge of the button, inset by
     internalLayoutInsets.left (flipped for RTL).
- 5. Position the titleLabel within the center of its available space.
+ 5. Position the titleLabel along the leading edge of its available space.
  6. Apply the imageEdgeInsets and titleEdgeInsets to their respective views.
  */
 - (void)layoutSubviews {
@@ -295,9 +299,9 @@ static NSString *const MDCFloatingButtonHitAreaInsetsDictionaryKey =
   //
   // +------------------------------------+
   // |    |  |  |  CEI TOP            |   |
-  // |CEI +--+  |       +-----+       |CEI|
-  // | LT ||SP|-- A --|Title|-- A --|RGT|
-  // |    +--+  |       +-----+       |   |
+  // |CEI +--+  |+-----+              |CEI|
+  // | LT ||SP||Title|              |RGT|
+  // |    +--+  |+-----+              |   |
   // |    |  |  |  CEI BOT            |   |
   // +------------------------------------+
   //
@@ -339,7 +343,8 @@ static NSString *const MDCFloatingButtonHitAreaInsetsDictionaryKey =
   // If we are RTL with a trailing image, the image goes on the left.
   if ((isLTR && isLeadingIcon) || (!isLTR && !isLeadingIcon)) {
     const CGFloat imageCenterX = CGRectGetMinX(insetBounds) + (imageViewWidth / 2);
-    const CGFloat titleCenterX = CGRectGetMaxX(insetBounds) - (titleWidthAvailable / 2);
+    const CGFloat titleCenterX = CGRectGetMaxX(insetBounds) - titleWidthAvailable +
+        (titleSize.width / 2);
     titleCenter = CGPointMake(titleCenterX, boundsCenterY);
     imageCenter = CGPointMake(imageCenterX, boundsCenterY);
   }
@@ -347,7 +352,8 @@ static NSString *const MDCFloatingButtonHitAreaInsetsDictionaryKey =
   // If we are RTL with a leading image, the image goes on the right.
   else {
     const CGFloat imageCenterX = CGRectGetMaxX(insetBounds) - (imageViewWidth / 2);
-    const CGFloat titleCenterX = CGRectGetMinX(insetBounds) + (titleWidthAvailable / 2);
+    const CGFloat titleCenterX = CGRectGetMinX(insetBounds) + titleWidthAvailable -
+        (titleSize.width / 2);
     imageCenter = CGPointMake(imageCenterX, boundsCenterY);
     titleCenter = CGPointMake(titleCenterX, boundsCenterY);
   }

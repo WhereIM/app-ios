@@ -35,6 +35,7 @@
 #import "BranchUniversalObject.h"
 #import "BranchView.h"
 #import "BranchViewHandler.h"
+#import "UIViewController+Branch.h"
 
 /**
  `Branch` is the primary interface of the Branch iOS SDK. Currently, all interactions you will make are funneled through this class. It is not meant to be instantiated or subclassed, usage should be limited to the global instance.
@@ -124,7 +125,6 @@ extern NSString * const BNCCanonicalIdList;
 extern NSString * const BNCPurchaseAmount;
 extern NSString * const BNCPurchaseCurrency;
 extern NSString * const BNCCanonicalIdList;
-extern NSString * const BNCPurchaseAmount;
 extern NSString * const BNCRegisterViewEvent;
 extern NSString * const BNCAddToWishlistEvent;
 extern NSString * const BNCAddToCartEvent;
@@ -526,11 +526,38 @@ typedef NS_ENUM(NSUInteger, BranchCreditHistoryOrder) {
 ///--------------------
 
 /**
- Have Branch treat this device / session as a debug session, causing more information to be logged, and info to be available in the debug tab of the dashboard.
+ Have Branch treat this device / session as a debug session, causing more information to be logged,
+ and info to be available in the debug tab of the dashboard.
 
  @warning This should not be used in production.
  */
 - (void)setDebug;
+
+/**
+  @brief        Use the `validateSDKIntegration` method as a debugging aid to assure that you've
+                integrated the Branch SDK correctly.
+
+  @discussion   Use the SDK integration validator to check that you've added the Branch SDK and
+                handle deep links correctly when you first integrate Branch into your app.
+
+  To check your integration, add the line:
+
+  ```
+  [[Branch getInstance] validateSDKIntegration];
+  ```
+
+  in your `application:didFinishLaunchingWithOptions:` method in your app delegate. Then run your
+  app and follow the instructions.
+
+  This is for testing in development only! Make sure you remove or comment out this line of code in
+  your release versions.
+
+  @see [SDK Integration Validator](https://docs.branch.io/pages/resources/validation-tools/#overview_1)
+  for more information.
+
+  @warning This should not be used in production.
+*/
+- (void)validateSDKIntegration;
 
 /**
  Specify additional constant parameters to be included in the response
@@ -552,6 +579,21 @@ typedef NS_ENUM(NSUInteger, BranchCreditHistoryOrder) {
  @param schemes array to add to the whitelist, i.e. @[@"http", @"https", @"myapp"]
  */
 -(void)setWhiteListedSchemes:(NSArray *)schemes;
+
+/**
+ @brief     Sets an array of regex patterns that match URLs for Branch to ignore.
+
+ @discusion Set this property to prevent URLs containing sensitive data such as oauth tokens,
+            passwords, login credentials, and other URLs from being transmitted to Branch.
+
+            The Branch SDK already ignores login URLs for Facebook, Twitter, Google, and many oauth
+            security URLs, so it's usually unnecessary to set this parameter yourself.
+
+            Set this parameter with any additional URLs that should be ignored by Branch.
+
+            These are ICU standard regular expressions.
+*/
+@property (copy) NSArray<NSString*>/*_Nullable*/* blackListURLRegex;
 
 /**
  Register your Facebook SDK's FBSDKAppLinkUtility class to be used by Branch for deferred deep linking from their platform
