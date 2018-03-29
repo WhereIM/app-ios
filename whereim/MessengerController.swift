@@ -9,11 +9,11 @@
 import UIKit
 import AVFoundation
 import CoreLocation
+import ImagePicker
 import SDWebImage
 
 class InputBar: UIStackView {
     let background = UIView()
-    let btn_picker = UIButton()
     let btn_camera = UIButton()
     let pin = UIImageView()
     let text = UITextView()
@@ -47,12 +47,6 @@ class InputBar: UIStackView {
         background.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         background.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         background.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-
-        btn_picker.translatesAutoresizingMaskIntoConstraints = false
-        btn_picker.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
-        btn_picker.setImage(UIImage(named: "ic_insert_photo"), for: .normal)
-        btn_picker.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
-        self.addArrangedSubview(btn_picker)
 
         btn_camera.translatesAutoresizingMaskIntoConstraints = false
         btn_camera.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0 , bottom: 0, right: 5)
@@ -746,7 +740,7 @@ class MessageAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, Callback {
+class MessengerController: UIViewController, UITextViewDelegate, ImagePickerDelegate, Callback {
     let inputBar = InputBar()
     let unread = UITextView()
     let messageView = UITableView()
@@ -854,33 +848,25 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
     }
 
     @objc func btn_camera_clicked(sender: Any) {
-        if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != AVAuthorizationStatus.authorized {
-            AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
-                if response {
-                    self.takePhoto()
-                }
-            }
-        } else {
-            takePhoto()
+        let imagePickerController = ImagePickerController()
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
+    func wrapperDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
+        // noop
+    }
+
+    func doneButtonDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
+        imagePicker.dismiss(animated: true, completion: nil)
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let folder = path.appendingPathComponent("temp")
+        do {
+            try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: false, attributes: nil)
+        } catch {
+            // noop
         }
-    }
-
-    func takePhoto() {
-        let pickerController = UIImagePickerController()
-        pickerController.delegate = self
-        pickerController.sourceType = UIImagePickerControllerSourceType.camera
-        self.present(pickerController, animated: true, completion: nil)
-    }
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let folder = path.appendingPathComponent("temp")
-            do {
-                try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: false, attributes: nil)
-            } catch {
-                // noop
-            }
+        for image in images {
             let uid = UUID().uuidString
             let file = "temp/\(uid).jpg"
             let newPath = path.appendingPathComponent(file)
@@ -892,7 +878,10 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
                 print(error)
             }
         }
-        dismiss(animated:true, completion: nil)
+    }
+
+    func cancelButtonDidPress(_ imagePicker: ImagePickerController) {
+        imagePicker.dismiss(animated: true, completion: nil)
     }
 
     @objc func btn_send_clicked(sender: Any) {
@@ -912,11 +901,9 @@ class MessengerController: UIViewController, UITextViewDelegate, UIImagePickerCo
     func updateUI() {
         inputBar.pin.isHidden = pinLocation==nil
         if isTyping || (pinLocation != nil) {
-            inputBar.btn_picker.isHidden = true
             inputBar.btn_camera.isHidden = true
         } else {
-            inputBar.btn_picker.isHidden = false
-            inputBar.btn_camera.isHidden = !UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
+            inputBar.btn_camera.isHidden = false
 
         }
     }
