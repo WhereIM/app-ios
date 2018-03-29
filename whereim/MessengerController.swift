@@ -866,16 +866,20 @@ class MessengerController: UIViewController, UITextViewDelegate, ImagePickerDele
         } catch {
             // noop
         }
-        for image in images {
-            let uid = UUID().uuidString
-            let file = "temp/\(uid).jpg"
-            let newPath = path.appendingPathComponent(file)
-            let jpgImageData = UIImageJPEGRepresentation(image, 1.0)
-            do {
-                try jpgImageData!.write(to: newPath)
-                service!.sendImage(channel!.id!, file)
-            } catch {
-                print(error)
+        DispatchQueue.main.async {
+            for image in images {
+                DispatchQueue.main.async {
+                    let uid = UUID().uuidString
+                    let file = "temp/\(uid).jpg"
+                    let newPath = path.appendingPathComponent(file)
+                    let jpgImageData = UIImageJPEGRepresentation(image, 1.0)
+                    do {
+                        try jpgImageData!.write(to: newPath)
+                        self.service!.sendImage(self.channel!.id!, file)
+                    } catch {
+                        print(error)
+                    }
+                }
             }
         }
     }
